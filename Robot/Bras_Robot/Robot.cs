@@ -49,6 +49,7 @@ namespace Bras_Robot
         private int PosY { get; set; }
         private int PosZ { get; set; }
         public bool Connected { get; private set; }
+        public bool EnOperation { get; private set; } = false;
 
         Position[] Bouteilles = new Position[6]
         {
@@ -79,6 +80,7 @@ namespace Bras_Robot
             System.Threading.Thread.Sleep(100);
             Connexion();
             Connected = true;
+            SetSpeed(Speed);
         }
         private void Connexion()
         {
@@ -230,7 +232,7 @@ namespace Bras_Robot
                 Command = Command + "HALT\r\n";
             }
         }
-        public void SetSpeed(decimal speed)
+        private void SetSpeed(decimal speed)
         {
             serialPort.Write("SPEED " + speed + "\r");
             System.Threading.Thread.Sleep(200);
@@ -245,7 +247,7 @@ namespace Bras_Robot
             PosX += x;
             PosY += y;
             PosZ += z;
-            
+
             serialPort.Write("JOG " + x + "," + y + "," + z + "\r");
             System.Threading.Thread.Sleep(200);
             serialPort.Write("FINISH\r");
@@ -255,8 +257,6 @@ namespace Bras_Robot
         {
             JOG(pos.X - PosX, pos.Y - PosY, pos.Z - PosZ);
         }
-
-        // TODO reste verser a regler
         private void VerserBouteille(ref Position pos)
         {
             //------Prendre bouteille------//
@@ -274,11 +274,14 @@ namespace Bras_Robot
             //------Apporter le bouteille a la station de travail------//
             JOG(0, 0, 200);
             VersPosition(ref CreateStation);
-
+            JOG(0, 0, 0);
             //------Verser------//
-            for(int i = 0; i < pos.NbShot; ++i)
+            for (int i = 0; i < pos.NbShot; ++i)
             {
-                // TODO
+                DeplacerMain(130);
+                System.Threading.Thread.Sleep(2000);
+                DeplacerMain(-130);
+                System.Threading.Thread.Sleep(1000);
             }
 
             //------Rapporter la bouteille a sa place d'origine------//
@@ -288,15 +291,13 @@ namespace Bras_Robot
 
             JOG(0, 0, 0); // wait
             OuvrirPince(100);
-            System.Threading.Thread.Sleep(2000);
+            System.Threading.Thread.Sleep(3000);
             JOG(pos.X - PosX, pos.Y - PosY, (pos.Z - PosZ) + 200);
-
-            //------Revenir a la position de depart------//
-            GoToStart();
+            JOG(0, 0, 0);
         }
 
         private Position RedCup = new Position(0, 0, -420);
-        private Position DONNEMOILECUP = new Position(200, 0 ,-100);
+        private Position DONNEMOILECUP = new Position(200, 0, -100);
         private Position RedCupFin = new Position(100, 200, -420);
         private void PickUpCup(ref Position cup)
         {
@@ -331,18 +332,34 @@ namespace Bras_Robot
         }
         public void MakeDrink(List<Position> positions)
         {
-            foreach(var pos in positions)
+            EnOperation = true;
+            foreach (var pos in positions)
             {
                 Position p = pos;
                 VerserBouteille(ref p);
             }
+            GoToStart();
+            JOG(0, 0, 0);
+            EnOperation = false;
         }
+        public List<Position> Exemple = new List<Position>
+        {
+            new Position(0,-300, -350),
+            new Position(-500,-300, -350),
+            new Position(-300,-300, -350),
+            new Position(-100,-300, -350),
+            new Position(-400,-300, -350),
+            new Position(-500,-300, -350),
+            new Position(0,-300, -350),
+            new Position(-400,-300, -350),
+            new Position(-500,-300, -350)
+        };
         public List<string> TEST()
         {
             List<string> list = new List<string>();
 
-
-            list.Add(PosX + " " + PosY + " " + PosZ);
+            MakeDrink(Exemple);
+            //list.Add(PosX + " " + PosY + " " + PosZ);
 
             return list;
         }

@@ -45,7 +45,7 @@ namespace Bras_Robot
         {
             //Robot = new CRS_A255();
             BTN_CONNEXION.BackColor = Color.Green;
-            Robot.SetSpeed(Robot.Speed);
+            //Robot.SetSpeed(Robot.Speed);
             NUD_SPEED.Value = Robot.Speed;
         }
 
@@ -170,7 +170,7 @@ namespace Bras_Robot
         }
         private void BTN_Ok_Click(object sender, EventArgs e)
         {
-            Robot.SetSpeed(NUD_SPEED.Value);
+            //Robot.SetSpeed(NUD_SPEED.Value);
         }
 
         private void BTN_CONSOLE_Click(object sender, EventArgs e)
