@@ -228,5 +228,10 @@ namespace Bras_Robot
             //var bouteille = new CRS_A255.Position(Convert.ToInt32(TB_X.Text), Convert.ToInt32(TB_Y.Text), Convert.ToInt32(TB_Z.Text));
             //Robot.VersPosition(ref bouteille);
         }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

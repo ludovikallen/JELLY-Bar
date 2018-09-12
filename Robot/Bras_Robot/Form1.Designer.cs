@@ -80,6 +80,7 @@
             this.TB_Y = new System.Windows.Forms.TextBox();
             this.TB_X = new System.Windows.Forms.TextBox();
             this.BTN_Pos = new System.Windows.Forms.Button();
+            this.Database = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TB_BASE_ANGLE)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -657,11 +658,21 @@
             this.BTN_Pos.UseVisualStyleBackColor = true;
             this.BTN_Pos.Click += new System.EventHandler(this.BTN_Pos_Click);
             // 
+            // Database
+            // 
+            this.Database.Location = new System.Drawing.Point(673, 453);
+            this.Database.Name = "Database";
+            this.Database.Size = new System.Drawing.Size(75, 23);
+            this.Database.TabIndex = 31;
+            this.Database.Text = "Data base";
+            this.Database.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(901, 485);
+            this.Controls.Add(this.Database);
             this.Controls.Add(this.BTN_Pos);
             this.Controls.Add(this.TB_X);
             this.Controls.Add(this.TB_Y);
@@ -691,6 +702,7 @@
             this.Controls.Add(this.groupBox1);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.groupBox1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.TB_BASE_ANGLE)).EndInit();
             this.groupBox2.ResumeLayout(false);
@@ -768,6 +780,7 @@
         private System.Windows.Forms.TextBox TB_Y;
         private System.Windows.Forms.TextBox TB_X;
         private System.Windows.Forms.Button BTN_Pos;
+        private System.Windows.Forms.Button Database;
     }
 }
 
