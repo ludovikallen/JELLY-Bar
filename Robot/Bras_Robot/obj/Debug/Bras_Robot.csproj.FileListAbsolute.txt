@@ -17,3 +17,4 @@ C:\Users\201646963\Desktop\Bras_Robot\Bras_Robot\obj\Debug\Bras_Robot.csproj.Gen
 C:\Users\201646963\Desktop\Bras_Robot\Bras_Robot\obj\Debug\Bras_Robot.csproj.CoreCompileInputs.cache
 C:\Users\201646963\Desktop\Bras_Robot\Bras_Robot\obj\Debug\Bras_Robot.exe
 C:\Users\201646963\Desktop\Bras_Robot\Bras_Robot\obj\Debug\Bras_Robot.pdb
+C:\Users\201646963\Desktop\Bras_Robot\Bras_Robot\obj\Debug\Bras_Robot.csprojAssemblyReference.cache
