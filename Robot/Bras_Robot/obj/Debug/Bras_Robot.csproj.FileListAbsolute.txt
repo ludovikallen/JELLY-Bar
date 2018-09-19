@@ -17,7 +17,30 @@ C:\Users\201646963\Desktop\Bras_Robot\Bras_Robot\obj\Debug\Bras_Robot.csproj.Gen
 C:\Users\201646963\Desktop\Bras_Robot\Bras_Robot\obj\Debug\Bras_Robot.csproj.CoreCompileInputs.cache
 C:\Users\201646963\Desktop\Bras_Robot\Bras_Robot\obj\Debug\Bras_Robot.exe
 C:\Users\201646963\Desktop\Bras_Robot\Bras_Robot\obj\Debug\Bras_Robot.pdb
+<<<<<<< HEAD
+C:\Users\201579584\Documents\JELLY-Bar\Robot\Bras_Robot\bin\Debug\Bras_Robot.exe.config
+C:\Users\201579584\Documents\JELLY-Bar\Robot\Bras_Robot\bin\Debug\Bras_Robot.exe
+C:\Users\201579584\Documents\JELLY-Bar\Robot\Bras_Robot\bin\Debug\Bras_Robot.pdb
+C:\Users\201579584\Documents\JELLY-Bar\Robot\Bras_Robot\bin\Debug\EntityFramework.dll
+C:\Users\201579584\Documents\JELLY-Bar\Robot\Bras_Robot\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\201579584\Documents\JELLY-Bar\Robot\Bras_Robot\bin\Debug\System.Data.SQLite.dll
+C:\Users\201579584\Documents\JELLY-Bar\Robot\Bras_Robot\bin\Debug\System.Data.SQLite.EF6.dll
+C:\Users\201579584\Documents\JELLY-Bar\Robot\Bras_Robot\bin\Debug\System.Data.SQLite.Linq.dll
+C:\Users\201579584\Documents\JELLY-Bar\Robot\Bras_Robot\bin\Debug\EntityFramework.xml
+C:\Users\201579584\Documents\JELLY-Bar\Robot\Bras_Robot\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\201579584\Documents\JELLY-Bar\Robot\Bras_Robot\bin\Debug\System.Data.SQLite.xml
+C:\Users\201579584\Documents\JELLY-Bar\Robot\Bras_Robot\bin\Debug\System.Data.SQLite.dll.config
+C:\Users\201579584\Documents\JELLY-Bar\Robot\Bras_Robot\obj\Debug\Bras_Robot.csprojAssemblyReference.cache
+C:\Users\201579584\Documents\JELLY-Bar\Robot\Bras_Robot\obj\Debug\Bras_Robot.Form1.resources
+C:\Users\201579584\Documents\JELLY-Bar\Robot\Bras_Robot\obj\Debug\Bras_Robot.Properties.Resources.resources
+C:\Users\201579584\Documents\JELLY-Bar\Robot\Bras_Robot\obj\Debug\Bras_Robot.csproj.GenerateResource.cache
+C:\Users\201579584\Documents\JELLY-Bar\Robot\Bras_Robot\obj\Debug\Bras_Robot.csproj.CoreCompileInputs.cache
+C:\Users\201579584\Documents\JELLY-Bar\Robot\Bras_Robot\obj\Debug\Bras_Robot.csproj.CopyComplete
+C:\Users\201579584\Documents\JELLY-Bar\Robot\Bras_Robot\obj\Debug\Bras_Robot.exe
+C:\Users\201579584\Documents\JELLY-Bar\Robot\Bras_Robot\obj\Debug\Bras_Robot.pdb
+=======
 C:\Users\201646963\Desktop\Bras_Robot\Bras_Robot\obj\Debug\Bras_Robot.csprojAssemblyReference.cache
+<<<<<<< HEAD
 C:\Users\201646963\Desktop\Bras_Robot\Bras_Robot\bin\Debug\Microsoft.Win32.Primitives.dll
 C:\Users\201646963\Desktop\Bras_Robot\Bras_Robot\bin\Debug\netstandard.dll
 C:\Users\201646963\Desktop\Bras_Robot\Bras_Robot\bin\Debug\System.AppContext.dll
@@ -121,3 +144,6 @@ C:\Users\201646963\Desktop\Bras_Robot\Bras_Robot\bin\Debug\System.Threading.Task
 C:\Users\201646963\Desktop\Bras_Robot\Bras_Robot\bin\Debug\System.ValueTuple.xml
 C:\Users\201646963\Desktop\Bras_Robot\Bras_Robot\obj\Debug\Bras_Robot.exe.config
 C:\Users\201646963\Desktop\Bras_Robot\Bras_Robot\obj\Debug\Bras_Robot.csproj.CopyComplete
+=======
+>>>>>>> Développement
+>>>>>>> Développement
