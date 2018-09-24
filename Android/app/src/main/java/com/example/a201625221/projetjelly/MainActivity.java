@@ -19,6 +19,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
@@ -27,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Variables pour contenir les layouts pour pouvoir changer d'onglet dans l'application
      */
-    ConstraintLayout listLYT,optionsLYT,cartLYT,infosLYT;
+    ConstraintLayout listLYT,optionsLYT,cartLYT,infosLYT, notesLYT;
 
     /**
      * Variables pour contenir les boutons pour pouvoir changer d'onglet dans l'application
@@ -42,11 +45,11 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Tableaux pour indiquer l'origine et la destination graphique
      */
-    String from[]={"nom","ing"};
+    String from[]={"nom","ing","note"};
     /**
      * Tableaux pour indiquer l'origine et la destination graphique
      */
-    int to[]={R.id.name_TXT,R.id.ing_TXT};
+    int to[]={R.id.name_TXT,R.id.ing_TXT,R.id.note_TXT};
 
     /**
      * Listes contenant les éléments de la BD et le panier
@@ -60,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
 
     String[] DrinkName={"Sex on the beach","Cosmopolitan","Rhum and coke","Beer","Diesel","Water"};
     String[] Ingredients={"Vodka+OrangeJuice+Grenadine","xxx","Rhum+Coke","Beer","Beer+Coke","Water"};
+    String[] Notes={"1.9","2.8","5.7","3","2","1"};
 
     /**
      * Fonction lancée à la création de l'activité
@@ -91,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
         optionsLYT=findViewById(R.id.options_LYT);
         cartLYT=findViewById(R.id.cart_LYT);
         infosLYT=findViewById(R.id.infos_LYT);
+        notesLYT=findViewById(R.id.notes_LYT);
 
         drinkBTN=findViewById(R.id.drinklist_BTN);
         ingBTN=findViewById(R.id.inglist_BTN);
@@ -117,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
     void setTouchListeners()
     {
         final ImageButton trashBTN=findViewById(R.id.trash_IMGBTN);
+        final TextView noteExitBTN=findViewById(R.id.exitNoteBTN);
 
         drinkBTN.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
@@ -156,6 +162,13 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        noteExitBTN.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                noteExitBTN.setBackgroundColor(getResources().getColor(R.color.darkgrey));
+                return false;
+            }
+        });
     }
 
     /**
@@ -164,6 +177,7 @@ public class MainActivity extends AppCompatActivity {
     void setClickListeners()
     {
         final ImageButton trashBTN=findViewById(R.id.trash_IMGBTN);
+        final TextView noteExitBTN=findViewById(R.id.exitNoteBTN);
 
         drinkBTN.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -260,6 +274,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        noteExitBTN.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                noteExitBTN.setBackgroundColor(getResources().getColor(R.color.grey));
+                AnnulerNote();
+            }
+        });
+
         listLVIEW.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
@@ -268,8 +289,8 @@ public class MainActivity extends AppCompatActivity {
 
                 HashMap<String, String> item = ( HashMap<String, String>)adapterView.getItemAtPosition(position);
                 Toast toast = Toast.makeText(getApplicationContext(),
-                        "x1 " + item.values().toArray()[0] + " ajouté au panier", Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.CENTER, 0, 350);
+                        "x1 " + item.values().toArray()[1] + " ajouté au panier", Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER, 0, 500);
                 toast.show();
 
                 AjouterPanier(item);
@@ -339,8 +360,10 @@ public class MainActivity extends AppCompatActivity {
             HashMap<String,String> hashMap=new HashMap<>();//create a hashmap to store the data in key value pair
             hashMap.put("nom",DrinkName[i]);
             hashMap.put("ing",Ingredients[i]+"");
+            hashMap.put("note",Notes[i]);
             arrayListNoms.add(hashMap);//add the hashmap into arrayList
         }
+        TrierEtoileBas(arrayListNoms);
         SimpleAdapter simpleAdapter=new SimpleAdapter(this,arrayListNoms,R.layout.custom_list,from,to);
         listLVIEW.setAdapter(simpleAdapter);//sets the adapter for listView
     }
@@ -356,8 +379,10 @@ public class MainActivity extends AppCompatActivity {
             HashMap<String,String> hashMap=new HashMap<>();//create a hashmap to store the data in key value pair
             hashMap.put("nom",DrinkName[i]);
             hashMap.put("ing",Ingredients[i]+"");
+            hashMap.put("note",Notes[i]);
             arrayListIng.add(hashMap);//add the hashmap into arrayList
         }
+        TrierEtoileHaut(arrayListIng);
         SimpleAdapter simpleAdapter=new SimpleAdapter(this,arrayListIng,R.layout.custom_list,from,to);
         listLVIEW.setAdapter(simpleAdapter);//sets the adapter for listView
     }
@@ -372,6 +397,63 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void Commander() {
-        
+
+    }
+
+    void AnnulerNote() {
+        notesLYT.setVisibility(View.INVISIBLE);
+    }
+
+    void EnvoyerNote() {
+
+        Toast toast = Toast.makeText(getApplicationContext(),
+                "Merci d'avoir noté!", Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER, 0, 500);
+        toast.show();
+        notesLYT.setVisibility(View.INVISIBLE);
+    }
+
+    void TrierEtoileHaut(ArrayList<HashMap<String,String>> liste)
+    {
+        Collections.sort(liste, new Comparator<HashMap<String,String>>()
+        {
+            public int compare(HashMap<String,String> o1,
+                               HashMap<String,String> o2)
+            {
+                float o1note=Float.valueOf(o1.get("note"));
+                float o2note=Float.valueOf(o2.get("note"));
+                if (o1note < o2note)
+                {
+                    return -1;
+                }
+                else if (o1note > o2note)
+                {
+                    return 1;
+                }
+                return 0;
+            }
+        });
+    }
+
+    void TrierEtoileBas(ArrayList<HashMap<String,String>> liste)
+    {
+        Collections.sort(liste, new Comparator<HashMap<String,String>>()
+        {
+            public int compare(HashMap<String,String> o1,
+                               HashMap<String,String> o2)
+            {
+                float o1note=Float.valueOf(o1.get("note"));
+                float o2note=Float.valueOf(o2.get("note"));
+                if (o1note < o2note)
+                {
+                    return 1;
+                }
+                else if (o1note > o2note)
+                {
+                    return -1;
+                }
+                return 0;
+            }
+        });
     }
 }

@@ -16,4 +16,25 @@
         android:layout_height="wrap_content"
         android:paddingTop="30dp"
         android:textColor="#686868" />
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/etoile"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="450dp"
+            android:src="@drawable/star"
+            android:scaleType="fitXY" />
+        <TextView
+            android:id="@+id/note_TXT"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="40dp"
+            android:textColor="#686868" />
+    </LinearLayout>
 </RelativeLayout>
