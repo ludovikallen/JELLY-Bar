@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Listes contenant les éléments de la BD et le panier
      */
-    ArrayList<HashMap<String,String>> arrayListDrink =new ArrayList<>(),arrayListIng=new ArrayList<>(),arrayListCart=new ArrayList<>(), drinkListCopie=null;
+    ArrayList<HashMap<String,String>> arrayListDrink =new ArrayList<>(),arrayListIng=new ArrayList<>(),arrayListCart=new ArrayList<>();
 
     ArrayList<Integer>selectedCartPositions=new ArrayList<>();
     /**
@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
     String[] Notes={"1.9","2.8","5.7","3","2","1"};
 
 
-    int compteur;
+    int compteurItemCourant;
     /**
      * Fonction lancée à la création de l'activité
      */
@@ -179,6 +179,7 @@ public class MainActivity extends AppCompatActivity {
     void setClickListeners()
     {
         final ImageButton trashBTN=findViewById(R.id.trash_IMGBTN);
+        final TextView trashAllBTN=findViewById(R.id.trashall_BTN);
         final TextView noteExitBTN=findViewById(R.id.exitNoteBTN);
         final TextView triNoteBTN=findViewById(R.id.triNote_BTN);
 
@@ -273,7 +274,15 @@ public class MainActivity extends AppCompatActivity {
                 trashBTN.setBackgroundColor(getResources().getColor(R.color.white));
                 RetirerPanier();
                 trashBTN.setVisibility(View.INVISIBLE);
-                selectFirstCartItem();
+            }
+        });
+
+        trashAllBTN.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                selectedCartPositions.clear();
+                arrayListCart.clear();
+                fillCartList();
+                trashBTN.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -342,18 +351,25 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position,
                                     long id) {
+                if(view != null && view.getContext() != null) {
+                    trashBTN.setVisibility(View.VISIBLE);
 
-                trashBTN.setVisibility(View.VISIBLE);
+                    if (arrayListCart.size() < position)
+                        selectedCartPositions.add(0);
+                    if (selectedCartPositions.contains(position))
+                        selectedCartPositions.remove(selectedCartPositions.indexOf(position));
+                    else if (!selectedCartPositions.contains(position))
+                        selectedCartPositions.add(position);
 
-                if(selectedCartPositions.contains(position))
-                    selectedCartPositions.remove(selectedCartPositions.indexOf(position));
-                else if(!selectedCartPositions.contains(position))
-                    selectedCartPositions.add(position);
-
-                if(selectedCartPositions.contains(position))
-                    cartLVIEW.getChildAt(position).setBackgroundColor(getResources().getColor(R.color.yellow));
-                else
-                    cartLVIEW.getChildAt(position).setBackgroundColor(getResources().getColor(R.color.white));
+                    if (selectedCartPositions.size() > 0) {
+                        if (arrayListCart.size() < position)
+                            cartLVIEW.getChildAt(0).setBackgroundColor(getResources().getColor(R.color.yellow));
+                        if (selectedCartPositions.contains(position))
+                            cartLVIEW.getChildAt(position).setBackgroundColor(getResources().getColor(R.color.yellow));
+                        else
+                            cartLVIEW.getChildAt(position).setBackgroundColor(getResources().getColor(R.color.white));
+                    }
+                }
             }
         });
     }
@@ -388,14 +404,16 @@ public class MainActivity extends AppCompatActivity {
      */
     void RetirerPanier()
     {
-        int compteurItems;
-        for (compteurItems=0; compteurItems<arrayListCart.size();compteurItems++)
+        int compteurItems=0;
+        for (; compteurItems<selectedCartPositions.size();compteurItems++)
         {
-            arrayListCart.remove(compteurItems);
+            arrayListCart.set(selectedCartPositions.get(compteurItems),null);
         }
+        while(arrayListCart.remove(null));
+        selectedCartPositions.clear();
         fillCartList();
         Toast toast = Toast.makeText(getApplicationContext(),
-                "x " + compteur + " items retiré du panier", Toast.LENGTH_SHORT);
+                "x " + compteurItems + " items retiré du panier", Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.CENTER, 0, 350);
         toast.show();
     }
@@ -414,6 +432,7 @@ public class MainActivity extends AppCompatActivity {
             hashMap.put("note",Notes[i]);
             arrayListDrink.add(hashMap);//add the hashmap into arrayList
         }
+        EnleverTri();
         refreshDrinkList();
     }
 
@@ -463,14 +482,15 @@ public class MainActivity extends AppCompatActivity {
         cartLVIEW.setAdapter(simpleAdapter);//sets the adapter for listView
     }
 
+    @Deprecated
     void selectFirstCartItem()
     {
         if(arrayListCart.size()>0)
         {
-            int defaultPositon = 0;
+            int defaultPosition = 0;
             int justIgnoreId = 0;
-            cartLVIEW.setItemChecked(defaultPositon, true);
-            cartLVIEW.performItemClick(cartLVIEW.getSelectedView(), defaultPositon, justIgnoreId);
+            cartLVIEW.setItemChecked(defaultPosition, true);
+            cartLVIEW.performItemClick(cartLVIEW.getSelectedView(),defaultPosition, justIgnoreId);
         }
     }
 
@@ -493,7 +513,6 @@ public class MainActivity extends AppCompatActivity {
 
     void TrierEtoileHaut()
     {
-        drinkListCopie=arrayListDrink;
         Collections.sort(arrayListDrink, new Comparator<HashMap<String,String>>()
         {
             public int compare(HashMap<String,String> o1,
@@ -518,7 +537,6 @@ public class MainActivity extends AppCompatActivity {
 
     void TrierEtoileBas()
     {
-        drinkListCopie=arrayListDrink;
         Collections.sort(arrayListDrink, new Comparator<HashMap<String,String>>()
         {
             public int compare(HashMap<String,String> o1,
@@ -537,18 +555,19 @@ public class MainActivity extends AppCompatActivity {
                 return 0;
             }
         });
-
         refreshDrinkList();
     }
 
     void EnleverTri()
     {
-        if(drinkListCopie!=null)
+        Collections.sort(arrayListDrink, new Comparator<HashMap<String,String>>()
         {
-            arrayListDrink=drinkListCopie;
-            drinkListCopie=null;
-
-            refreshDrinkList();
-        }
+            public int compare(HashMap<String,String> o1,
+                               HashMap<String,String> o2)
+            {
+                return o1.get("nom").compareTo(o2.get("nom"));
+            }
+        });
+        refreshDrinkList();
     }
 }
