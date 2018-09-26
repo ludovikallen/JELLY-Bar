@@ -9,7 +9,7 @@
 
 
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/list_LYT"
+        android:id="@+id/listDrink_LYT"
         android:layout_width="584dip"
         android:layout_height="677dp"
         android:layout_marginBottom="8dp"
@@ -24,8 +24,26 @@
         app:layout_constraintTop_toTopOf="@+id/backgroundTitle_TView"
         app:layout_constraintVertical_bias="0.86">
 
+        <Button
+            android:id="@+id/triNote_BTN"
+            android:layout_width="59dp"
+            android:layout_height="55dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="~"
+            android:textSize="30sp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@+id/cart_LYT"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/cart_LYT"
+            app:layout_constraintVertical_bias="0.0" />
+
         <ListView
-            android:id="@+id/drinking_LVIEW"
+            android:id="@+id/drink_LVIEW"
             android:layout_width="592dp"
             android:layout_height="593dp"
             android:layout_alignParentTop="true"
@@ -42,12 +60,62 @@
             app:layout_constraintVertical_bias="0.86" />
 
         <TextView
-            android:id="@+id/labeldrinking_TXT"
+            android:id="@+id/labeldrink_TXT"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="612dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
+            android:text="@string/drinks_str"
+            android:textColor="@color/black"
+            android:textSize="36sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent" />
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/listIng_LYT"
+        android:layout_width="584dip"
+        android:layout_height="677dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/backgroundFooter_TView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/backgroundTitle_TView"
+        app:layout_constraintVertical_bias="0.86">
+
+        <ListView
+            android:id="@+id/ing_LVIEW"
+            android:layout_width="592dp"
+            android:layout_height="593dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:divider="#000"
+            android:dividerHeight="2dp"
+            android:listSelector="@color/colorAccent"
+            android:paddingLeft="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.86" />
+
+        <TextView
+            android:id="@+id/labeling_TXT"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="612dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:text="@string/ingredients_str"
             android:textColor="@color/black"
             android:textSize="36sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -167,7 +235,7 @@
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/cart_LYT"
-            app:layout_constraintVertical_bias="0.004"
+            app:layout_constraintVertical_bias="0.0"
             app:srcCompat="@drawable/trashcan" />
 
     </android.support.constraint.ConstraintLayout>
@@ -231,7 +299,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:background="@color/grey"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/backgroundFooter_TView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
