@@ -45,7 +45,6 @@ namespace Bras_Robot
                 System.Threading.Thread.Sleep(100);
                 Connexion();
                 Connected = true;
-                SetSpeed(Speed);
             });
         }
 
@@ -57,21 +56,26 @@ namespace Bras_Robot
         private int PosY { get; set; }
         private int PosZ { get; set; }
         public bool Connected { get; private set; }
-
+        private int nbCup { get; set; } = 0;
         Position[] Bouteilles = new Position[6]
         {
-            new Position(0,-300, -365),
-            new Position(-110,-300, -365),
-            new Position(-220,-300, -365),
-            new Position(-330,-300, -365),
-            new Position(-440,-300, -375),
-            new Position(-550,-300, -375),
+            new Position(130, -200, -365),
+            new Position(70, -290, -365),
+            new Position(-10, -350, -365),
+            new Position(-100,-400,-365),
+            new Position(-205,-400,-365),
+            new Position(-305,-400,-365)
         };
+
+        private Position RedCupStackStation = new Position(-180, 360, -340);
+        private Position RedCupDrinkStation = new Position(25, 0, -400);
+        private Position DONNEMOILECUP = new Position(200, 0, -100);
+        private Position RedCupFin = new Position(100, 200, -425);
+
         private Position LazyPrendreBouteille = new Position(100, 200, -365);
-        private Position CreateStation = new Position(-10, 80, -220);
+        private Position CreateStation = new Position(10, 100, -220);
         private SerialPort serialPort;
-        private bool Record { get; set; } = false;
-        public bool Calibration { get; private set; } = false;
+        public bool Calibration { get; set; } = false;
         private int Base { get; set; } = 0;
         private int Poignet { get; set; } = 0;
         private int Epaule { get; set; } = 0;
@@ -79,7 +83,7 @@ namespace Bras_Robot
         private int Coude { get; set; } = 0;
         private bool Pince { get; set; } = false;
         private string Command { get; set; } = "";
-        private int Speed { get; set; } = 100;
+        private int Speed { get; set; } = 10;
         #endregion
 
         #region general robot fonctions
@@ -113,8 +117,6 @@ namespace Bras_Robot
         }
         public void GoToStart()
         {
-            if (Calibration)
-                return;
             serialPort.Write("MOVE START\r");
             System.Threading.Thread.Sleep(200);
             SetPosToStart();
@@ -127,16 +129,6 @@ namespace Bras_Robot
             PosY = 0;
             PosZ = 0;
         }
-        public void Recording()
-        {
-            if (Record)
-                Record = false;
-            else
-            {
-                Record = true;
-                Command = "";
-            }
-        }
         public void ManuelCommand(String command)
         {
             if (!Calibration)
@@ -145,15 +137,12 @@ namespace Bras_Robot
             System.Threading.Thread.Sleep(200);
         }
         public bool EnMarche() => task.IsCompleted;
+        public int AjouterCup(int ajout) => nbCup += ajout;
         public void DeplacerBase(int val)
         {
             if (!Calibration)
                 return;
             Base += val;
-            if (Record)
-            {
-                Command = Command + "JOINT 1, " + val.ToString() + "\r\n";
-            }
             serialPort.Write("JOINT 1, " + val.ToString() + "\r");
             System.Threading.Thread.Sleep(200);
         }
@@ -162,10 +151,6 @@ namespace Bras_Robot
             if (!Calibration)
                 return;
             Poignet += val;
-            if (Record)
-            {
-                Command = Command + "JOINT 4, " + val.ToString() + "\r\n";
-            }
             serialPort.Write("JOINT 4, " + val.ToString() + "\r");
             System.Threading.Thread.Sleep(200);
         }
@@ -174,10 +159,6 @@ namespace Bras_Robot
             if (!Calibration)
                 return;
             Epaule += val;
-            if (Record)
-            {
-                Command = Command + "JOINT 2, " + val.ToString() + "\r\n";
-            }
             serialPort.Write("JOINT 2, " + val.ToString() + "\r");
             System.Threading.Thread.Sleep(200);
         }
@@ -186,10 +167,12 @@ namespace Bras_Robot
             if (!Calibration)
                 return;
             Main += val;
-            if (Record)
-            {
-                Command = Command + "JOINT 5, " + val.ToString() + "\r\n";
-            }
+            serialPort.Write("JOINT 5, " + val.ToString() + "\r");
+            System.Threading.Thread.Sleep(200);
+        }
+        private void DeplacerMainPriv(int val)
+        {
+            Main += val;
             serialPort.Write("JOINT 5, " + val.ToString() + "\r");
             System.Threading.Thread.Sleep(200);
         }
@@ -198,32 +181,20 @@ namespace Bras_Robot
             if (!Calibration)
                 return;
             Coude += val;
-            if (Record)
-            {
-                Command = Command + "JOINT 3, " + val.ToString() + "\r\n";
-            }
             serialPort.Write("JOINT 3, " + val.ToString() + "\r");
             System.Threading.Thread.Sleep(200);
         }
         public void OuvrirPince(int val)
         {
-            if (!Calibration)
+            if (Calibration)
                 return;
-            if (Record)
-            {
-                Command = Command + "OPEN " + val.ToString() + "\r\n";
-            }
             serialPort.Write("OPEN " + val.ToString() + "\r");
             System.Threading.Thread.Sleep(200);
         }
         public void FermerPince(int val)
         {
-            if (!Calibration)
+            if (Calibration)
                 return;
-            if (Record)
-            {
-                Command = Command + "CLOSE " + val.ToString() + "\r\n";
-            }
             serialPort.Write("CLOSE " + val.ToString() + "\r");
             System.Threading.Thread.Sleep(200);
         }
@@ -233,10 +204,6 @@ namespace Bras_Robot
                 return;
             serialPort.Write("HOME\r");
             System.Threading.Thread.Sleep(100);
-            if (Record)
-            {
-                Command = Command + "HOME\r\n";
-            }
         }
         public void Ready()
         {
@@ -244,10 +211,6 @@ namespace Bras_Robot
                 return;
             serialPort.Write("READY\r");
             System.Threading.Thread.Sleep(200);
-            if (Record)
-            {
-                Command = Command + "READY\r\n";
-            }
         }
         public void Halt()
         {
@@ -255,19 +218,11 @@ namespace Bras_Robot
                 return;
             serialPort.Write("HALT\r");
             System.Threading.Thread.Sleep(200);
-            if (Record)
-            {
-                Command = Command + "HALT\r\n";
-            }
         }
-        private void SetSpeed(decimal speed)
+        public void SetSpeed(decimal speed)
         {
             serialPort.Write("SPEED " + speed + "\r");
             System.Threading.Thread.Sleep(200);
-            if (Record)
-            {
-                Command = Command + "SPEED " + speed + "\r\n";
-            }
             Speed = (int)speed;
         }
         private void JOG(int x, int y, int z)
@@ -281,41 +236,50 @@ namespace Bras_Robot
             serialPort.Write("FINISH\r");
             System.Threading.Thread.Sleep(200);
         }
+        public void CALIBRE()
+        {
+            serialPort.Write("PASSWORD 255\r");
+            System.Threading.Thread.Sleep(1000);
+            serialPort.Write("@ZERO\r");
+            System.Threading.Thread.Sleep(1000);
+            serialPort.Write("MOTOR 2, -18000\r");
+            System.Threading.Thread.Sleep(1000);
+            serialPort.Write("@@CAL\r");
+            System.Threading.Thread.Sleep(1000);
+        }
         #endregion
 
         #region Barman fonction
-        private void VersPosition(ref Position pos)
-        {
-            JOG(pos.X - PosX, pos.Y - PosY, pos.Z - PosZ);
-        }
+        public void VersPosition(ref Position pos) => JOG(pos.X - PosX, pos.Y - PosY, pos.Z - PosZ);
         private void VerserBouteille(ref (Position pos, int nbShots) pos)
         {
-            SetSpeed(50);
+            SetSpeed(100);
             //------Prendre bouteille------//
             JOG(0, 0, 0); // wait
             OuvrirPince(100);
             System.Threading.Thread.Sleep(1000);
             JOG(pos.pos.X - PosX, pos.pos.Y - PosY, (pos.pos.Z - PosZ) + 280);
+            SetSpeed(75);
             JOG(pos.pos.X - PosX, pos.pos.Y - PosY, pos.pos.Z - PosZ);
 
             JOG(0, 0, 0); // wait
             FermerPince(100);
-            System.Threading.Thread.Sleep(5000);
-
+            System.Threading.Thread.Sleep(2000);
             //------Apporter le bouteille a la station de travail------//
             JOG(0, 0, 280);
             JOG(CreateStation.X - PosX, CreateStation.Y - PosY, 0);
             JOG(0, 0, CreateStation.Z - PosZ);
             JOG(0, 0, 0);
             //------Verser------//
-            SetSpeed(25);
-            System.Threading.Thread.Sleep(3500);
+            System.Threading.Thread.Sleep(2000);
             for (int i = 0; i < pos.nbShots; ++i)
             {
-                DeplacerMain(130);
-                System.Threading.Thread.Sleep(2000);
-                DeplacerMain(-130);
-                System.Threading.Thread.Sleep(2000);
+                SetSpeed(7);
+                DeplacerMainPriv(130);
+                System.Threading.Thread.Sleep(7000);
+                SetSpeed(75);
+                DeplacerMainPriv(-130);
+                System.Threading.Thread.Sleep(500);
             }
             SetSpeed(50);
             //------Rapporter la bouteille a sa place d'origine------//
@@ -326,81 +290,46 @@ namespace Bras_Robot
 
             JOG(0, 0, 0); // wait
             OuvrirPince(50);
-            System.Threading.Thread.Sleep(7000);
+            System.Threading.Thread.Sleep(5000);
             JOG(pos.pos.X - PosX, pos.pos.Y - PosY, (pos.pos.Z - PosZ) + 280);
             JOG(0, 0, 0);
         }
-        // TODO bcp de fine tunning
-        private void PlacerBouteille(ref (Position pos, int nbShots) pos)
-        {
-            //------Prendre bouteille------//
-
-            JOG(0, 0, 0); // wait
-            OuvrirPince(100);
-            System.Threading.Thread.Sleep(1000);
-            JOG(LazyPrendreBouteille.X - PosX, LazyPrendreBouteille.Y - PosY, (LazyPrendreBouteille.Z - PosZ) + 300);
-            JOG(LazyPrendreBouteille.X - PosX, LazyPrendreBouteille.Y - PosY, LazyPrendreBouteille.Z - PosZ);
-            System.Threading.Thread.Sleep(5000);
-            JOG(0, 0, 0); // wait
-            FermerPince(100);
-            System.Threading.Thread.Sleep(1000);
-
-            //------Apporter le bouteille a la station de travail------//
-            JOG(0, 0, 300);
-            JOG(CreateStation.X, CreateStation.Y, 300);
-            VersPosition(ref CreateStation);
-            JOG(0, 0, 0);
-            //------Rapporter la bouteille a sa place d'origine------//
-
-            JOG(pos.pos.X - PosX, pos.pos.Y - PosY, (pos.pos.Z - PosZ) + 300);
-            JOG(pos.pos.X - PosX, pos.pos.Y - PosY, pos.pos.Z - PosZ + 10);
-
-            JOG(0, 0, 0); // wait
-            OuvrirPince(100);
-            System.Threading.Thread.Sleep(3000);
-            JOG(pos.pos.X - PosX, pos.pos.Y - PosY, (pos.pos.Z - PosZ) + 300);
-            JOG(0, 0, 0);
-        }
-
-        private Position RedCupStackStation = new Position(-200, 350, -420);
-        private Position RedCupDrinkStation = new Position(0, 0, -395);
-        private Position DONNEMOILECUP = new Position(200, 0, -100);
-        private Position RedCupFin = new Position(100, 200, -425);
 
         private void PickUpCup(ref Position cup)
         {
             OuvrirPince(100);
-            SetSpeed(25);
-            Position RedCupHauteur = new Position(cup.X, cup.Y, cup.Z + 100);
-
+            SetSpeed(100);
+            Position RedCupHauteur = new Position(cup.X, cup.Y, cup.Z + 120);
             VersPosition(ref RedCupHauteur);
+            SetSpeed(25);
             VersPosition(ref cup);
 
             JOG(0, 0, 0); // wait
             FermerPince(15);
-            System.Threading.Thread.Sleep(10000);
+            System.Threading.Thread.Sleep(8000);
+            VersPosition(ref RedCupHauteur);
+            System.Threading.Thread.Sleep(2000);
 
             SetSpeed(50);
         }
         private void DropCup(ref Position cup)
         {
-            GoToStart();
-            Position cuptemp = new Position(cup.X, cup.Y, cup.Z + 20);
+            //GoToStart();
+            Position cuptemp = new Position(cup.X, cup.Y, PosZ);
+            VersPosition(ref cuptemp);
+            cuptemp = new Position(PosX, PosY, cup.Z);
             VersPosition(ref cuptemp);
             VersPosition(ref cup);
-            JOG(0, 0, 0);
+            JOG(0, 0, 0); // wait
             OuvrirPince(100);
-            System.Threading.Thread.Sleep(4000);
-            Position RedCupFinHauteur = new Position(cup.X, cup.Y, cup.Z + 100);
+            System.Threading.Thread.Sleep(3000);
+            Position RedCupFinHauteur = new Position(cup.X, cup.Y, cup.Z + 200);
             VersPosition(ref RedCupFinHauteur);
             GoToStart();
         }
         private void ServirCup()
         {
             PickUpCup(ref RedCupDrinkStation);
-            GoToStart();
-            //VersPosition(ref DONNEMOILECUP);
-            //System.Threading.Thread.Sleep(6000);
             DropCup(ref RedCupFin);
         }
         #endregion
@@ -411,7 +340,11 @@ namespace Bras_Robot
             return Task.Run(() =>
             {
                 GoToStart(); // Se met un position de debart
-                PickUpCup(ref RedCupStackStation); // Prend le cup dans la pile
+                Position cuptemp = new Position(RedCupStackStation.X, RedCupStackStation.Y, RedCupStackStation.Z + (nbCup * 4));
+                PickUpCup(ref cuptemp); // Prend le cup dans la pile
+                SetSpeed(75);
+                DeplacerMainPriv(-180);
+                --nbCup;
                 DropCup(ref RedCupDrinkStation); // Depose le cup dans la station de travail
                 foreach (var position in positions) // Verse les bouteille une par une
                 {
@@ -433,20 +366,18 @@ namespace Bras_Robot
 
         public List<(Position position, int nbShots)> Exemple = new List<(Position pos, int nbShots)>
         {
-            (new Position(0,-300, -375), 3),
-            (new Position(-220,-300, -375), 2)
+            (new Position(130,-200, -365), 1),
+            (new Position(70,-290, -365), 1),
+            (new Position(-10,-350, -365), 1),
+            (new Position(-100,-400, -365), 1),
+            (new Position(-205,-400, -365), 1),
+            (new Position(-305,-400, -365), 1)
+
         };
         public void TEST()
         {
-            /*
-            Task.Run(() =>
-            {
-                foreach (var b in Bouteilles)
-                {
-                    var a = (b, 1);
-                    PlacerBouteille(ref a);
-                }
-            });*/
+            Calibration = true;
+            //VersPosition(ref CreateStation);
         }
     }
 }
