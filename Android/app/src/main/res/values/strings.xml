@@ -2,7 +2,6 @@
     <string name="app_name">ProjetJELLY</string>
     <string name="options_str"><u>Options</u></string>
     <string name="drinks_str"><u>Drinks</u></string>
-    <string name="chosen_str"><u>Drink choisi</u></string>
     <string name="ingredients_str"><u>Ingrédients</u></string>
     <string name="cart_str"><u>Panier</u></string>
     <string name="infos_str"><u>À propos...</u></string>

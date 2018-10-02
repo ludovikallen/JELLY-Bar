@@ -2,6 +2,7 @@ package com.example.a201625221.projetjelly;
 
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.os.StrictMode;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,13 +18,22 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 
+import static android.media.CamcorderProfile.get;
+
 public class MainActivity extends AppCompatActivity {
 
+    ResultSet rst= null;
+    public static Connection conn_ = null;
     int toast_height=420;
     /**
      * Variables pour contenir les layouts pour pouvoir changer d'onglet dans l'application
@@ -73,8 +83,20 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        StrictMode.setThreadPolicy(new
+                StrictMode.ThreadPolicy.Builder()
+                .detectDiskReads()
+                .detectDiskWrites()
+                .detectNetwork()
+                .penaltyLog()
+                .build());
+        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+                .detectLeakedSqlLiteObjects()
+                .penaltyLog()
+                .penaltyDeath()
+                .build());
+        OracleConnexion();
 
-        Initialize();
     }
     /**
      * Appel de toutes les fonctions d'initialisation
@@ -86,7 +108,38 @@ public class MainActivity extends AppCompatActivity {
         setTouchListeners();
         setClickListeners();
     }
+    private void OracleConnexion(){
+        Thread t= new Thread() {
+            @Override
+            public void run() {
+                try
+                {
+                    Class.forName("oracle.jdbc.OracleDriver");
+                } catch (
+                        ClassNotFoundException e
+                        )
+                {
+                    Toast.makeText(MainActivity.this, "Driver manquant." +
+                            e.getMessage().toString(), Toast.LENGTH_LONG).show();
+                }
+                String jdbcURL = "jdbc:oracle:thin:@mercure.clg.qc.ca:1521:ORCL";
+                String user = "barman";
+                String passwd = "projet";
+                try
+                {
+                    conn_ = DriverManager.getConnection(jdbcURL,user,passwd);
+                    Initialize();
 
+                } catch (
+                        java.sql.SQLException se
+                        )
+                {
+                    Toast.makeText(MainActivity.this, "Connexion au serveur  impossible." + se.getMessage().toString(), Toast.LENGTH_LONG).show();
+                }
+            }
+        };
+        t.start();
+    }
     /**
      * Initialise les composantes globales utilisées plusieurs fois pour ne pas avoir à les rechercher dans les fonctions
      */
@@ -465,16 +518,59 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Vide puis rempli la liste des drinks disponibles à partir de la BD(Pour l'initialiser, puis la rafraîchir)
      */
-    void fillDrinksList()
+   void fillDrinksList()
     {
         arrayListDrink.clear();
-        for (int i=0;i<DrinkName.length;i++)
+        Statement stm1s;
+        Statement stm1;
+        ResultSet resultSet;
+        ResultSet setRecette;
+        int nombreRecette = 0;
+        String requeteNombreRecette = "select count(*) from recette";
+        try {
+            stm1s = conn_.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
+            setRecette = stm1s.executeQuery(requeteNombreRecette);
+            setRecette.next();
+            nombreRecette = setRecette.getInt(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        for (int i = 1; i <= nombreRecette; i++)
         {
-            HashMap<String,String> hashMap=new HashMap<>();//create a hashmap to store the data in key value pair
-            hashMap.put("nom",DrinkName[i]);
-            hashMap.put("desc",DrinksIngredients[i]+"");
-            hashMap.put("note",Notes[i]);
-            arrayListDrink.add(hashMap);//add the hashmap into arrayList
+            try {
+                String requeteDescription = "select recette.NOMRECETTE, NOMBOUTEILLE, INGREDIENTRECETTE.QTYSHOT,INGREDIENT.BOUTEILLEPRESENTE,INGREDIENT.QTYRESTANTE from INGREDIENT INNER JOIN INGREDIENTRECETTE ON INGREDIENT.CODEBOUTEILLE = INGREDIENTRECETTE.CODEBOUTEILLE INNER JOIN RECETTE ON INGREDIENTRECETTE.CODERECETTE = RECETTE.CODERECETTE WHERE RECETTE.CODERECETTE = " + i;
+
+                stm1 = conn_.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
+
+                resultSet = stm1.executeQuery(requeteDescription);
+                String nom = null;
+                String description = "";
+                boolean drinkPossible = true;
+                while(resultSet.next())
+                {
+
+                    nom = resultSet.getString(1);
+                    description += resultSet.getString(3) +" oz " + resultSet.getString(2) +", ";
+                    if (resultSet.getString(4).equals("0") || resultSet.getInt(5) == 0)
+                    {
+                        drinkPossible = false;
+                    }
+                }
+                if (!description.trim().equals("")){
+                    description = description.substring(0, description.length() - 2);
+                }
+                HashMap<String,String> hashMap=new HashMap<>();//create a hashmap to store the data in key value pair
+
+                hashMap.put("nom", nom);
+                hashMap.put("desc",description);
+                if (drinkPossible)
+                {
+                    arrayListDrink.add(hashMap);//add the hashmap into arrayList
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         EnleverTri();
         refreshDrinkList();
@@ -494,15 +590,36 @@ public class MainActivity extends AppCompatActivity {
      */
     void fillIngList()
     {
-        arrayListIng.clear();
-        for (int i=0;i<IngName.length;i++)
-        {
-            HashMap<String,String> hashMap=new HashMap<>();//create a hashmap to store the data in key value pair
-            hashMap.put("nom",IngName[i]);
+        /*arrayListIng.clear();
+        for (String aIngName : IngName) {
+            HashMap<String, String> hashMap = new HashMap<>();//create a hashmap to store the data in key value pair
+            hashMap.put("nom", aIngName);
             //hashMap.put("desc",Ingredients[i]+"");
             //hashMap.put("note",Notes[i]);
             arrayListIng.add(hashMap);//add the hashmap into arrayList
+        }*/
+        arrayListIng.clear();
+        Statement stm1;
+        ResultSet resultSet;
+        String sql="select NOMBOUTEILLE,DESCRIPTIONS from INGREDIENT";
+        try {
+            stm1 = conn_.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
+
+            resultSet = stm1.executeQuery(sql);
+            while(resultSet.next())
+            {
+                HashMap<String,String> hashMap=new HashMap<>();//create a hashmap to store the data in key value pair
+
+                hashMap.put("nom",resultSet.getString(1));
+                hashMap.put("desc",resultSet.getString(2));
+                arrayListIng.add(hashMap);//add the hashmap into arrayList
+            }
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+
         Collections.sort(arrayListIng, new Comparator<HashMap<String,String>>()
         {
             public int compare(HashMap<String,String> o1,
@@ -517,7 +634,7 @@ public class MainActivity extends AppCompatActivity {
     void refreshIngList()
     {
         SimpleAdapter simpleAdapter=new SimpleAdapter(this,arrayListIng,R.layout.custom_list_ing,from,to);
-        listIngLVIEW.setAdapter(simpleAdapter);//sets the adapter for listView
+        //listIngLVIEW.setAdapter(simpleAdapter);//sets the adapter for listView
     }
 
     /**
@@ -543,16 +660,12 @@ public class MainActivity extends AppCompatActivity {
 
     void Commander() {
 
-<<<<<<< Updated upstream
-
-=======
         int list = arrayListCart.size();
         for (int i = 0; i < list ; i++)
         {
             String  line = String.valueOf(arrayListCart.get(i));
             System.out.println(line);
         }
->>>>>>> Stashed changes
         DemanderNote();
         arrayListCart.clear();
         selectedCartPositions.clear();
@@ -633,7 +746,7 @@ public class MainActivity extends AppCompatActivity {
                 return 0;
             }
         });
-        refreshDrinkList();
+       refreshDrinkList();
     }
 
     void EnleverTri()
@@ -651,9 +764,9 @@ public class MainActivity extends AppCompatActivity {
 
     void refreshCartItemCount()
     {
-        final TextView itemCountTXT=findViewById(R.id.cartItemsCount_TXT);
+      //  final TextView itemCountTXT=findViewById(R.id.cartItemsCount_TXT);
 
-        itemCountTXT.setText(Integer.toString(arrayListCart.size()));
+       // itemCountTXT.setText(Integer.toString(arrayListCart.size()));
     }
 
     void faireToast(String message)
