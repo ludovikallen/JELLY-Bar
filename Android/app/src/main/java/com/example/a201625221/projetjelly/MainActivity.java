@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -23,7 +24,7 @@ import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
-
+    int toast_height=420;
     /**
      * Variables pour contenir les layouts pour pouvoir changer d'onglet dans l'application
      */
@@ -32,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Variables pour contenir les boutons pour pouvoir changer d'onglet dans l'application
      */
-    Button drinkBTN,ingBTN,cartBTN,optionsBTN;
+    Button drinkBTN,cartBTN,optionsBTN,infoBTN;
 
     /**
      * Variables permettant d'afficher dans la ListView les éléments des ArrayList<HashMap<String,String>> en passant par l'adapter
@@ -64,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
     String[] Notes={"1.9","2.8","5.7","3","2","1"};
 
 
-    int compteurItemCourant;
+    Integer note=0;
     /**
      * Fonction lancée à la création de l'activité
      */
@@ -99,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
         notesLYT=findViewById(R.id.notes_LYT);
 
         drinkBTN=findViewById(R.id.drinklist_BTN);
-        ingBTN=findViewById(R.id.inglist_BTN);
+        infoBTN=findViewById(R.id.infos_BTN);
         cartBTN=findViewById(R.id.cart_BTN);
         optionsBTN=findViewById(R.id.options_BTN);
 
@@ -116,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
         fillDrinksList();
         fillIngList();
         fillCartList();
+        refreshCartItemCount();
     }
 
     /**
@@ -124,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
     void setTouchListeners()
     {
         final ImageButton trashBTN=findViewById(R.id.trash_IMGBTN);
+        final ImageButton commandBTN=findViewById(R.id.command_IMGBTN);
         final TextView noteExitBTN=findViewById(R.id.exitNoteBTN);
 
         drinkBTN.setOnTouchListener(new View.OnTouchListener() {
@@ -134,10 +137,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ingBTN.setOnTouchListener(new View.OnTouchListener() {
+        infoBTN.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
-                ingBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.grey)));
-                ingBTN.setBackgroundResource(R.drawable.iconmix);
+                infoBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.grey)));
+                infoBTN.setBackgroundResource(R.drawable.iconinfo);
                 return false;
             }
         });
@@ -171,6 +174,12 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+        commandBTN.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                commandBTN.setBackgroundColor(getResources().getColor(R.color.grey));
+                return false;
+            }
+        });
     }
 
     /**
@@ -179,51 +188,29 @@ public class MainActivity extends AppCompatActivity {
     void setClickListeners()
     {
         final ImageButton trashBTN=findViewById(R.id.trash_IMGBTN);
+        final ImageButton commandBTN=findViewById(R.id.command_IMGBTN);
         final TextView trashAllBTN=findViewById(R.id.trashall_BTN);
         final TextView noteExitBTN=findViewById(R.id.exitNoteBTN);
+        final TextView noteSendBTN=findViewById(R.id.sendNote_BTN);
         final TextView triNoteBTN=findViewById(R.id.triNote_BTN);
+        final ImageButton etoile1= findViewById(R.id.star1_IMGBTN);
+        final ImageButton etoile2= findViewById(R.id.star2_IMGBTN);
+        final ImageButton etoile3= findViewById(R.id.star3_IMGBTN);
+        final ImageButton etoile4= findViewById(R.id.star4_IMGBTN);
+        final ImageButton etoile5= findViewById(R.id.star5_IMGBTN);
 
         drinkBTN.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 drinkBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
                 drinkBTN.setBackgroundResource(R.drawable.icondrink);
 
-                if(listDrinkLYT.getVisibility()!=View.VISIBLE) {
-                    listDrinkLYT.setVisibility(View.VISIBLE);
-                    infosLYT.setVisibility(View.INVISIBLE);
-                }
-                else
-                {
-                    listDrinkLYT.setVisibility(View.INVISIBLE);
-                    infosLYT.setVisibility(View.VISIBLE);
-                }
+                listDrinkLYT.setVisibility(View.VISIBLE);
                 listIngLYT.setVisibility(View.INVISIBLE);
                 optionsLYT.setVisibility(View.INVISIBLE);
                 cartLYT.setVisibility(View.INVISIBLE);
+                infosLYT.setVisibility(View.INVISIBLE);
 
                 fillDrinksList();
-            }
-        });
-
-        ingBTN.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                ingBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
-                ingBTN.setBackgroundResource(R.drawable.iconmix);
-
-                if(listIngLYT.getVisibility()!=View.VISIBLE) {
-                    listIngLYT.setVisibility(View.VISIBLE);
-                    infosLYT.setVisibility(View.INVISIBLE);
-                }
-                else
-                {
-                    listIngLYT.setVisibility(View.INVISIBLE);
-                    infosLYT.setVisibility(View.VISIBLE);
-                }
-                listDrinkLYT.setVisibility(View.INVISIBLE);
-                optionsLYT.setVisibility(View.INVISIBLE);
-                cartLYT.setVisibility(View.INVISIBLE);
-
-                fillIngList();
             }
         });
 
@@ -232,19 +219,11 @@ public class MainActivity extends AppCompatActivity {
                 cartBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
                 cartBTN.setBackgroundResource(R.drawable.iconcart);
 
-                if(cartLYT.getVisibility()!=View.VISIBLE) {
-                    cartLYT.setVisibility(View.VISIBLE);
-                    selectFirstCartItem();
-                }
-                else
-                {
-                    cartLYT.setVisibility(View.INVISIBLE);
-                    infosLYT.setVisibility(View.VISIBLE);
-                }
-                infosLYT.setVisibility(View.INVISIBLE);
                 listDrinkLYT.setVisibility(View.INVISIBLE);
                 listIngLYT.setVisibility(View.INVISIBLE);
                 optionsLYT.setVisibility(View.INVISIBLE);
+                cartLYT.setVisibility(View.VISIBLE);
+                infosLYT.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -253,19 +232,24 @@ public class MainActivity extends AppCompatActivity {
                 optionsBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
                 optionsBTN.setBackgroundResource(R.drawable.iconoptions);
 
-                if(optionsLYT.getVisibility()!=View.VISIBLE) {
-                    optionsLYT.setVisibility(View.VISIBLE);
-                    infosLYT.setVisibility(View.INVISIBLE);
-
-                }
-                else
-                {
-                    optionsLYT.setVisibility(View.INVISIBLE);
-                    infosLYT.setVisibility(View.VISIBLE);
-                }
                 listDrinkLYT.setVisibility(View.INVISIBLE);
                 listIngLYT.setVisibility(View.INVISIBLE);
+                optionsLYT.setVisibility(View.VISIBLE);
                 cartLYT.setVisibility(View.INVISIBLE);
+                infosLYT.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        infoBTN.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                infoBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
+                infoBTN.setBackgroundResource(R.drawable.iconinfo);
+
+                listDrinkLYT.setVisibility(View.INVISIBLE);
+                listIngLYT.setVisibility(View.INVISIBLE);
+                optionsLYT.setVisibility(View.INVISIBLE);
+                cartLYT.setVisibility(View.INVISIBLE);
+                infosLYT.setVisibility(View.VISIBLE);
             }
         });
 
@@ -277,12 +261,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        commandBTN.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                commandBTN.setBackgroundColor(getResources().getColor(R.color.white));
+                Commander();
+            }
+        });
+
         trashAllBTN.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 selectedCartPositions.clear();
                 arrayListCart.clear();
                 fillCartList();
                 trashBTN.setVisibility(View.INVISIBLE);
+                refreshCartItemCount();
             }
         });
 
@@ -290,6 +282,12 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 noteExitBTN.setBackgroundColor(getResources().getColor(R.color.grey));
                 AnnulerNote();
+            }
+        });
+
+        noteSendBTN.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                EnvoyerNote();
             }
         });
 
@@ -302,14 +300,69 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else if(triNoteBTN.getText().equals("▲"))
                 {
-                    triNoteBTN.setText("~");
+                    triNoteBTN.setText("A-B");
                     EnleverTri();
                 }
-                else if(triNoteBTN.getText().equals("~"))
+                else if(triNoteBTN.getText().equals("A-B"))
                 {
                     triNoteBTN.setText("▼");
                     TrierEtoileBas();
                 }
+            }
+        });
+
+        etoile1.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                etoile1.setImageDrawable(getResources().getDrawable(R.drawable.star_active));
+                etoile2.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
+                etoile3.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
+                etoile4.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
+                etoile5.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
+                note=1;
+            }
+        });
+
+        etoile2.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                etoile1.setImageDrawable(getResources().getDrawable(R.drawable.star_active));
+                etoile2.setImageDrawable(getResources().getDrawable(R.drawable.star_active));
+                etoile3.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
+                etoile4.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
+                etoile5.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
+                note=2;
+            }
+        });
+
+        etoile3.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                etoile1.setImageDrawable(getResources().getDrawable(R.drawable.star_active));
+                etoile2.setImageDrawable(getResources().getDrawable(R.drawable.star_active));
+                etoile3.setImageDrawable(getResources().getDrawable(R.drawable.star_active));
+                etoile4.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
+                etoile5.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
+                note=3;
+            }
+        });
+
+        etoile4.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                etoile1.setImageDrawable(getResources().getDrawable(R.drawable.star_active));
+                etoile2.setImageDrawable(getResources().getDrawable(R.drawable.star_active));
+                etoile3.setImageDrawable(getResources().getDrawable(R.drawable.star_active));
+                etoile4.setImageDrawable(getResources().getDrawable(R.drawable.star_active));
+                etoile5.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
+                note=4;
+            }
+        });
+
+        etoile5.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                etoile1.setImageDrawable(getResources().getDrawable(R.drawable.star_active));
+                etoile2.setImageDrawable(getResources().getDrawable(R.drawable.star_active));
+                etoile3.setImageDrawable(getResources().getDrawable(R.drawable.star_active));
+                etoile4.setImageDrawable(getResources().getDrawable(R.drawable.star_active));
+                etoile5.setImageDrawable(getResources().getDrawable(R.drawable.star_active));
+                note=5;
             }
         });
 
@@ -321,10 +374,7 @@ public class MainActivity extends AppCompatActivity {
                                     long id) {
 
                 HashMap<String, String> item = ( HashMap<String, String>)adapterView.getItemAtPosition(position);
-                Toast toast = Toast.makeText(getApplicationContext(),
-                        "x1 " + item.values().toArray()[1] + " ajouté au panier", Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.CENTER, 0, 500);
-                toast.show();
+                faireToast("x1 " + item.values().toArray()[1] + " ajouté au panier");
 
                 AjouterPanier(item);
             }
@@ -337,10 +387,7 @@ public class MainActivity extends AppCompatActivity {
                                     long id) {
 
                 HashMap<String, String> item = ( HashMap<String, String>)adapterView.getItemAtPosition(position);
-                Toast toast = Toast.makeText(getApplicationContext(),
-                        "x1 " + item.values().toArray()[0] + " ajouté au panier", Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.CENTER, 0, 500);
-                toast.show();
+                faireToast("x1 " + item.values().toArray()[0] + " ajouté au panier");
 
                 AjouterPanier(item);
             }
@@ -381,6 +428,7 @@ public class MainActivity extends AppCompatActivity {
     {
         arrayListCart.add(ajout);
         fillCartList();
+        refreshCartItemCount();
     }
 
     /**
@@ -392,15 +440,12 @@ public class MainActivity extends AppCompatActivity {
         if(retrait!=null) {
             arrayListCart.remove(retrait);
             fillCartList();
-            Toast toast = Toast.makeText(getApplicationContext(),
-                    "x1 " + retrait.values().toArray()[0] + " retiré du panier", Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.CENTER, 0, 350);
-            toast.show();
+            faireToast("x1 " + retrait.values().toArray()[0] + " retiré du panier");
         }
     }
 
     /**
-     * Supprime l'élément courant selectionné du panier
+     * Supprime les éléments courants selectionnés du panier
      */
     void RetirerPanier()
     {
@@ -412,10 +457,9 @@ public class MainActivity extends AppCompatActivity {
         while(arrayListCart.remove(null));
         selectedCartPositions.clear();
         fillCartList();
-        Toast toast = Toast.makeText(getApplicationContext(),
-                "x " + compteurItems + " items retiré du panier", Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.CENTER, 0, 350);
-        toast.show();
+        faireToast("x " + compteurItems + " items retiré du panier");
+
+        refreshCartItemCount();
     }
 
     /**
@@ -434,6 +478,9 @@ public class MainActivity extends AppCompatActivity {
         }
         EnleverTri();
         refreshDrinkList();
+
+        final TextView triNoteBTN=findViewById(R.id.triNote_BTN);
+        triNoteBTN.setText("A-B");
     }
 
     void refreshDrinkList()
@@ -496,19 +543,41 @@ public class MainActivity extends AppCompatActivity {
 
     void Commander() {
 
+
+        DemanderNote();
+        arrayListCart.clear();
+        selectedCartPositions.clear();
+        fillCartList();
+    }
+
+    void DemanderNote()
+    {
+        notesLYT.setVisibility(View.VISIBLE);
     }
 
     void AnnulerNote() {
         notesLYT.setVisibility(View.INVISIBLE);
+        note=0;
+
+        final ImageButton etoile1= findViewById(R.id.star1_IMGBTN);
+        final ImageButton etoile2= findViewById(R.id.star2_IMGBTN);
+        final ImageButton etoile3= findViewById(R.id.star3_IMGBTN);
+        final ImageButton etoile4= findViewById(R.id.star4_IMGBTN);
+        final ImageButton etoile5= findViewById(R.id.star5_IMGBTN);
+        etoile1.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
+        etoile2.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
+        etoile3.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
+        etoile4.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
+        etoile5.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
     }
 
     void EnvoyerNote() {
 
-        Toast toast = Toast.makeText(getApplicationContext(),
-                "Merci d'avoir noté!", Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.CENTER, 0, 500);
-        toast.show();
+
+
+        faireToast("Merci d'avoir noté: "+note);
         notesLYT.setVisibility(View.INVISIBLE);
+        note=0;
     }
 
     void TrierEtoileHaut()
@@ -569,5 +638,23 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         refreshDrinkList();
+    }
+
+    void refreshCartItemCount()
+    {
+        final TextView itemCountTXT=findViewById(R.id.cartItemsCount_TXT);
+
+        itemCountTXT.setText(Integer.toString(arrayListCart.size()));
+    }
+
+    void faireToast(String message)
+    {
+        Toast toast = Toast.makeText(getApplicationContext(),
+                message, Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.CENTER, 0, toast_height);
+        View view = toast.getView();
+
+        view.setBackgroundColor(getResources().getColor(R.color.yellow));
+        toast.show();
     }
 }
