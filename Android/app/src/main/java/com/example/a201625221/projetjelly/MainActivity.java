@@ -543,7 +543,16 @@ public class MainActivity extends AppCompatActivity {
 
     void Commander() {
 
+<<<<<<< Updated upstream
 
+=======
+        int list = arrayListCart.size();
+        for (int i = 0; i < list ; i++)
+        {
+            String  line = String.valueOf(arrayListCart.get(i));
+            System.out.println(line);
+        }
+>>>>>>> Stashed changes
         DemanderNote();
         arrayListCart.clear();
         selectedCartPositions.clear();
