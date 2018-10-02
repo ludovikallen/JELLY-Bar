@@ -16,14 +16,24 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.os.StrictMode;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import static android.media.CamcorderProfile.get;
 
 public class MainActivity extends AppCompatActivity {
-
+    public static Connection conn_ = null;
     int toast_height=420;
     /**
      * Variables pour contenir les layouts pour pouvoir changer d'onglet dans l'application
@@ -74,8 +84,53 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Initialize();
+        StrictMode.setThreadPolicy(new
+                StrictMode.ThreadPolicy.Builder()
+                .detectDiskReads()
+                .detectDiskWrites()
+                .detectNetwork()
+                .penaltyLog()
+                .build());
+        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+                .detectLeakedSqlLiteObjects()
+                .penaltyLog()
+                .penaltyDeath()
+                .build());
+        OracleConnexion();
+
     }
+
+    private void OracleConnexion(){
+        Thread t= new Thread() {
+            @Override
+            public void run() {
+                try
+                {
+                    Class.forName("oracle.jdbc.OracleDriver");
+                }
+                catch (ClassNotFoundException e)
+                {
+                    Toast.makeText(MainActivity.this, "Driver manquant." +
+                            e.getMessage().toString(), Toast.LENGTH_LONG).show();
+                }
+                String jdbcURL = "jdbc:oracle:thin:@mercure.clg.qc.ca:1521:ORCL";
+                String user = "barman";
+                String passwd = "projet";
+                try
+                {
+                    conn_ = DriverManager.getConnection(jdbcURL,user,passwd);
+                    Initialize();
+
+                }
+                catch (java.sql.SQLException se)
+                {
+                    faireToast("Connexion au serveur  impossible." + se.getMessage());
+                }
+            }
+        };
+        t.start();
+    }
+
     /**
      * Appel de toutes les fonctions d'initialisation
      */
@@ -117,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
         fillDrinksList();
         fillIngList();
         fillCartList();
-        refreshCartItemCount();
+       // refreshCartItemCount();
     }
 
     /**
@@ -465,28 +520,69 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Vide puis rempli la liste des drinks disponibles à partir de la BD(Pour l'initialiser, puis la rafraîchir)
      */
-    void fillDrinksList()
-    {
+    void fillDrinksList() {
         arrayListDrink.clear();
-        for (int i=0;i<DrinkName.length;i++)
+        Statement stm1s;
+        Statement stm1;
+        ResultSet resultSet;
+        ResultSet setRecette;
+        int nombreRecette = 0;
+        String requeteNombreRecette = "select count(*) from recette";
+        try {
+            stm1s = conn_.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
+            setRecette = stm1s.executeQuery(requeteNombreRecette);
+            setRecette.next();
+            nombreRecette = setRecette.getInt(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        for (int i = 1; i <= nombreRecette; i++)
         {
-            HashMap<String,String> hashMap=new HashMap<>();//create a hashmap to store the data in key value pair
-            hashMap.put("nom",DrinkName[i]);
-            hashMap.put("desc",DrinksIngredients[i]+"");
-            hashMap.put("note",Notes[i]);
-            arrayListDrink.add(hashMap);//add the hashmap into arrayList
+            try {
+                String requeteDescription = "select recette.NOMRECETTE, NOMBOUTEILLE, INGREDIENTRECETTE.QTYSHOT,INGREDIENT.BOUTEILLEPRESENTE,INGREDIENT.QTYRESTANTE from INGREDIENT INNER JOIN INGREDIENTRECETTE ON INGREDIENT.CODEBOUTEILLE = INGREDIENTRECETTE.CODEBOUTEILLE INNER JOIN RECETTE ON INGREDIENTRECETTE.CODERECETTE = RECETTE.CODERECETTE WHERE RECETTE.CODERECETTE = " + i;
+
+                stm1 = conn_.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
+
+                resultSet = stm1.executeQuery(requeteDescription);
+                String nom = null;
+                String description = "";
+                boolean drinkPossible = true;
+                while(resultSet.next())
+                {
+
+                    nom = resultSet.getString(1);
+                    description += resultSet.getString(3) +" oz " + resultSet.getString(2) +", ";
+                    if (resultSet.getString(4).equals("0") || resultSet.getInt(5) == 0)
+                    {
+                        drinkPossible = false;
+                    }
+                }
+                if (!description.trim().equals("")){
+                    description = description.substring(0, description.length() - 2);
+                }
+                HashMap<String,String> hashMap=new HashMap<>();//create a hashmap to store the data in key value pair
+
+                hashMap.put("nom", nom);
+                hashMap.put("desc",description);
+                hashMap.put("note", "0");
+                if (drinkPossible)
+                {
+                    arrayListDrink.add(hashMap);//add the hashmap into arrayList
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         EnleverTri();
-        refreshDrinkList();
-
-        final TextView triNoteBTN=findViewById(R.id.triNote_BTN);
-        triNoteBTN.setText("A-B");
     }
 
     void refreshDrinkList()
     {
         SimpleAdapter simpleAdapter=new SimpleAdapter(this, arrayListDrink,R.layout.custom_list_drink,from,to);
         listDrinkLVIEW.setAdapter(simpleAdapter);//sets the adapter for listView
+        final TextView triNoteBTN=findViewById(R.id.triNote_BTN);
+        triNoteBTN.setText("A-B");
     }
 
     /**
@@ -495,23 +591,26 @@ public class MainActivity extends AppCompatActivity {
     void fillIngList()
     {
         arrayListIng.clear();
-        for (int i=0;i<IngName.length;i++)
-        {
-            HashMap<String,String> hashMap=new HashMap<>();//create a hashmap to store the data in key value pair
-            hashMap.put("nom",IngName[i]);
-            //hashMap.put("desc",Ingredients[i]+"");
-            //hashMap.put("note",Notes[i]);
-            arrayListIng.add(hashMap);//add the hashmap into arrayList
-        }
-        Collections.sort(arrayListIng, new Comparator<HashMap<String,String>>()
-        {
-            public int compare(HashMap<String,String> o1,
-                               HashMap<String,String> o2)
+        Statement stm1;
+        ResultSet resultSet;
+        String sql="select NOMBOUTEILLE,DESCRIPTIONS from INGREDIENT";
+        try {
+            stm1 = conn_.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
+
+            resultSet = stm1.executeQuery(sql);
+            while(resultSet.next())
             {
-                return o1.get("nom").compareTo(o2.get("nom"));
+                HashMap<String,String> hashMap=new HashMap<>();//create a hashmap to store the data in key value pair
+
+                hashMap.put("nom",resultSet.getString(1));
+                hashMap.put("desc",resultSet.getString(2));
+                arrayListIng.add(hashMap);//add the hashmap into arrayList
             }
-        });
-        refreshIngList();
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     void refreshIngList()
@@ -543,16 +642,12 @@ public class MainActivity extends AppCompatActivity {
 
     void Commander() {
 
-<<<<<<< Updated upstream
-
-=======
         int list = arrayListCart.size();
         for (int i = 0; i < list ; i++)
         {
             String  line = String.valueOf(arrayListCart.get(i));
             System.out.println(line);
         }
->>>>>>> Stashed changes
         DemanderNote();
         arrayListCart.clear();
         selectedCartPositions.clear();
@@ -596,17 +691,14 @@ public class MainActivity extends AppCompatActivity {
             public int compare(HashMap<String,String> o1,
                                HashMap<String,String> o2)
             {
-                float o1note=Float.valueOf(o1.get("note"));
-                float o2note=Float.valueOf(o2.get("note"));
-                if (o1note < o2note)
-                {
-                    return -1;
-                }
-                else if (o1note > o2note)
-                {
-                    return 1;
-                }
-                return 0;
+                    float o1note = Float.valueOf(o1.get("note"));
+                    float o2note = Float.valueOf(o2.get("note"));
+                    if (o1note < o2note) {
+                        return -1;
+                    } else if (o1note > o2note) {
+                        return 1;
+                    }
+                    return 0;
             }
         });
 
@@ -620,18 +712,15 @@ public class MainActivity extends AppCompatActivity {
             public int compare(HashMap<String,String> o1,
                                HashMap<String,String> o2)
             {
-                float o1note=Float.valueOf(o1.get("note"));
-                float o2note=Float.valueOf(o2.get("note"));
-                if (o1note < o2note)
-                {
-                    return 1;
+                    float o1note = Float.valueOf(o1.get("note"));
+                    float o2note = Float.valueOf(o2.get("note"));
+                    if (o1note < o2note) {
+                        return 1;
+                    } else if (o1note > o2note) {
+                        return -1;
+                    }
+                    return 0;
                 }
-                else if (o1note > o2note)
-                {
-                    return -1;
-                }
-                return 0;
-            }
         });
         refreshDrinkList();
     }
@@ -652,7 +741,6 @@ public class MainActivity extends AppCompatActivity {
     void refreshCartItemCount()
     {
         final TextView itemCountTXT=findViewById(R.id.cartItemsCount_TXT);
-
         itemCountTXT.setText(Integer.toString(arrayListCart.size()));
     }
 
