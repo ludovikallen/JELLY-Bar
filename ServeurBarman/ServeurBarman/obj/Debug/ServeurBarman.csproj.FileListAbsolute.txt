@@ -77,7 +77,6 @@ C:\Users\Mael\Desktop\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.csproj
 C:\Users\Mael\Desktop\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.exe
 C:\Users\Mael\Desktop\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.pdb
 C:\Users\Mael\Desktop\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.csprojAssemblyReference.cache
-C:\Users\201605878\Documents\ServeurBarman\ServeurBarman\bin\Debug\Bar.db
 C:\Users\201605878\Documents\ServeurBarman\ServeurBarman\bin\Debug\ServeurBarman.exe.config
 C:\Users\201605878\Documents\ServeurBarman\ServeurBarman\bin\Debug\ServeurBarman.exe
 C:\Users\201605878\Documents\ServeurBarman\ServeurBarman\bin\Debug\ServeurBarman.pdb
@@ -85,10 +84,7 @@ C:\Users\201605878\Documents\ServeurBarman\ServeurBarman\bin\Debug\Dapper.dll
 C:\Users\201605878\Documents\ServeurBarman\ServeurBarman\bin\Debug\MetroFramework.Design.dll
 C:\Users\201605878\Documents\ServeurBarman\ServeurBarman\bin\Debug\MetroFramework.dll
 C:\Users\201605878\Documents\ServeurBarman\ServeurBarman\bin\Debug\MetroFramework.Fonts.dll
-C:\Users\201605878\Documents\ServeurBarman\ServeurBarman\bin\Debug\System.Data.SQLite.dll
 C:\Users\201605878\Documents\ServeurBarman\ServeurBarman\bin\Debug\Dapper.xml
-C:\Users\201605878\Documents\ServeurBarman\ServeurBarman\bin\Debug\System.Data.SQLite.xml
-C:\Users\201605878\Documents\ServeurBarman\ServeurBarman\bin\Debug\System.Data.SQLite.dll.config
 C:\Users\201605878\Documents\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.csprojAssemblyReference.cache
 C:\Users\201605878\Documents\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.AddCups.resources
 C:\Users\201605878\Documents\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.Add_Drinks.resources
@@ -103,9 +99,32 @@ C:\Users\201605878\Documents\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman
 C:\Users\201605878\Documents\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.csproj.CopyComplete
 C:\Users\201605878\Documents\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.exe
 C:\Users\201605878\Documents\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.pdb
-C:\Users\201605878\Desktop\ServeurBarman\ServeurBarman\bin\Debug\Bar.db
 C:\Users\201605878\Desktop\ServeurBarman\ServeurBarman\bin\Debug\Dapper.dll
-C:\Users\201605878\Desktop\ServeurBarman\ServeurBarman\bin\Debug\System.Data.SQLite.dll
 C:\Users\201605878\Desktop\ServeurBarman\ServeurBarman\bin\Debug\Dapper.xml
-C:\Users\201605878\Desktop\ServeurBarman\ServeurBarman\bin\Debug\System.Data.SQLite.xml
-C:\Users\201605878\Desktop\ServeurBarman\ServeurBarman\bin\Debug\System.Data.SQLite.dll.config
+C:\Users\201605878\Desktop\ServeurBarman\ServeurBarman\bin\Debug\Oracle.ManagedDataAccess.dll
+C:\Users\201605878\Documents\ServeurBarman\ServeurBarman\bin\Debug\Oracle.ManagedDataAccess.dll
+C:\Users\201605878\Documents\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.DLG_Settings.resources
+C:\Users\201605878\Desktop\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.DLG_Settings.resources
+C:\Users\Sanogo Mael\Desktop\ServeurBarman\ServeurBarman\bin\Debug\ServeurBarman.exe.config
+C:\Users\Sanogo Mael\Desktop\ServeurBarman\ServeurBarman\bin\Debug\ServeurBarman.exe
+C:\Users\Sanogo Mael\Desktop\ServeurBarman\ServeurBarman\bin\Debug\ServeurBarman.pdb
+C:\Users\Sanogo Mael\Desktop\ServeurBarman\ServeurBarman\bin\Debug\Dapper.dll
+C:\Users\Sanogo Mael\Desktop\ServeurBarman\ServeurBarman\bin\Debug\MetroFramework.Design.dll
+C:\Users\Sanogo Mael\Desktop\ServeurBarman\ServeurBarman\bin\Debug\MetroFramework.dll
+C:\Users\Sanogo Mael\Desktop\ServeurBarman\ServeurBarman\bin\Debug\MetroFramework.Fonts.dll
+C:\Users\Sanogo Mael\Desktop\ServeurBarman\ServeurBarman\bin\Debug\Dapper.xml
+C:\Users\Sanogo Mael\Desktop\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.csprojAssemblyReference.cache
+C:\Users\Sanogo Mael\Desktop\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.AddCups.resources
+C:\Users\Sanogo Mael\Desktop\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.Add_Drinks.resources
+C:\Users\Sanogo Mael\Desktop\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.Developers.resources
+C:\Users\Sanogo Mael\Desktop\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.DLG_Settings.resources
+C:\Users\Sanogo Mael\Desktop\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.PageAccueil.resources
+C:\Users\Sanogo Mael\Desktop\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.PageConnexion.resources
+C:\Users\Sanogo Mael\Desktop\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.Properties.Resources.resources
+C:\Users\Sanogo Mael\Desktop\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.Setting.resources
+C:\Users\Sanogo Mael\Desktop\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.WelcomePage.resources
+C:\Users\Sanogo Mael\Desktop\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.csproj.GenerateResource.cache
+C:\Users\Sanogo Mael\Desktop\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.csproj.CoreCompileInputs.cache
+C:\Users\Sanogo Mael\Desktop\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.csproj.CopyComplete
+C:\Users\Sanogo Mael\Desktop\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.exe
+C:\Users\Sanogo Mael\Desktop\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.pdb
