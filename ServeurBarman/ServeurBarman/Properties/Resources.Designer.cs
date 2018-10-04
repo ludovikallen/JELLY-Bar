@@ -63,9 +63,59 @@ namespace ServeurBarman.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap _2000px_Go_home_svg {
+            get {
+                object obj = ResourceManager.GetObject("2000px-Go-home.svg", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap emergency {
             get {
                 object obj = ResourceManager.GetObject("emergency", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap if_go_home_118770 {
+            get {
+                object obj = ResourceManager.GetObject("if_go-home_118770", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap if_go_home_1187701 {
+            get {
+                object obj = ResourceManager.GetObject("if_go-home_1187701", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap if_setting_1814117 {
+            get {
+                object obj = ResourceManager.GetObject("if_setting_1814117", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap if_setting_18141171 {
+            get {
+                object obj = ResourceManager.GetObject("if_setting_18141171", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -96,6 +146,26 @@ namespace ServeurBarman.Properties {
         internal static System.Drawing.Bitmap point_vert {
             get {
                 object obj = ResourceManager.GetObject("point-vert", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap red_cup {
+            get {
+                object obj = ResourceManager.GetObject("red-cup", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Setting_icon {
+            get {
+                object obj = ResourceManager.GetObject("Setting-icon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

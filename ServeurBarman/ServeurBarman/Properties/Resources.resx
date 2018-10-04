@@ -118,16 +118,37 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="JELLY_Bar Logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\JELLY_Bar Logo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="2000px-Go-home.svg" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\2000px-Go-home.svg.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="point-rouge" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\point-rouge.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="point-vert" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\point-vert.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="red-cup" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\red-cup.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="if_go-home_118770" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\if_go-home_118770.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="JELLY_Bar Logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\JELLY_Bar Logo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Setting-icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Setting-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="emergency" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\emergency.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="if_go-home_1187701" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\if_go-home_118770.ico;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="if_setting_1814117" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\if_setting_1814117.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="point-vert" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\point-vert.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="if_setting_18141171" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\if_setting_1814117.ico;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
