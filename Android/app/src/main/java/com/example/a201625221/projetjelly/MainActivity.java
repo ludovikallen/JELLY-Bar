@@ -727,7 +727,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    void Commander() {
+  /*  void Commander() {
 
 
         if(arrayListCart.size()!=0) {
@@ -747,7 +747,35 @@ public class MainActivity extends AppCompatActivity {
 
             fillDrinksList();
         }
-    }
+    }*/
+  void Commander() {
+
+      int list = arrayListCart.size();
+      String Commandes[] = new String[0];
+      ArrayList<ArrayList<HashMap<Integer, String>>> ListeCommande= new ArrayList<>();
+      for (int i = 0; i < list ; i++)
+      {
+          boolean drinkRestant = true;
+          String line = String.valueOf(arrayListCart.get(i));
+          line = line.substring(line.indexOf("=")+1);
+          line = line.substring(line.indexOf("=")+1);
+          line = line.substring(0, line.length() - 1);
+          Commandes = line.split(",");
+          ListeCommande.add(new ArrayList<HashMap<Integer, String>>());
+          for (String Commande: Commandes) {
+              String ElementCommande[] = Commande.split("oz");
+              HashMap<Integer, String> Drink = new HashMap<Integer, String>();
+              Drink.put(Integer.valueOf(ElementCommande[0].trim()), ElementCommande[1].trim());
+              ListeCommande.get(i).add(Drink);
+          }
+
+      }
+
+      DemanderNote(arrayListCart.get(0).get("nom"));
+      arrayListCart.clear();
+      selectedCartPositions.clear();
+      fillCartList();
+  }
 
     void DemanderNote(String nomMix)
     {
