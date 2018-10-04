@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PageConnexion));
             this.TBX_User = new System.Windows.Forms.TextBox();
             this.TBX_Pwd = new System.Windows.Forms.TextBox();
             this.BTN_Logon = new System.Windows.Forms.Button();
@@ -44,7 +45,7 @@
             this.TBX_User.Name = "TBX_User";
             this.TBX_User.Size = new System.Drawing.Size(152, 27);
             this.TBX_User.TabIndex = 1;
-            this.TBX_User.Text = "usager";
+            this.TBX_User.Text = "barman";
             // 
             // TBX_Pwd
             // 
@@ -54,7 +55,8 @@
             this.TBX_Pwd.Name = "TBX_Pwd";
             this.TBX_Pwd.Size = new System.Drawing.Size(152, 27);
             this.TBX_Pwd.TabIndex = 1;
-            this.TBX_Pwd.Text = "mot de passe";
+            this.TBX_Pwd.Text = "projet";
+            this.TBX_Pwd.UseSystemPasswordChar = true;
             // 
             // BTN_Logon
             // 
@@ -65,6 +67,7 @@
             this.BTN_Logon.TabIndex = 2;
             this.BTN_Logon.Text = "Connexion";
             this.BTN_Logon.UseVisualStyleBackColor = true;
+            this.BTN_Logon.TextChanged += new System.EventHandler(this.BTN_Logon_TextChanged);
             this.BTN_Logon.Click += new System.EventHandler(this.BTN_Logon_Click);
             // 
             // label1
@@ -97,6 +100,7 @@
             this.Controls.Add(this.TBX_Pwd);
             this.Controls.Add(this.TBX_User);
             this.Controls.Add(this.pictureBox1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximumSize = new System.Drawing.Size(344, 450);
             this.MinimumSize = new System.Drawing.Size(344, 450);
             this.Name = "PageConnexion";

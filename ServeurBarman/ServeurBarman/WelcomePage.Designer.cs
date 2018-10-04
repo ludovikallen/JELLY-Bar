@@ -31,9 +31,11 @@
             this.label1 = new System.Windows.Forms.Label();
             this.TBX_NombreClient = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.TbxNombreBouteille = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.TbxNombreVerres = new System.Windows.Forms.TextBox();
+            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.metroLabel1 = new MetroFramework.Controls.MetroLabel();
             this.SuspendLayout();
             // 
             // label1
@@ -54,6 +56,7 @@
             this.TBX_NombreClient.Size = new System.Drawing.Size(64, 26);
             this.TBX_NombreClient.TabIndex = 1;
             this.TBX_NombreClient.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.TBX_NombreClient.TextChanged += new System.EventHandler(this.TBX_NombreClient_TextChanged);
             // 
             // label2
             // 
@@ -65,14 +68,14 @@
             this.label2.TabIndex = 0;
             this.label2.Text = "Nombre de bouteilles";
             // 
-            // textBox2
+            // TbxNombreBouteille
             // 
-            this.textBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox2.Location = new System.Drawing.Point(204, 76);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(64, 26);
-            this.textBox2.TabIndex = 1;
-            this.textBox2.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.TbxNombreBouteille.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TbxNombreBouteille.Location = new System.Drawing.Point(204, 76);
+            this.TbxNombreBouteille.Name = "TbxNombreBouteille";
+            this.TbxNombreBouteille.Size = new System.Drawing.Size(64, 26);
+            this.TbxNombreBouteille.TabIndex = 1;
+            this.TbxNombreBouteille.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // label3
             // 
@@ -84,22 +87,41 @@
             this.label3.TabIndex = 0;
             this.label3.Text = "Nombre de verres";
             // 
-            // textBox3
+            // TbxNombreVerres
             // 
-            this.textBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox3.Location = new System.Drawing.Point(204, 130);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(64, 26);
-            this.textBox3.TabIndex = 1;
-            this.textBox3.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.TbxNombreVerres.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TbxNombreVerres.Location = new System.Drawing.Point(204, 130);
+            this.TbxNombreVerres.Name = "TbxNombreVerres";
+            this.TbxNombreVerres.Size = new System.Drawing.Size(64, 26);
+            this.TbxNombreVerres.TabIndex = 1;
+            this.TbxNombreVerres.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // listBox1
+            // 
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.Location = new System.Drawing.Point(413, 42);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.Size = new System.Drawing.Size(243, 225);
+            this.listBox1.TabIndex = 2;
+            // 
+            // metroLabel1
+            // 
+            this.metroLabel1.AutoSize = true;
+            this.metroLabel1.Location = new System.Drawing.Point(413, 17);
+            this.metroLabel1.Name = "metroLabel1";
+            this.metroLabel1.Size = new System.Drawing.Size(93, 19);
+            this.metroLabel1.TabIndex = 3;
+            this.metroLabel1.Text = "Activités robot";
             // 
             // WelcomePage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.textBox3);
+            this.Controls.Add(this.metroLabel1);
+            this.Controls.Add(this.listBox1);
+            this.Controls.Add(this.TbxNombreVerres);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.textBox2);
+            this.Controls.Add(this.TbxNombreBouteille);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.TBX_NombreClient);
             this.Controls.Add(this.label1);
@@ -118,8 +140,10 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox TBX_NombreClient;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox TbxNombreBouteille;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.TextBox TbxNombreVerres;
+        private System.Windows.Forms.ListBox listBox1;
+        private MetroFramework.Controls.MetroLabel metroLabel1;
     }
 }

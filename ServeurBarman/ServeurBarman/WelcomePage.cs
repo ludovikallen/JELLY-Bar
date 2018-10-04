@@ -13,8 +13,10 @@ namespace ServeurBarman
 {
     public partial class WelcomePage : UserControl
     {
-        List<Drinks> drink = new List<Drinks>();
-        public List<string> Nombre { get; private set; } = new List<string>();
+
+        public string nombreClient;
+        public string nombreBouteille;
+        public string nombreVerre;
         public WelcomePage()
         {
             InitializeComponent();
@@ -23,16 +25,19 @@ namespace ServeurBarman
 
         public void Init_UserUI()
         {
-            Nombre.Clear();
-            for (int i = 0; i < drink.Count; ++i)
-                Nombre.Add(drink[i].nomRecette);
-
-            TBX_NombreClient.Text = Nombre.Count.ToString();
+            TBX_NombreClient.Text = nombreClient;
+            TbxNombreBouteille.Text = nombreBouteille;
+            TbxNombreVerres.Text = nombreVerre;
         }
 
         private void WelcomePage_Load(object sender, EventArgs e)
         {
+            
+        }
 
+        private void TBX_NombreClient_TextChanged(object sender, EventArgs e)
+        {
+            Init_UserUI();
         }
     }
 }

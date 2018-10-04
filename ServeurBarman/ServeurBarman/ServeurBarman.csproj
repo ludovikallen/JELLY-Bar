@@ -75,11 +75,18 @@
       <DependentUpon>Add_Drinks.cs</DependentUpon>
     </Compile>
     <Compile Include="Cups.cs" />
+    <Compile Include="DataBase.cs" />
     <Compile Include="Developers.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Developers.Designer.cs">
       <DependentUpon>Developers.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DLG_Settings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DLG_Settings.Designer.cs">
+      <DependentUpon>DLG_Settings.cs</DependentUpon>
     </Compile>
     <Compile Include="Drinks.cs" />
     <Compile Include="Liaison.cs" />
@@ -124,6 +131,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Developers.resx">
       <DependentUpon>Developers.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DLG_Settings.resx">
+      <DependentUpon>DLG_Settings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PageAccueil.resx">
       <DependentUpon>PageAccueil.cs</DependentUpon>
@@ -172,6 +182,27 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\emergency.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\if_icon-ios7-arrow-back_211686.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ur10e.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\if_Rounded-01_2024671.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\if_Rounded-02_2024670.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\if_Rounded-14_2024661.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\if_Rounded-13_2024662.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\stop1.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
