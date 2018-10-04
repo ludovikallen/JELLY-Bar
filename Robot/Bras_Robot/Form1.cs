@@ -199,6 +199,7 @@ namespace Bras_Robot
 
         private void BTN_Test_Click(object sender, EventArgs e)
         {
+            //Robot.TEST();
             Robot.MakeDrink(Robot.Exemple);
             //Robot.Home();
             //Robot.TEST();
