@@ -46,7 +46,7 @@ namespace Bras_Robot
             //Robot = new CRS_A255();
             BTN_CONNEXION.BackColor = Color.Green;
             //Robot.SetSpeed(Robot.Speed);
-            NUD_SPEED.Value = Robot.Speed;
+            //NUD_SPEED.Value = Robot.Speed;
         }
 
         private void BTN_BASE_GAUCHE_Click(object sender, EventArgs e)
@@ -126,20 +126,11 @@ namespace Bras_Robot
 
         private void BTN_RECORD_Click(object sender, EventArgs e)
         {
-            if (BTN_RECORD.Text == "RECORD")
-            {
-                BTN_RECORD.Text = "DONE";
-            }
-            else if(BTN_RECORD.Text == "DONE")
-            {
-                BTN_RECORD.Text = "RECORD";
-            }
-            Robot.Recording();
         }
 
         private void BTN_SAVE_Click(object sender, EventArgs e)
         {
-            if(Robot.Command != "" && Robot.Record == false)
+            /*if(Robot.Command != "" && Robot.Record == false)
             {
                 using (FileStream fs = File.Create("COMMAND\\" + TB_COMMAND.Text + ".txt"))
                 {
@@ -151,7 +142,7 @@ namespace Bras_Robot
                     }
                     LB_COMMAND.Items.Add(TB_COMMAND.Text);
                 }
-            }
+            }*/
         }
 
         private void BTN_PLAY_Click(object sender, EventArgs e)
@@ -170,7 +161,7 @@ namespace Bras_Robot
         }
         private void BTN_Ok_Click(object sender, EventArgs e)
         {
-            //Robot.SetSpeed(NUD_SPEED.Value);
+            Robot.SetSpeed(NUD_SPEED.Value);
         }
 
         private void BTN_CONSOLE_Click(object sender, EventArgs e)
@@ -190,13 +181,15 @@ namespace Bras_Robot
 
         private void BTN_POS_SAVE_Click(object sender, EventArgs e)
         {
-            LB_CONSOLE.Items.Add(TB_POS.Text);
-            TB_CONSOLE.Text = "";
+            if (Robot.Calibration)
+                Robot.Calibration = false;
+            else
+                Robot.Calibration = true;
         }
 
         private void BTN_POS_EXECUTE_Click(object sender, EventArgs e)
         {
-
+            Robot.CALIBRE();
         }
 
         private void BTN_DECONNEXION_Click(object sender, EventArgs e)
@@ -206,11 +199,9 @@ namespace Bras_Robot
 
         private void BTN_Test_Click(object sender, EventArgs e)
         {
-            List<string> list =  Robot.TEST();
-            foreach(var s in list)
-            {
-                LB_POS.Items.Add(s);
-            }
+            Robot.MakeDrink(Robot.Exemple);
+            //Robot.Home();
+            //Robot.TEST();
         }
 
         private void BTN_Reset_Click(object sender, EventArgs e)
@@ -225,11 +216,25 @@ namespace Bras_Robot
 
         private void BTN_Pos_Click(object sender, EventArgs e)
         {
-            //var bouteille = new CRS_A255.Position(Convert.ToInt32(TB_X.Text), Convert.ToInt32(TB_Y.Text), Convert.ToInt32(TB_Z.Text));
-            //Robot.VersPosition(ref bouteille);
+            var bouteille = new Position(Convert.ToInt32(TB_X.Text), Convert.ToInt32(TB_Y.Text), Convert.ToInt32(TB_Z.Text));
+            Robot.VersPosition(ref bouteille);
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+            Robot.AjouterCup(Convert.ToInt32(textBox1.Text));
+            textBox1.Text = "";
+            if (!Robot.EnMarche())
+                textBox1.Text = "GIOEJWROP";
+        }
+
+        private void TB_CONSOLE_TextChanged(object sender, EventArgs e)
         {
 
         }

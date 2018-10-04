@@ -1,9 +1,9 @@
 package com.example.a201625221.projetjelly;
 
+import android.annotation.SuppressLint;
 import android.content.res.ColorStateList;
-import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
-import android.graphics.drawable.Drawable;
+import android.graphics.PorterDuff;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,54 +17,64 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.os.StrictMode;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import static android.media.CamcorderProfile.get;
 
 public class MainActivity extends AppCompatActivity {
-
-
+    public static Connection conn_ = null;
+    int toast_height=420;
     /**
      * Variables pour contenir les layouts pour pouvoir changer d'onglet dans l'application
      */
-    ConstraintLayout listLYT,optionsLYT,cartLYT,infosLYT, notesLYT;
+    ConstraintLayout listDrinkLYT, modifyLYT,optionsLYT,cartLYT,infosLYT,notesLYT;
 
     /**
      * Variables pour contenir les boutons pour pouvoir changer d'onglet dans l'application
      */
-    Button drinkBTN,ingBTN,cartBTN,optionsBTN;
+    Button drinkBTN,cartBTN,optionsBTN,infoBTN;
 
     /**
      * Variables permettant d'afficher dans la ListView les éléments des ArrayList<HashMap<String,String>> en passant par l'adapter
      */
-    ListView listLVIEW,cartLVIEW;
+    ListView listDrinkLVIEW,listIngLVIEW,cartLVIEW, drinkItemLVIEW;
 
     /**
-     * Tableaux pour indiquer l'origine et la destination graphique
+     * Tableaux pour indiquer l'origine des données de l'adapter
      */
-    String from[]={"nom","ing","note"};
+    String from[]={"nom","desc","note"};
     /**
-     * Tableaux pour indiquer l'origine et la destination graphique
+     * Tableau la destination graphique de l'adapter
      */
     int to[]={R.id.name_TXT,R.id.ing_TXT,R.id.note_TXT};
 
     /**
      * Listes contenant les éléments de la BD et le panier
      */
-    ArrayList<HashMap<String,String>> arrayListNoms=new ArrayList<>(),arrayListIng=new ArrayList<>(),arrayListCart=new ArrayList<>();
+    ArrayList<HashMap<String,String>> arrayListDrink =new ArrayList<>(),arrayListIng=new ArrayList<>(),arrayListCart=new ArrayList<>(), arrayListItemCourant=new ArrayList<>();
 
+    ArrayList<Integer>selectedCartPositions=new ArrayList<>();
     /**
      * Variable contenant l'objet selectionné dans le panier
      */
-    HashMap<String,String> SelectedCartItem;
 
+    String[] IngName ={"Orange juice","Ice","Salt","Water","Grenadine","Gold powder"};
     String[] DrinkName={"Sex on the beach","Cosmopolitan","Rhum and coke","Beer","Diesel","Water"};
-    String[] Ingredients={"Vodka+OrangeJuice+Grenadine","xxx","Rhum+Coke","Beer","Beer+Coke","Water"};
-    String[] Notes={"1.9","2.8","5.7","3","2","1"};
+    String[] DrinksIngredients={"Vodka+OrangeJuice+Grenadine","xxx","Rhum+Coke","Beer","Beer+Coke","Water"};
+    String[] Notes={"1.9","2.8","5.7","3","2","1","6","8"};
 
+
+    Integer note=0;
     /**
      * Fonction lancée à la création de l'activité
      */
@@ -73,8 +83,53 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Initialize();
+        StrictMode.setThreadPolicy(new
+                StrictMode.ThreadPolicy.Builder()
+                .detectDiskReads()
+                .detectDiskWrites()
+                .detectNetwork()
+                .penaltyLog()
+                .build());
+        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+                .detectLeakedSqlLiteObjects()
+                .penaltyLog()
+                .penaltyDeath()
+                .build());
+        OracleConnexion();
+
     }
+
+    private void OracleConnexion(){
+        Thread t= new Thread() {
+            @Override
+            public void run() {
+                try
+                {
+                    Class.forName("oracle.jdbc.OracleDriver");
+                }
+                catch (ClassNotFoundException e)
+                {
+                    Toast.makeText(MainActivity.this, "Driver manquant." +
+                            e.getMessage().toString(), Toast.LENGTH_LONG).show();
+                }
+                String jdbcURL = "jdbc:oracle:thin:@mercure.clg.qc.ca:1521:ORCL";
+                String user = "barman";
+                String passwd = "projet";
+                try
+                {
+                    conn_ = DriverManager.getConnection(jdbcURL,user,passwd);
+                    Initialize();
+
+                }
+                catch (java.sql.SQLException se)
+                {
+                    faireToast("Connexion au serveur  impossible." + se.getMessage());
+                }
+            }
+        };
+        t.start();
+    }
+
     /**
      * Appel de toutes les fonctions d'initialisation
      */
@@ -91,19 +146,22 @@ public class MainActivity extends AppCompatActivity {
      */
      void InitializeComponents()
     {
-        listLYT=findViewById(R.id.list_LYT);
+        listDrinkLYT=findViewById(R.id.listDrink_LYT);
+        modifyLYT =findViewById(R.id.listIng_LYT);
         optionsLYT=findViewById(R.id.options_LYT);
         cartLYT=findViewById(R.id.cart_LYT);
         infosLYT=findViewById(R.id.infos_LYT);
         notesLYT=findViewById(R.id.notes_LYT);
 
         drinkBTN=findViewById(R.id.drinklist_BTN);
-        ingBTN=findViewById(R.id.inglist_BTN);
+        infoBTN=findViewById(R.id.infos_BTN);
         cartBTN=findViewById(R.id.cart_BTN);
         optionsBTN=findViewById(R.id.options_BTN);
 
-        listLVIEW=findViewById(R.id.drinking_LVIEW);
+        listDrinkLVIEW=findViewById(R.id.drink_LVIEW);
+        listIngLVIEW=findViewById(R.id.ing_LVIEW);
         cartLVIEW=findViewById(R.id.cart_LVIEW);
+        drinkItemLVIEW=findViewById(R.id.drinkItem_LVIEW);
     }
 
     /**
@@ -114,15 +172,25 @@ public class MainActivity extends AppCompatActivity {
         fillDrinksList();
         fillIngList();
         fillCartList();
+       // refreshCartItemCount();
     }
 
     /**
      * Initialise les touch listeners, pour effectuer des actions avant le relâchement du toucher
      */
+    @SuppressLint("ClickableViewAccessibility")
     void setTouchListeners()
     {
         final ImageButton trashBTN=findViewById(R.id.trash_IMGBTN);
+        final ImageButton commandBTN=findViewById(R.id.command_IMGBTN);
         final TextView noteExitBTN=findViewById(R.id.exitNoteBTN);
+
+        final ImageButton etoile1= findViewById(R.id.star1_IMGBTN);
+        final ImageButton etoile2= findViewById(R.id.star2_IMGBTN);
+        final ImageButton etoile3= findViewById(R.id.star3_IMGBTN);
+        final ImageButton etoile4= findViewById(R.id.star4_IMGBTN);
+        final ImageButton etoile5= findViewById(R.id.star5_IMGBTN);
+
 
         drinkBTN.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
@@ -132,10 +200,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ingBTN.setOnTouchListener(new View.OnTouchListener() {
+        infoBTN.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
-                ingBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.grey)));
-                ingBTN.setBackgroundResource(R.drawable.iconmix);
+                infoBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.grey)));
+                infoBTN.setBackgroundResource(R.drawable.iconinfo);
                 return false;
             }
         });
@@ -169,6 +237,43 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+        commandBTN.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                commandBTN.setBackgroundColor(getResources().getColor(R.color.grey));
+                return false;
+            }
+        });
+
+        etoile1.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                etoile1.setBackgroundTintMode(PorterDuff.Mode.CLEAR);
+                return false;
+            }
+        });
+        etoile2.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                etoile2.setBackgroundTintMode(PorterDuff.Mode.CLEAR);
+                return false;
+            }
+        });
+        etoile3.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                etoile3.setBackgroundTintMode(PorterDuff.Mode.CLEAR);
+                return false;
+            }
+        });
+        etoile4.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                etoile4.setBackgroundTintMode(PorterDuff.Mode.CLEAR);
+                return false;
+            }
+        });
+        etoile5.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                etoile5.setBackgroundTintMode(PorterDuff.Mode.CLEAR);
+                return false;
+            }
+        });
     }
 
     /**
@@ -177,55 +282,30 @@ public class MainActivity extends AppCompatActivity {
     void setClickListeners()
     {
         final ImageButton trashBTN=findViewById(R.id.trash_IMGBTN);
+        final ImageButton commandBTN=findViewById(R.id.command_IMGBTN);
+        final TextView trashAllBTN=findViewById(R.id.trashall_BTN);
         final TextView noteExitBTN=findViewById(R.id.exitNoteBTN);
+        final TextView noteSendBTN=findViewById(R.id.sendNote_BTN);
+        final TextView triNoteBTN=findViewById(R.id.triNote_BTN);
+        final ImageButton etoile1= findViewById(R.id.star1_IMGBTN);
+        final ImageButton etoile2= findViewById(R.id.star2_IMGBTN);
+        final ImageButton etoile3= findViewById(R.id.star3_IMGBTN);
+        final ImageButton etoile4= findViewById(R.id.star4_IMGBTN);
+        final ImageButton etoile5= findViewById(R.id.star5_IMGBTN);
 
         drinkBTN.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                TextView label=findViewById(R.id.labeldrinking_TXT);
                 drinkBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
                 drinkBTN.setBackgroundResource(R.drawable.icondrink);
 
-                if(listLYT.getVisibility()!=View.VISIBLE) {
-                    listLYT.setVisibility(View.VISIBLE);
-                    infosLYT.setVisibility(View.INVISIBLE);
-                }
-                else if(label.getText().equals(getString(R.string.drinks_str)))
-                {
-                    listLYT.setVisibility(View.INVISIBLE);
-                    infosLYT.setVisibility(View.VISIBLE);
-                }
+                listDrinkLYT.setVisibility(View.VISIBLE);
+                modifyLYT.setVisibility(View.INVISIBLE);
                 optionsLYT.setVisibility(View.INVISIBLE);
                 cartLYT.setVisibility(View.INVISIBLE);
-
-                label.setText(getString(R.string.drinks_str));
-                label.setPaintFlags(label.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
+                infosLYT.setVisibility(View.INVISIBLE);
 
                 fillDrinksList();
-            }
-        });
-
-        ingBTN.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                TextView label=findViewById(R.id.labeldrinking_TXT);
-                ingBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
-                ingBTN.setBackgroundResource(R.drawable.iconmix);
-
-                if(listLYT.getVisibility()!=View.VISIBLE) {
-                    listLYT.setVisibility(View.VISIBLE);
-                    infosLYT.setVisibility(View.INVISIBLE);
-                }
-                else if(label.getText().equals(getString(R.string.ingredients_str)))
-                {
-                    listLYT.setVisibility(View.INVISIBLE);
-                    infosLYT.setVisibility(View.VISIBLE);
-                }
-                optionsLYT.setVisibility(View.INVISIBLE);
-                cartLYT.setVisibility(View.INVISIBLE);
-
-                label.setText(getString(R.string.ingredients_str));
-                label.setPaintFlags(label.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
-
-                fillIngList();
+                EnleverTri();
             }
         });
 
@@ -234,16 +314,11 @@ public class MainActivity extends AppCompatActivity {
                 cartBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
                 cartBTN.setBackgroundResource(R.drawable.iconcart);
 
-                if(cartLYT.getVisibility()!=View.VISIBLE) {
-                    cartLYT.setVisibility(View.VISIBLE);
-                }
-                else
-                {
-                    cartLYT.setVisibility(View.INVISIBLE);
-                }
-                infosLYT.setVisibility(View.INVISIBLE);
-                listLYT.setVisibility(View.INVISIBLE);
+                listDrinkLYT.setVisibility(View.INVISIBLE);
+                modifyLYT.setVisibility(View.INVISIBLE);
                 optionsLYT.setVisibility(View.INVISIBLE);
+                cartLYT.setVisibility(View.VISIBLE);
+                infosLYT.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -252,17 +327,24 @@ public class MainActivity extends AppCompatActivity {
                 optionsBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
                 optionsBTN.setBackgroundResource(R.drawable.iconoptions);
 
-                if(optionsLYT.getVisibility()!=View.VISIBLE) {
-                    optionsLYT.setVisibility(View.VISIBLE);
-                    infosLYT.setVisibility(View.INVISIBLE);
-                }
-                else
-                {
-                    optionsLYT.setVisibility(View.INVISIBLE);
-                    infosLYT.setVisibility(View.VISIBLE);
-                }
-                listLYT.setVisibility(View.INVISIBLE);
+                listDrinkLYT.setVisibility(View.INVISIBLE);
+                modifyLYT.setVisibility(View.INVISIBLE);
+                optionsLYT.setVisibility(View.VISIBLE);
                 cartLYT.setVisibility(View.INVISIBLE);
+                infosLYT.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        infoBTN.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                infoBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
+                infoBTN.setBackgroundResource(R.drawable.iconinfo);
+
+                listDrinkLYT.setVisibility(View.INVISIBLE);
+                modifyLYT.setVisibility(View.INVISIBLE);
+                optionsLYT.setVisibility(View.INVISIBLE);
+                cartLYT.setVisibility(View.INVISIBLE);
+                infosLYT.setVisibility(View.VISIBLE);
             }
         });
 
@@ -274,6 +356,23 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        commandBTN.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                commandBTN.setBackgroundColor(getResources().getColor(R.color.white));
+                Commander();
+            }
+        });
+
+        trashAllBTN.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                selectedCartPositions.clear();
+                arrayListCart.clear();
+                fillCartList();
+                trashBTN.setVisibility(View.INVISIBLE);
+                refreshCartItemCount();
+            }
+        });
+
         noteExitBTN.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 noteExitBTN.setBackgroundColor(getResources().getColor(R.color.grey));
@@ -281,19 +380,115 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        listLVIEW.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        noteSendBTN.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                EnvoyerNote();
+            }
+        });
+
+        triNoteBTN.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if(triNoteBTN.getText().equals("▼"))
+                {
+                    TrierEtoileHaut();
+                }
+                else if(triNoteBTN.getText().equals("▲"))
+                {
+                    EnleverTri();
+                }
+                else if(triNoteBTN.getText().equals("A-B"))
+                {
+                    TrierEtoileBas();
+                }
+            }
+        });
+
+        etoile1.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                etoile1.setImageDrawable(getResources().getDrawable(R.drawable.star_active));
+                etoile2.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
+                etoile3.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
+                etoile4.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
+                etoile5.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
+                note=1;
+            }
+        });
+
+        etoile2.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                etoile1.setImageDrawable(getResources().getDrawable(R.drawable.star_active));
+                etoile2.setImageDrawable(getResources().getDrawable(R.drawable.star_active));
+                etoile3.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
+                etoile4.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
+                etoile5.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
+                note=2;
+            }
+        });
+
+        etoile3.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                etoile1.setImageDrawable(getResources().getDrawable(R.drawable.star_active));
+                etoile2.setImageDrawable(getResources().getDrawable(R.drawable.star_active));
+                etoile3.setImageDrawable(getResources().getDrawable(R.drawable.star_active));
+                etoile4.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
+                etoile5.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
+                note=3;
+            }
+        });
+
+        etoile4.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                etoile1.setImageDrawable(getResources().getDrawable(R.drawable.star_active));
+                etoile2.setImageDrawable(getResources().getDrawable(R.drawable.star_active));
+                etoile3.setImageDrawable(getResources().getDrawable(R.drawable.star_active));
+                etoile4.setImageDrawable(getResources().getDrawable(R.drawable.star_active));
+                etoile5.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
+                note=4;
+            }
+        });
+
+        etoile5.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                etoile1.setImageDrawable(getResources().getDrawable(R.drawable.star_active));
+                etoile2.setImageDrawable(getResources().getDrawable(R.drawable.star_active));
+                etoile3.setImageDrawable(getResources().getDrawable(R.drawable.star_active));
+                etoile4.setImageDrawable(getResources().getDrawable(R.drawable.star_active));
+                etoile5.setImageDrawable(getResources().getDrawable(R.drawable.star_active));
+                note=5;
+            }
+        });
+
+
+        listDrinkLVIEW.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position,
                                     long id) {
 
                 HashMap<String, String> item = ( HashMap<String, String>)adapterView.getItemAtPosition(position);
-                Toast toast = Toast.makeText(getApplicationContext(),
-                        "x1 " + item.values().toArray()[1] + " ajouté au panier", Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.CENTER, 0, 500);
-                toast.show();
+                faireToast("x1 " + item.values().toArray()[1] + " ajouté au panier");
 
                 AjouterPanier(item);
+            }
+        });
+
+        listIngLVIEW.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position,
+                                    long id) {
+
+                HashMap<String, String> nouveauIngredient = ( HashMap<String, String>)adapterView.getItemAtPosition(position);
+                faireToast("x1 " + nouveauIngredient.values().toArray()[0] + " ajouté au drink");
+
+                HashMap<String, String> itemActuel=arrayListItemCourant.get(0);
+                arrayListItemCourant.clear();
+                HashMap<String, String> nouvelItemActuel=new HashMap<String, String>();
+                nouvelItemActuel.put("nom", itemActuel.get("nom"));
+                nouvelItemActuel.put("desc", itemActuel.get("desc")+", "+nouveauIngredient.get("nom"));
+                nouvelItemActuel.put("note", itemActuel.get("note"));
+                arrayListItemCourant.add(nouvelItemActuel);
+                refreshItemCourant();
             }
         });
 
@@ -302,9 +497,57 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position,
                                     long id) {
+                if(view != null && view.getContext() != null) {
+                    trashBTN.setVisibility(View.VISIBLE);
 
-                SelectedCartItem = ( HashMap<String, String>)adapterView.getItemAtPosition(position);
-                trashBTN.setVisibility(View.VISIBLE);
+                    if (arrayListCart.size() < position)
+                        selectedCartPositions.add(0);
+                    if (selectedCartPositions.contains(position))
+                        selectedCartPositions.remove(selectedCartPositions.indexOf(position));
+                    else if (!selectedCartPositions.contains(position))
+                        selectedCartPositions.add(position);
+
+                    if (selectedCartPositions.size() > 0) {
+                        if (arrayListCart.size() < position)
+                            cartLVIEW.getChildAt(0).setBackgroundColor(getResources().getColor(R.color.yellow));
+                        if (selectedCartPositions.contains(position))
+                            cartLVIEW.getChildAt(position).setBackgroundColor(getResources().getColor(R.color.yellow));
+                        else
+                            cartLVIEW.getChildAt(position).setBackgroundColor(getResources().getColor(R.color.white));
+                    }
+                }
+            }
+        });
+
+        listDrinkLVIEW.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
+                    arrayListItemCourant.clear();
+                    HashMap<String, String> item = ( HashMap<String, String>)adapterView.getItemAtPosition(position);
+                    arrayListItemCourant.add(item);
+                    refreshItemCourant();
+
+                    listDrinkLYT.setVisibility(View.INVISIBLE);
+                    modifyLYT.setVisibility(View.VISIBLE);
+                    fillIngList();
+                    refreshIngList();
+                return true;
+            }
+        });
+
+        cartLVIEW.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
+                    arrayListItemCourant.clear();
+                    HashMap<String, String> item = ( HashMap<String, String>)adapterView.getItemAtPosition(position);
+                    arrayListItemCourant.add(item);
+                    refreshItemCourant();
+
+                    cartLYT.setVisibility(View.INVISIBLE);
+                    modifyLYT.setVisibility(View.VISIBLE);
+                    fillIngList();
+                    refreshIngList();
+                return true;
             }
         });
     }
@@ -316,56 +559,106 @@ public class MainActivity extends AppCompatActivity {
     {
         arrayListCart.add(ajout);
         fillCartList();
+        refreshCartItemCount();
     }
 
     /**
      * Supprime l'élément envoyé en paramètre du panier
      */
+    @Deprecated
     void RetirerPanier(HashMap<String, String> retrait)
     {
         if(retrait!=null) {
             arrayListCart.remove(retrait);
             fillCartList();
-            Toast toast = Toast.makeText(getApplicationContext(),
-                    "x1 " + retrait.values().toArray()[0] + " retiré du panier", Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.CENTER, 0, 350);
-            toast.show();
+            faireToast("x1 " + retrait.values().toArray()[0] + " retiré du panier");
         }
     }
 
     /**
-     * Supprime l'élément courant selectionné du panier
+     * Supprime les éléments courants selectionnés du panier
      */
     void RetirerPanier()
     {
-        if(SelectedCartItem !=null) {
-            arrayListCart.remove(SelectedCartItem);
-            fillCartList();
-            Toast toast = Toast.makeText(getApplicationContext(),
-                    "x1 " + SelectedCartItem.values().toArray()[0] + " retiré du panier", Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.CENTER, 0, 350);
-            toast.show();
-            SelectedCartItem = null;
+        int compteurItems=0;
+        for (; compteurItems<selectedCartPositions.size();compteurItems++)
+        {
+            arrayListCart.set(selectedCartPositions.get(compteurItems),null);
         }
+        while(arrayListCart.remove(null));
+        selectedCartPositions.clear();
+        fillCartList();
+        if(compteurItems==1)
+            faireToast(compteurItems + " item retiré du panier");
+        else
+            faireToast(compteurItems + " items retirés du panier");
+        refreshCartItemCount();
     }
 
     /**
      * Vide puis rempli la liste des drinks disponibles à partir de la BD(Pour l'initialiser, puis la rafraîchir)
      */
-    void fillDrinksList()
-    {
-        arrayListNoms.clear();
-        for (int i=0;i<DrinkName.length;i++)
-        {
-            HashMap<String,String> hashMap=new HashMap<>();//create a hashmap to store the data in key value pair
-            hashMap.put("nom",DrinkName[i]);
-            hashMap.put("ing",Ingredients[i]+"");
-            hashMap.put("note",Notes[i]);
-            arrayListNoms.add(hashMap);//add the hashmap into arrayList
+    void fillDrinksList() {
+        arrayListDrink.clear();
+        Statement stm1s;
+        Statement stm1;
+        ResultSet resultSet;
+        ResultSet setRecette;
+        int nombreRecette = 0;
+        String requeteNombreRecette = "select count(*) from recette";
+        try {
+            stm1s = conn_.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
+            setRecette = stm1s.executeQuery(requeteNombreRecette);
+            setRecette.next();
+            nombreRecette = setRecette.getInt(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        TrierEtoileBas(arrayListNoms);
-        SimpleAdapter simpleAdapter=new SimpleAdapter(this,arrayListNoms,R.layout.custom_list,from,to);
-        listLVIEW.setAdapter(simpleAdapter);//sets the adapter for listView
+
+        for (int i = 1; i <= nombreRecette; i++)
+        {
+            try {
+                String requeteDescription = "select recette.NOMRECETTE, NOMBOUTEILLE, INGREDIENTRECETTE.QTYSHOT,INGREDIENT.BOUTEILLEPRESENTE,INGREDIENT.QTYRESTANTE from INGREDIENT INNER JOIN INGREDIENTRECETTE ON INGREDIENT.CODEBOUTEILLE = INGREDIENTRECETTE.CODEBOUTEILLE INNER JOIN RECETTE ON INGREDIENTRECETTE.CODERECETTE = RECETTE.CODERECETTE WHERE RECETTE.CODERECETTE = " + i;
+
+                stm1 = conn_.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
+
+                resultSet = stm1.executeQuery(requeteDescription);
+                String nom = null;
+                String description = "";
+                boolean drinkPossible = true;
+                while(resultSet.next())
+                {
+
+                    nom = resultSet.getString(1);
+                    description += resultSet.getString(3) +" oz " + resultSet.getString(2) +", ";
+                    if (resultSet.getString(4).equals("0") || resultSet.getInt(5) == 0)
+                    {
+                        drinkPossible = false;
+                    }
+                }
+                if (!description.trim().equals("")){
+                    description = description.substring(0, description.length() - 2);
+                }
+                HashMap<String,String> hashMap=new HashMap<>();//create a hashmap to store the data in key value pair
+
+                hashMap.put("nom", nom);
+                hashMap.put("desc",description);
+                hashMap.put("note", Notes[i]);
+                if (drinkPossible)
+                {
+                    arrayListDrink.add(hashMap);//add the hashmap into arrayList
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        EnleverTri();
+    }
+
+    void refreshDrinkList()
+    {
+        SimpleAdapter simpleAdapter=new SimpleAdapter(this, arrayListDrink,R.layout.custom_list_drink,from,to);
+        listDrinkLVIEW.setAdapter(simpleAdapter);//sets the adapter for listView
     }
 
     /**
@@ -374,17 +667,37 @@ public class MainActivity extends AppCompatActivity {
     void fillIngList()
     {
         arrayListIng.clear();
-        for (int i=0;i<DrinkName.length;i++)
-        {
-            HashMap<String,String> hashMap=new HashMap<>();//create a hashmap to store the data in key value pair
-            hashMap.put("nom",DrinkName[i]);
-            hashMap.put("ing",Ingredients[i]+"");
-            hashMap.put("note",Notes[i]);
-            arrayListIng.add(hashMap);//add the hashmap into arrayList
+        Statement stm1;
+        ResultSet resultSet;
+        String sql="select NOMBOUTEILLE,DESCRIPTIONS from INGREDIENT";
+        try {
+            stm1 = conn_.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
+
+            resultSet = stm1.executeQuery(sql);
+            while(resultSet.next())
+            {
+                HashMap<String,String> hashMap=new HashMap<>();//create a hashmap to store the data in key value pair
+
+                hashMap.put("nom",resultSet.getString(1));
+                hashMap.put("desc",resultSet.getString(2));
+                arrayListIng.add(hashMap);//add the hashmap into arrayList
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        TrierEtoileHaut(arrayListIng);
-        SimpleAdapter simpleAdapter=new SimpleAdapter(this,arrayListIng,R.layout.custom_list,from,to);
-        listLVIEW.setAdapter(simpleAdapter);//sets the adapter for listView
+    }
+
+    void refreshIngList()
+    {
+        SimpleAdapter simpleAdapter=new SimpleAdapter(this,arrayListIng,R.layout.custom_list_ing,from,to);
+        listIngLVIEW.setAdapter(simpleAdapter);//sets the adapter for listView
+    }
+
+    void refreshItemCourant()
+    {
+        SimpleAdapter simpleAdapter=new SimpleAdapter(this,arrayListItemCourant,R.layout.custom_list_itemcourant,from,to);
+        drinkItemLVIEW.setAdapter(simpleAdapter);//sets the adapter for listView
     }
 
     /**
@@ -392,68 +705,225 @@ public class MainActivity extends AppCompatActivity {
      */
     void fillCartList()
     {
-        SimpleAdapter simpleAdapter=new SimpleAdapter(this,arrayListCart,R.layout.custom_list,from,to);
+        final ImageButton commandBTN=findViewById(R.id.command_IMGBTN);
+        if(arrayListCart.size()!=0)
+            commandBTN.setVisibility(View.VISIBLE);
+        else
+            commandBTN.setVisibility(View.INVISIBLE);
+
+        SimpleAdapter simpleAdapter=new SimpleAdapter(this,arrayListCart,R.layout.custom_list_ing,from,to);
         cartLVIEW.setAdapter(simpleAdapter);//sets the adapter for listView
     }
 
-    void Commander() {
+    @Deprecated
+    void selectFirstCartItem()
+    {
+        if(arrayListCart.size()>0)
+        {
+            int defaultPosition = 0;
+            int justIgnoreId = 0;
+            cartLVIEW.setItemChecked(defaultPosition, true);
+            cartLVIEW.performItemClick(cartLVIEW.getSelectedView(),defaultPosition, justIgnoreId);
+        }
+    }
 
+  /*  void Commander() {
+
+
+        if(arrayListCart.size()!=0) {
+            int list = arrayListCart.size();
+            for (int i = 0; i < list; i++) {
+                String line = String.valueOf(arrayListCart.get(i));
+                System.out.println(line);
+            }
+            for(int i=0; i<arrayListCart.size();i++)
+            {
+                //ENVOYER COMMANDES BD, NE PAS VIDER LA ARRAYLISTCART
+            }
+
+            DemanderNote(arrayListCart.get(0).get("nom"));
+            selectedCartPositions.clear();
+            fillCartList();
+
+            fillDrinksList();
+        }
+    }*/
+  void Commander() {
+
+      int list = arrayListCart.size();
+      String Commandes[] = new String[0];
+      ArrayList<ArrayList<HashMap<Integer, String>>> ListeCommande= new ArrayList<>();
+      for (int i = 0; i < list ; i++)
+      {
+          boolean drinkRestant = true;
+          String line = String.valueOf(arrayListCart.get(i));
+          line = line.substring(line.indexOf("=")+1);
+          line = line.substring(line.indexOf("=")+1);
+          line = line.substring(0, line.length() - 1);
+          Commandes = line.split(",");
+          ListeCommande.add(new ArrayList<HashMap<Integer, String>>());
+          for (String Commande: Commandes) {
+              String ElementCommande[] = Commande.split("oz");
+              HashMap<Integer, String> Drink = new HashMap<Integer, String>();
+              Drink.put(Integer.valueOf(ElementCommande[0].trim()), ElementCommande[1].trim());
+              ListeCommande.get(i).add(Drink);
+          }
+
+      }
+
+      DemanderNote(arrayListCart.get(0).get("nom"));
+      arrayListCart.clear();
+      selectedCartPositions.clear();
+      fillCartList();
+  }
+
+    void DemanderNote(String nomMix)
+    {
+        final TextView nomMixTXT=findViewById(R.id.nomMix_TXT);
+        nomMixTXT.setText(nomMix);
+        notesLYT.setVisibility(View.VISIBLE);
+        fillCartList();
     }
 
     void AnnulerNote() {
-        notesLYT.setVisibility(View.INVISIBLE);
+
+        final TextView nomMixTXT=findViewById(R.id.nomMix_TXT);
+        nomMixTXT.setText("");
+
+        ReinitTableauNotes();
+        arrayListCart.remove(0);
+        if(arrayListCart.size()!=0) {
+            DemanderNote(arrayListCart.get(0).get("nom"));
+        }
+        else
+            fillCartList();
+        refreshCartItemCount();
     }
 
     void EnvoyerNote() {
 
-        Toast toast = Toast.makeText(getApplicationContext(),
-                "Merci d'avoir noté!", Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.CENTER, 0, 500);
-        toast.show();
+        if(note==0)
+            faireToast("Désolé de votre mauvaise expérience. Revenez nous voir.");
+        else if(note==1)
+            faireToast("Merci d'avoir noté: "+note+" étoile");
+        else
+            faireToast("Merci d'avoir noté: "+note+" étoiles");
+
+        //ENVOYER ICI A LA BD arrayListCart.get(0).get("nom") et note
+        {
+
+
+        }
+
+
+        ReinitTableauNotes();
+        arrayListCart.remove(0);
+        if(arrayListCart.size()!=0) {
+            DemanderNote(arrayListCart.get(0).get("nom"));
+        }
+        else
+            fillCartList();
+        refreshCartItemCount();
+    }
+
+    void ReinitTableauNotes()
+    {
+        final ImageButton etoile1= findViewById(R.id.star1_IMGBTN);
+        final ImageButton etoile2= findViewById(R.id.star2_IMGBTN);
+        final ImageButton etoile3= findViewById(R.id.star3_IMGBTN);
+        final ImageButton etoile4= findViewById(R.id.star4_IMGBTN);
+        final ImageButton etoile5= findViewById(R.id.star5_IMGBTN);
+        etoile1.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
+        etoile2.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
+        etoile3.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
+        etoile4.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
+        etoile5.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
         notesLYT.setVisibility(View.INVISIBLE);
+        note=0;
     }
 
-    void TrierEtoileHaut(ArrayList<HashMap<String,String>> liste)
+    void TrierEtoileHaut()
     {
-        Collections.sort(liste, new Comparator<HashMap<String,String>>()
+        final TextView triNoteBTN=findViewById(R.id.triNote_BTN);
+        triNoteBTN.setText("▲");
+        Collections.sort(arrayListDrink, new Comparator<HashMap<String,String>>()
         {
             public int compare(HashMap<String,String> o1,
                                HashMap<String,String> o2)
             {
-                float o1note=Float.valueOf(o1.get("note"));
-                float o2note=Float.valueOf(o2.get("note"));
-                if (o1note < o2note)
-                {
-                    return -1;
-                }
-                else if (o1note > o2note)
-                {
-                    return 1;
-                }
-                return 0;
+                    float o1note = Float.valueOf(o1.get("note"));
+                    float o2note = Float.valueOf(o2.get("note"));
+                    if (o1note < o2note) {
+                        return -1;
+                    } else if (o1note > o2note) {
+                        return 1;
+                    }
+                    return 0;
             }
         });
+
+        refreshDrinkList();
     }
 
-    void TrierEtoileBas(ArrayList<HashMap<String,String>> liste)
+    void TrierEtoileBas()
     {
-        Collections.sort(liste, new Comparator<HashMap<String,String>>()
+        final TextView triNoteBTN=findViewById(R.id.triNote_BTN);
+        triNoteBTN.setText("▼");
+        Collections.sort(arrayListDrink, new Comparator<HashMap<String,String>>()
         {
             public int compare(HashMap<String,String> o1,
                                HashMap<String,String> o2)
             {
-                float o1note=Float.valueOf(o1.get("note"));
-                float o2note=Float.valueOf(o2.get("note"));
-                if (o1note < o2note)
-                {
-                    return 1;
+                    float o1note = Float.valueOf(o1.get("note"));
+                    float o2note = Float.valueOf(o2.get("note"));
+                    if (o1note < o2note) {
+                        return 1;
+                    } else if (o1note > o2note) {
+                        return -1;
+                    }
+                    return 0;
                 }
-                else if (o1note > o2note)
-                {
-                    return -1;
-                }
-                return 0;
+        });
+        refreshDrinkList();
+    }
+
+    void EnleverTri()
+    {
+        final TextView triNoteBTN=findViewById(R.id.triNote_BTN);
+        triNoteBTN.setText("A-B");
+        Collections.sort(arrayListDrink, new Comparator<HashMap<String,String>>()
+        {
+            public int compare(HashMap<String,String> o1,
+                               HashMap<String,String> o2)
+            {
+                return o1.get("nom").compareTo(o2.get("nom"));
             }
         });
+        refreshDrinkList();
+    }
+
+    void refreshCartItemCount()
+    {
+        final TextView itemCountTXT=findViewById(R.id.cartItemsCount_TXT);
+        itemCountTXT.setText(Integer.toString(arrayListCart.size()));
+        final TextView panierTXT=findViewById(R.id.cart_TXT);
+        if(arrayListCart.size()==0)
+
+            panierTXT.setText(getResources().getString(R.string.cartempty_str));
+        else {
+            panierTXT.setText(getResources().getString(R.string.cart_str));
+            panierTXT.setPaintFlags(panierTXT.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);
+        }
+    }
+
+    void faireToast(String message)
+    {
+        Toast toast = Toast.makeText(getApplicationContext(),
+                message, Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.CENTER, 0, toast_height);
+        View view = toast.getView();
+
+        view.setBackgroundColor(getResources().getColor(R.color.yellow));
+        toast.show();
     }
 }

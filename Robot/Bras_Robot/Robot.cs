@@ -17,71 +17,76 @@ namespace Bras_Robot
         public int X { get; private set; }
         public int Y { get; private set; }
         public int Z { get; private set; }
-        public int NbShot { get; private set; }
+        //public int NbShot { get; private set; }
         public Position()
         {
             // 100000 pour etre "out of range"
             X = 100000;
             Y = 100000;
             Z = 100000;
-            NbShot = 0;
-        }
-        public Position(int x, int y, int z, int nbShot)
-        {
-            X = x;
-            Y = y;
-            Z = z;
-            NbShot = nbShot;
         }
         public Position(int x, int y, int z)
         {
             X = x;
             Y = y;
             Z = z;
-            NbShot = 1;
         }
     }
     sealed class CRS_A255
     {
+        private CRS_A255()
+        {
+            task = Task.Run(() =>
+            {
+                //contourne un bug dans la connection avec le robot
+                SetPosToStart();
+                Connexion();
+                Deconnexion();
+                System.Threading.Thread.Sleep(100);
+                Connexion();
+                Connected = true;
+            });
+        }
+
+        #region robot attributes
         private static readonly Lazy<CRS_A255> lazy = new Lazy<CRS_A255>(() => new CRS_A255());
         public static CRS_A255 Instance { get { return lazy.Value; } }
+        private Task task { get; set; }
         private int PosX { get; set; }
         private int PosY { get; set; }
         private int PosZ { get; set; }
         public bool Connected { get; private set; }
-        public bool EnOperation { get; private set; } = false;
-
+        private int nbCup { get; set; } = 0;
         Position[] Bouteilles = new Position[6]
         {
-            new Position(0,-300, -350),
-            new Position(-100,-300, -350),
-            new Position(-200,-300, -350),
-            new Position(-300,-300, -350),
-            new Position(-400,-300, -350),
-            new Position(-500,-300, -350),
+            new Position(130, -200, -365),
+            new Position(70, -290, -365),
+            new Position(-10, -350, -365),
+            new Position(-100,-400,-365),
+            new Position(-205,-400,-365),
+            new Position(-305,-400,-365)
         };
 
-        private Position CreateStation = new Position(0, 150, -150);
+        private Position RedCupStackStation = new Position(-180, 360, -340);
+        private Position RedCupDrinkStation = new Position(25, 0, -400);
+        private Position DONNEMOILECUP = new Position(200, 0, -100);
+        private Position RedCupFin = new Position(100, 200, -425);
+
+        private Position LazyPrendreBouteille = new Position(100, 200, -365);
+        private Position CreateStation = new Position(10, 100, -220);
         private SerialPort serialPort;
-        public bool Record { get; set; } = false;
+        public bool Calibration { get; set; } = false;
         private int Base { get; set; } = 0;
         private int Poignet { get; set; } = 0;
         private int Epaule { get; set; } = 0;
         private int Main { get; set; } = 0;
         private int Coude { get; set; } = 0;
         private bool Pince { get; set; } = false;
-        public string Command { get; set; } = "";
-        public int Speed { get; set; } = 100;
-        private CRS_A255()
-        {
-            SetPosToStart();
-            Connexion();
-            Deconnexion();
-            System.Threading.Thread.Sleep(100);
-            Connexion();
-            Connected = true;
-            SetSpeed(Speed);
-        }
+        private string Command { get; set; } = "";
+        private int Speed { get; set; } = 10;
+        #endregion
+
+        #region general robot fonctions
         private void Connexion()
         {
             serialPort = new SerialPort("COM1", 19200);
@@ -118,128 +123,106 @@ namespace Bras_Robot
         }
         private void SetPosToStart()
         {
+            if (Calibration)
+                return;
             PosX = 0;
             PosY = 0;
             PosZ = 0;
         }
-        public void Recording()
-        {
-            if (Record)
-                Record = false;
-            else
-            {
-                Record = true;
-                Command = "";
-            }
-        }
         public void ManuelCommand(String command)
         {
+            if (!Calibration)
+                return;
             serialPort.Write(command);
             System.Threading.Thread.Sleep(200);
         }
+        public bool EnMarche() => task.IsCompleted;
+        public int AjouterCup(int ajout) => nbCup += ajout;
         public void DeplacerBase(int val)
         {
+            if (!Calibration)
+                return;
             Base += val;
-            if (Record)
-            {
-                Command = Command + "JOINT 1, " + val.ToString() + "\r\n";
-            }
             serialPort.Write("JOINT 1, " + val.ToString() + "\r");
             System.Threading.Thread.Sleep(200);
         }
         public void DeplacerPoignet(int val)
         {
+            if (!Calibration)
+                return;
             Poignet += val;
-            if (Record)
-            {
-                Command = Command + "JOINT 4, " + val.ToString() + "\r\n";
-            }
             serialPort.Write("JOINT 4, " + val.ToString() + "\r");
             System.Threading.Thread.Sleep(200);
         }
         public void DeplacerEpaule(int val)
         {
+            if (!Calibration)
+                return;
             Epaule += val;
-            if (Record)
-            {
-                Command = Command + "JOINT 2, " + val.ToString() + "\r\n";
-            }
             serialPort.Write("JOINT 2, " + val.ToString() + "\r");
             System.Threading.Thread.Sleep(200);
         }
         public void DeplacerMain(int val)
         {
+            if (!Calibration)
+                return;
             Main += val;
-            if (Record)
-            {
-                Command = Command + "JOINT 5, " + val.ToString() + "\r\n";
-            }
+            serialPort.Write("JOINT 5, " + val.ToString() + "\r");
+            System.Threading.Thread.Sleep(200);
+        }
+        private void DeplacerMainPriv(int val)
+        {
+            Main += val;
             serialPort.Write("JOINT 5, " + val.ToString() + "\r");
             System.Threading.Thread.Sleep(200);
         }
         public void DeplacerCoude(int val)
         {
+            if (!Calibration)
+                return;
             Coude += val;
-            if (Record)
-            {
-                Command = Command + "JOINT 3, " + val.ToString() + "\r\n";
-            }
             serialPort.Write("JOINT 3, " + val.ToString() + "\r");
             System.Threading.Thread.Sleep(200);
         }
         public void OuvrirPince(int val)
         {
-            if (Record)
-            {
-                Command = Command + "OPEN " + val.ToString() + "\r\n";
-            }
+            if (Calibration)
+                return;
             serialPort.Write("OPEN " + val.ToString() + "\r");
             System.Threading.Thread.Sleep(200);
         }
         public void FermerPince(int val)
         {
-            if (Record)
-            {
-                Command = Command + "CLOSE " + val.ToString() + "\r\n";
-            }
+            if (Calibration)
+                return;
             serialPort.Write("CLOSE " + val.ToString() + "\r");
             System.Threading.Thread.Sleep(200);
         }
         public void Home()
         {
+            if (!Calibration)
+                return;
             serialPort.Write("HOME\r");
             System.Threading.Thread.Sleep(100);
-            if (Record)
-            {
-                Command = Command + "HOME\r\n";
-            }
         }
         public void Ready()
         {
+            if (!Calibration)
+                return;
             serialPort.Write("READY\r");
             System.Threading.Thread.Sleep(200);
-            if (Record)
-            {
-                Command = Command + "READY\r\n";
-            }
         }
         public void Halt()
         {
+            if (!Calibration)
+                return;
             serialPort.Write("HALT\r");
             System.Threading.Thread.Sleep(200);
-            if (Record)
-            {
-                Command = Command + "HALT\r\n";
-            }
         }
-        private void SetSpeed(decimal speed)
+        public void SetSpeed(decimal speed)
         {
             serialPort.Write("SPEED " + speed + "\r");
             System.Threading.Thread.Sleep(200);
-            if (Record)
-            {
-                Command = Command + "SPEED " + speed + "\r\n";
-            }
             Speed = (int)speed;
         }
         private void JOG(int x, int y, int z)
@@ -253,115 +236,148 @@ namespace Bras_Robot
             serialPort.Write("FINISH\r");
             System.Threading.Thread.Sleep(200);
         }
-        private void VersPosition(ref Position pos)
+        public void CALIBRE()
         {
-            JOG(pos.X - PosX, pos.Y - PosY, pos.Z - PosZ);
+            serialPort.Write("PASSWORD 255\r");
+            System.Threading.Thread.Sleep(1000);
+            serialPort.Write("@ZERO\r");
+            System.Threading.Thread.Sleep(1000);
+            serialPort.Write("MOTOR 2, -18000\r");
+            System.Threading.Thread.Sleep(1000);
+            serialPort.Write("@@CAL\r");
+            System.Threading.Thread.Sleep(1000);
         }
-        private void VerserBouteille(ref Position pos)
-        {
-            //------Prendre bouteille------//
+        #endregion
 
+        #region Barman fonction
+        public void VersPosition(ref Position pos) => JOG(pos.X - PosX, pos.Y - PosY, pos.Z - PosZ);
+        private void VerserBouteille(ref (Position pos, int nbShots) pos)
+        {
+            SetSpeed(100);
+            //------Prendre bouteille------//
             JOG(0, 0, 0); // wait
             OuvrirPince(100);
             System.Threading.Thread.Sleep(1000);
-            JOG(pos.X - PosX, pos.Y - PosY, (pos.Z - PosZ) + 200);
-            JOG(pos.X - PosX, pos.Y - PosY, pos.Z - PosZ);
+            JOG(pos.pos.X - PosX, pos.pos.Y - PosY, (pos.pos.Z - PosZ) + 280);
+            SetSpeed(75);
+            JOG(pos.pos.X - PosX, pos.pos.Y - PosY, pos.pos.Z - PosZ);
 
             JOG(0, 0, 0); // wait
             FermerPince(100);
-            System.Threading.Thread.Sleep(1000);
-
+            System.Threading.Thread.Sleep(2000);
             //------Apporter le bouteille a la station de travail------//
-            JOG(0, 0, 200);
-            VersPosition(ref CreateStation);
+            JOG(0, 0, 280);
+            JOG(CreateStation.X - PosX, CreateStation.Y - PosY, 0);
+            JOG(0, 0, CreateStation.Z - PosZ);
             JOG(0, 0, 0);
             //------Verser------//
-            for (int i = 0; i < pos.NbShot; ++i)
+            System.Threading.Thread.Sleep(2000);
+            for (int i = 0; i < pos.nbShots; ++i)
             {
-                DeplacerMain(130);
-                System.Threading.Thread.Sleep(2000);
-                DeplacerMain(-130);
-                System.Threading.Thread.Sleep(1000);
+                SetSpeed(7);
+                DeplacerMainPriv(130);
+                System.Threading.Thread.Sleep(7000);
+                SetSpeed(75);
+                DeplacerMainPriv(-130);
+                System.Threading.Thread.Sleep(500);
             }
-
+            SetSpeed(50);
             //------Rapporter la bouteille a sa place d'origine------//
 
-            JOG(pos.X - PosX, pos.Y - PosY, (pos.Z - PosZ) + 200);
-            JOG(pos.X - PosX, pos.Y - PosY, pos.Z - PosZ);
+            JOG(0, 0, (pos.pos.Z - PosZ) + 280);
+            JOG(pos.pos.X - PosX, pos.pos.Y - PosY, 0);
+            JOG(pos.pos.X - PosX, pos.pos.Y - PosY, pos.pos.Z - PosZ + 1);
 
             JOG(0, 0, 0); // wait
-            OuvrirPince(100);
-            System.Threading.Thread.Sleep(3000);
-            JOG(pos.X - PosX, pos.Y - PosY, (pos.Z - PosZ) + 200);
+            OuvrirPince(50);
+            System.Threading.Thread.Sleep(5000);
+            JOG(pos.pos.X - PosX, pos.pos.Y - PosY, (pos.pos.Z - PosZ) + 280);
             JOG(0, 0, 0);
         }
 
-        private Position RedCup = new Position(0, 0, -420);
-        private Position DONNEMOILECUP = new Position(200, 0, -100);
-        private Position RedCupFin = new Position(100, 200, -420);
         private void PickUpCup(ref Position cup)
         {
             OuvrirPince(100);
-            SetSpeed(25);
-            Position RedCupHauteur = new Position(cup.X, cup.Y, cup.Z + 100);
-
+            SetSpeed(100);
+            Position RedCupHauteur = new Position(cup.X, cup.Y, cup.Z + 120);
             VersPosition(ref RedCupHauteur);
+            SetSpeed(25);
             VersPosition(ref cup);
 
             JOG(0, 0, 0); // wait
             FermerPince(15);
             System.Threading.Thread.Sleep(8000);
+            VersPosition(ref RedCupHauteur);
+            System.Threading.Thread.Sleep(2000);
 
-            SetSpeed(100);
+            SetSpeed(50);
         }
-        private void ServirCup()
+        private void DropCup(ref Position cup)
         {
-            PickUpCup(ref RedCup);
-            GoToStart();
-            VersPosition(ref DONNEMOILECUP);
-            System.Threading.Thread.Sleep(6000);
-
-            GoToStart();
-            VersPosition(ref RedCupFin);
-            JOG(0, 0, 0);
+            //GoToStart();
+            Position cuptemp = new Position(cup.X, cup.Y, PosZ);
+            VersPosition(ref cuptemp);
+            cuptemp = new Position(PosX, PosY, cup.Z);
+            VersPosition(ref cuptemp);
+            VersPosition(ref cup);
+            JOG(0, 0, 0); // wait
             OuvrirPince(100);
-            System.Threading.Thread.Sleep(4000);
-            Position RedCupFinHauteur = new Position(RedCupFin.X, RedCupFin.Y, RedCupFin.Z + 100);
+            System.Threading.Thread.Sleep(3000);
+            Position RedCupFinHauteur = new Position(cup.X, cup.Y, cup.Z + 200);
             VersPosition(ref RedCupFinHauteur);
             GoToStart();
         }
-        public void MakeDrink(List<Position> positions)
+        private void ServirCup()
         {
-            EnOperation = true;
-            foreach (var pos in positions)
-            {
-                Position p = pos;
-                VerserBouteille(ref p);
-            }
-            GoToStart();
-            JOG(0, 0, 0);
-            EnOperation = false;
+            PickUpCup(ref RedCupDrinkStation);
+            DropCup(ref RedCupFin);
         }
-        public List<Position> Exemple = new List<Position>
+        #endregion
+
+        #region Tasks
+        private Task DrinkOperation(List<(Position pos, int nbShots)> positions)
         {
-            new Position(0,-300, -350),
-            new Position(-500,-300, -350),
-            new Position(-300,-300, -350),
-            new Position(-100,-300, -350),
-            new Position(-400,-300, -350),
-            new Position(-500,-300, -350),
-            new Position(0,-300, -350),
-            new Position(-400,-300, -350),
-            new Position(-500,-300, -350)
+            return Task.Run(() =>
+            {
+                GoToStart(); // Se met un position de debart
+                Position cuptemp = new Position(RedCupStackStation.X, RedCupStackStation.Y, RedCupStackStation.Z + (nbCup * 4));
+                PickUpCup(ref cuptemp); // Prend le cup dans la pile
+                SetSpeed(75);
+                DeplacerMainPriv(-180);
+                --nbCup;
+                DropCup(ref RedCupDrinkStation); // Depose le cup dans la station de travail
+                foreach (var position in positions) // Verse les bouteille une par une
+                {
+                    var p = position;
+                    VerserBouteille(ref p);
+                }
+                GoToStart();
+                JOG(0, 0, 0);
+                ServirCup(); // prend le cup et le depose devant le client
+            });
+        }
+        #endregion
+
+        public void MakeDrink(List<(Position pos, int nbShots)> positions)
+        {
+            if (task.IsCompleted && positions.Capacity != 0 && !Calibration)
+                task = DrinkOperation(positions);
+        }
+
+        public List<(Position position, int nbShots)> Exemple = new List<(Position pos, int nbShots)>
+        {
+            (new Position(130,-200, -365), 1),
+            (new Position(70,-290, -365), 1),
+            (new Position(-10,-350, -365), 1),
+            (new Position(-100,-400, -365), 1),
+            (new Position(-205,-400, -365), 1),
+            (new Position(-305,-400, -365), 1)
+
         };
-        public List<string> TEST()
+        public void TEST()
         {
-            List<string> list = new List<string>();
-
-            MakeDrink(Exemple);
-            //list.Add(PosX + " " + PosY + " " + PosZ);
-
-            return list;
+            Calibration = true;
+            //VersPosition(ref CreateStation);
         }
     }
 }
