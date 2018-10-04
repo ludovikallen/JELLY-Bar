@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
     String[] DrinksIngredients={"Vodka+OrangeJuice+Grenadine","xxx","Rhum+Coke","Beer","Beer+Coke","Water"};
     String[] Notes={"1.9","2.8","5.7","3","2","1","6","8"};
 
-
+    String drinkCourantNote;
     Integer note=0;
     /**
      * Fonction lancée à la création de l'activité
@@ -600,20 +600,9 @@ public class MainActivity extends AppCompatActivity {
      */
     void fillDrinksList() {
         arrayListDrink.clear();
-        Statement stm1s;
         Statement stm1;
         ResultSet resultSet;
-        ResultSet setRecette;
-        int nombreRecette = 0;
-        String requeteNombreRecette = "select count(*) from recette";
-        try {
-            stm1s = conn_.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
-            setRecette = stm1s.executeQuery(requeteNombreRecette);
-            setRecette.next();
-            nombreRecette = setRecette.getInt(1);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        int nombreRecette = compterNombreRecettes();
 
         for (int i = 1; i <= nombreRecette; i++)
         {
@@ -659,6 +648,23 @@ public class MainActivity extends AppCompatActivity {
     {
         SimpleAdapter simpleAdapter=new SimpleAdapter(this, arrayListDrink,R.layout.custom_list_drink,from,to);
         listDrinkLVIEW.setAdapter(simpleAdapter);//sets the adapter for listView
+    }
+
+    int compterNombreRecettes()
+    {
+        Statement stm1s;
+        ResultSet setRecette;
+
+        String requeteNombreRecette = "select count(*) from recette";
+        try {
+            stm1s = conn_.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
+            setRecette = stm1s.executeQuery(requeteNombreRecette);
+            setRecette.next();
+            return setRecette.getInt(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
     }
 
     /**
@@ -727,59 +733,26 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-  /*  void Commander() {
+    void Commander()
+    {
+        HashMap<String, Integer> drink= new HashMap<>();
+        for (int i = 0; i < arrayListCart.size(); i++)
+        {
+            drink=défaireDescription(arrayListCart.get(i).get("desc"));
+            //REQUETES BD ICI
 
-
-        if(arrayListCart.size()!=0) {
-            int list = arrayListCart.size();
-            for (int i = 0; i < list; i++) {
-                String line = String.valueOf(arrayListCart.get(i));
-                System.out.println(line);
-            }
-            for(int i=0; i<arrayListCart.size();i++)
-            {
-                //ENVOYER COMMANDES BD, NE PAS VIDER LA ARRAYLISTCART
-            }
-
-            DemanderNote(arrayListCart.get(0).get("nom"));
-            selectedCartPositions.clear();
-            fillCartList();
-
-            fillDrinksList();
         }
-    }*/
-  void Commander() {
 
-      int list = arrayListCart.size();
-      String Commandes[] = new String[0];
-      ArrayList<ArrayList<HashMap<Integer, String>>> ListeCommande= new ArrayList<>();
-      for (int i = 0; i < list ; i++)
-      {
-          boolean drinkRestant = true;
-          String line = String.valueOf(arrayListCart.get(i));
-          line = line.substring(line.indexOf("=")+1);
-          line = line.substring(line.indexOf("=")+1);
-          line = line.substring(0, line.length() - 1);
-          Commandes = line.split(",");
-          ListeCommande.add(new ArrayList<HashMap<Integer, String>>());
-          for (String Commande: Commandes) {
-              String ElementCommande[] = Commande.split("oz");
-              HashMap<Integer, String> Drink = new HashMap<Integer, String>();
-              Drink.put(Integer.valueOf(ElementCommande[0].trim()), ElementCommande[1].trim());
-              ListeCommande.get(i).add(Drink);
-          }
-
-      }
-
-      DemanderNote(arrayListCart.get(0).get("nom"));
-      arrayListCart.clear();
-      selectedCartPositions.clear();
-      fillCartList();
-  }
+        DemanderNote(arrayListCart.get(0).get("nom"));
+        selectedCartPositions.clear();
+        fillCartList();
+        fillDrinksList();
+    }
 
     void DemanderNote(String nomMix)
     {
         final TextView nomMixTXT=findViewById(R.id.nomMix_TXT);
+
         nomMixTXT.setText(nomMix);
         notesLYT.setVisibility(View.VISIBLE);
         fillCartList();
@@ -925,5 +898,27 @@ public class MainActivity extends AppCompatActivity {
 
         view.setBackgroundColor(getResources().getColor(R.color.yellow));
         toast.show();
+    }
+
+    HashMap<String, Integer> défaireDescription(String description)
+    {
+        HashMap<String, Integer> ingredients = new HashMap<>();
+        ArrayList<HashMap<String, Integer>> drink = new ArrayList<>();
+        ArrayList<String> tableauIngredients=new ArrayList<>();
+        String line=description;
+
+        while(line.contains(","))
+        {
+            tableauIngredients.add(line.substring(0, line.indexOf(",")));
+            line=line.substring(line.indexOf(",") + 1);
+        }
+        tableauIngredients.add(line);
+
+        for(int i=0;i<tableauIngredients.size();i++)
+        {
+            String ElementCommande[] = tableauIngredients.get(i).split("oz");
+            ingredients.put(ElementCommande[1].trim(), Integer.valueOf(ElementCommande[0].trim()));
+        }
+        return ingredients;
     }
 }
