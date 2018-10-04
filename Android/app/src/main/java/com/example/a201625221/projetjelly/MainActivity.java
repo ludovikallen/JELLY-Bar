@@ -2,13 +2,8 @@ package com.example.a201625221.projetjelly;
 
 import android.annotation.SuppressLint;
 import android.content.res.ColorStateList;
-<<<<<<< HEAD
-import android.graphics.Color;
-import android.os.StrictMode;
-=======
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
->>>>>>> Développement
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,11 +19,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.os.StrictMode;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -40,15 +30,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import static android.media.CamcorderProfile.get;
-<<<<<<< HEAD
 
 public class MainActivity extends AppCompatActivity {
-
-    ResultSet rst= null;
-=======
-
-public class MainActivity extends AppCompatActivity {
->>>>>>> Développement
     public static Connection conn_ = null;
     int toast_height=420;
     /**
@@ -99,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         StrictMode.setThreadPolicy(new
                 StrictMode.ThreadPolicy.Builder()
                 .detectDiskReads()
@@ -113,23 +97,6 @@ public class MainActivity extends AppCompatActivity {
                 .build());
         OracleConnexion();
 
-<<<<<<< HEAD
-=======
-        StrictMode.setThreadPolicy(new
-                StrictMode.ThreadPolicy.Builder()
-                .detectDiskReads()
-                .detectDiskWrites()
-                .detectNetwork()
-                .penaltyLog()
-                .build());
-        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-                .detectLeakedSqlLiteObjects()
-                .penaltyLog()
-                .penaltyDeath()
-                .build());
-        OracleConnexion();
-
->>>>>>> Développement
     }
 
     private void OracleConnexion(){
@@ -173,38 +140,7 @@ public class MainActivity extends AppCompatActivity {
         setTouchListeners();
         setClickListeners();
     }
-    private void OracleConnexion(){
-        Thread t= new Thread() {
-            @Override
-            public void run() {
-                try
-                {
-                    Class.forName("oracle.jdbc.OracleDriver");
-                } catch (
-                        ClassNotFoundException e
-                        )
-                {
-                    Toast.makeText(MainActivity.this, "Driver manquant." +
-                            e.getMessage().toString(), Toast.LENGTH_LONG).show();
-                }
-                String jdbcURL = "jdbc:oracle:thin:@mercure.clg.qc.ca:1521:ORCL";
-                String user = "barman";
-                String passwd = "projet";
-                try
-                {
-                    conn_ = DriverManager.getConnection(jdbcURL,user,passwd);
-                    Initialize();
 
-                } catch (
-                        java.sql.SQLException se
-                        )
-                {
-                    Toast.makeText(MainActivity.this, "Connexion au serveur  impossible." + se.getMessage().toString(), Toast.LENGTH_LONG).show();
-                }
-            }
-        };
-        t.start();
-    }
     /**
      * Initialise les composantes globales utilisées plusieurs fois pour ne pas avoir à les rechercher dans les fonctions
      */
@@ -662,12 +598,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Vide puis rempli la liste des drinks disponibles à partir de la BD(Pour l'initialiser, puis la rafraîchir)
      */
-<<<<<<< HEAD
-   void fillDrinksList()
-    {
-=======
     void fillDrinksList() {
->>>>>>> Développement
         arrayListDrink.clear();
         Statement stm1s;
         Statement stm1;
@@ -712,10 +643,7 @@ public class MainActivity extends AppCompatActivity {
 
                 hashMap.put("nom", nom);
                 hashMap.put("desc",description);
-<<<<<<< HEAD
-=======
                 hashMap.put("note", Notes[i]);
->>>>>>> Développement
                 if (drinkPossible)
                 {
                     arrayListDrink.add(hashMap);//add the hashmap into arrayList
@@ -738,17 +666,6 @@ public class MainActivity extends AppCompatActivity {
      */
     void fillIngList()
     {
-<<<<<<< HEAD
-        /*arrayListIng.clear();
-        for (String aIngName : IngName) {
-            HashMap<String, String> hashMap = new HashMap<>();//create a hashmap to store the data in key value pair
-            hashMap.put("nom", aIngName);
-            //hashMap.put("desc",Ingredients[i]+"");
-            //hashMap.put("note",Notes[i]);
-            arrayListIng.add(hashMap);//add the hashmap into arrayList
-        }*/
-=======
->>>>>>> Développement
         arrayListIng.clear();
         Statement stm1;
         ResultSet resultSet;
@@ -758,26 +675,6 @@ public class MainActivity extends AppCompatActivity {
 
             resultSet = stm1.executeQuery(sql);
             while(resultSet.next())
-<<<<<<< HEAD
-            {
-                HashMap<String,String> hashMap=new HashMap<>();//create a hashmap to store the data in key value pair
-
-                hashMap.put("nom",resultSet.getString(1));
-                hashMap.put("desc",resultSet.getString(2));
-                arrayListIng.add(hashMap);//add the hashmap into arrayList
-            }
-
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        Collections.sort(arrayListIng, new Comparator<HashMap<String,String>>()
-        {
-            public int compare(HashMap<String,String> o1,
-                               HashMap<String,String> o2)
-=======
->>>>>>> Développement
             {
                 HashMap<String,String> hashMap=new HashMap<>();//create a hashmap to store the data in key value pair
 
@@ -794,7 +691,7 @@ public class MainActivity extends AppCompatActivity {
     void refreshIngList()
     {
         SimpleAdapter simpleAdapter=new SimpleAdapter(this,arrayListIng,R.layout.custom_list_ing,from,to);
-        //listIngLVIEW.setAdapter(simpleAdapter);//sets the adapter for listView
+        listIngLVIEW.setAdapter(simpleAdapter);//sets the adapter for listView
     }
 
     void refreshItemCourant()
@@ -832,18 +729,6 @@ public class MainActivity extends AppCompatActivity {
 
     void Commander() {
 
-<<<<<<< HEAD
-        int list = arrayListCart.size();
-        for (int i = 0; i < list ; i++)
-        {
-            String  line = String.valueOf(arrayListCart.get(i));
-            System.out.println(line);
-        }
-        DemanderNote();
-        arrayListCart.clear();
-        selectedCartPositions.clear();
-        fillCartList();
-=======
 
         if(arrayListCart.size()!=0) {
             int list = arrayListCart.size();
@@ -862,7 +747,6 @@ public class MainActivity extends AppCompatActivity {
 
             fillDrinksList();
         }
->>>>>>> Développement
     }
 
     void DemanderNote(String nomMix)
@@ -972,7 +856,7 @@ public class MainActivity extends AppCompatActivity {
                     return 0;
                 }
         });
-       refreshDrinkList();
+        refreshDrinkList();
     }
 
     void EnleverTri()
@@ -992,11 +876,6 @@ public class MainActivity extends AppCompatActivity {
 
     void refreshCartItemCount()
     {
-<<<<<<< HEAD
-      //  final TextView itemCountTXT=findViewById(R.id.cartItemsCount_TXT);
-
-       // itemCountTXT.setText(Integer.toString(arrayListCart.size()));
-=======
         final TextView itemCountTXT=findViewById(R.id.cartItemsCount_TXT);
         itemCountTXT.setText(Integer.toString(arrayListCart.size()));
         final TextView panierTXT=findViewById(R.id.cart_TXT);
@@ -1007,7 +886,6 @@ public class MainActivity extends AppCompatActivity {
             panierTXT.setText(getResources().getString(R.string.cart_str));
             panierTXT.setPaintFlags(panierTXT.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);
         }
->>>>>>> Développement
     }
 
     void faireToast(String message)
