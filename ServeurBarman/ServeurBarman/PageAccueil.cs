@@ -20,6 +20,9 @@ namespace ServeurBarman
         public OracleConnection connexion;
         int count = 0;
         CRS_A255 robot;
+        List<string> commande = new List<string>();
+        List<(Position,int)> commandeRobot=new List<(Position, int)>();
+
 
         public PageAccueil()
         {
@@ -27,7 +30,6 @@ namespace ServeurBarman
             connexion = new OracleConnection();
             PBX_EtatDeconnecté.Visible = true;
             check = true;
-
             Task.Run(() =>
             {
                 while (check)
@@ -36,12 +38,13 @@ namespace ServeurBarman
                     //Show_WaitingDrinksList();
                     Thread.Sleep(1000);
                 }
-            }).Start();
+            });
         }
 
         private void BTN_Welcome_Click(object sender, EventArgs e)
         {
             welcomePage1.BringToFront();
+            Show_WaitingDrinksList();
         }
 
         private void BTN_AddDrink_Click(object sender, EventArgs e)
@@ -85,19 +88,64 @@ namespace ServeurBarman
 
         private void Show_WaitingDrinksList()
         {
+            Boolean check1 = true;
+            if (check)
+                if (LBX_WaitingList.Items.Count == 0 || LBX_WaitingList.Items.Count != commande.Count)
+                {
+                    commande.Clear();
+                    LBX_WaitingList.Items.Clear();
+                    Refresh_WaitingList();
+                    foreach (var e in commande)
+                        LBX_WaitingList.Items.Add(e);
+                }
+                else
+                {
+                    commande.Clear();
+                    Refresh_WaitingList();
+                    commande.Sort();
+
+                    for (int i = 0; i < commande.Count; ++i)
+                    {
+                        if (LBX_WaitingList.Items.Count != commande.Count)
+                        {
+                            commande.Clear();
+                            LBX_WaitingList.Items.Clear();
+                            Refresh_WaitingList();
+                            foreach (var e in commande)
+                                LBX_WaitingList.Items.Add(e);
+                        }
+                        else if (!LBX_WaitingList.Items[i].Equals(commande[i]))
+                            check1 = false;
+                    }
+
+                    if (!check1)
+                    {
+                        LBX_WaitingList.Items.Clear();
+                        foreach (var e in commande)
+                            LBX_WaitingList.Items.Add(e);
+                    }
+                }
+        }
+
+
+        private void Refresh_WaitingList()
+        {
             count = 0;
-            string cmd = "select descriptions from ingredient";
-            LBX_WaitingList.Items.Clear();
+            string cmd = "select e.descriptions, e.POSITIONX,e.POSITIONY,e.POSITIONZ,c.QTY from ingredient e inner join commande c on e.codebouteille=c.ingredient";
             try
             {
                 OracleCommand listeDiv = new OracleCommand(cmd, connexion);
                 listeDiv.CommandType = CommandType.Text;
                 OracleDataReader divisionReader = listeDiv.ExecuteReader();
+                Console.WriteLine(divisionReader.ToString());
                 while (divisionReader.Read())
                 {
-                    LBX_WaitingList.Items.Add(divisionReader.GetString(0));
                     count++;
+                    commande.Add(divisionReader.GetString(0));
+                    // Une tuple contenant l'emplacement et la quantité de l'ingrédient
+                    commandeRobot.Add((new Position(divisionReader.GetInt32(1), divisionReader.GetInt32(2), divisionReader.GetInt32(3)), divisionReader.GetInt32(4)));
                 }
+                
                 divisionReader.Close();
                 welcomePage1.nombreClient = count.ToString();
                 welcomePage1.Init_UserUI();
@@ -105,13 +153,18 @@ namespace ServeurBarman
             catch (Exception sel) { MessageBox.Show(sel.Message.ToString()); }
         }
 
+        private void ServirClient()
+        {
+            foreach(var e in commandeRobot)
+            {
+                robot.MakeDrink(commandeRobot);
+            }
+        }
+
         private void mBtnConnexionRobot_Click(object sender, EventArgs e)
         {
             BTN_Setting.Enabled = true;
-            DLG_Settings.port = port;
-            Update_UI();
-            Write_To_Robot(); // Envoie des paramètres de configuration au robot
-            Read_From_Robot(); // Réception de la réponse du robot suite aux paramètres envoyés
+            robot.Connexion();  
             if (robot.Connected)
             {
                 MessageBox.Show("Connexion robot réussie");
@@ -121,8 +174,7 @@ namespace ServeurBarman
             {
                 MessageBox.Show("Connexion robot impossible");
                 robot.Deconnexion();
-            }
-            
+            } 
         }
 
         private void button6_Click(object sender, EventArgs e)
@@ -145,39 +197,5 @@ namespace ServeurBarman
             }).Start();
         }
 
-        private void Write_To_Robot()
-        {
-            port.Write(tab, 0x00, tab.Length);
-            Thread.Sleep(100);
-            port.Write(tab1, 0x00, tab1.Length);
-            Thread.Sleep(100);
-            port.Write(tab2, 0x00, tab2.Length);
-            Thread.Sleep(100);
-            port.Write(tab3, 0x00, tab3.Length);
-            Thread.Sleep(100);
-            port.Write("NOHELP\r");
-            Thread.Sleep(100);
-        }
-
-        private void Read_From_Robot()
-        {
-            byte[] tabre = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-            port.Read(tabre, 0x00, tabre.Length);
-
-            if (!tabre.Length.Equals(0))
-            {
-                Thread.Sleep(100);
-            }
-            else
-            {
-                port.Close();
-            }
-        }
-
-        private void Update_UI()
-        {
-            port.Open();
-            port.BaudRate = 19200;
-        }
     }
 }

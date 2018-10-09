@@ -32,7 +32,7 @@ namespace ServeurBarman
 
         private void WelcomePage_Load(object sender, EventArgs e)
         {
-            
+
         }
 
         private void TBX_NombreClient_TextChanged(object sender, EventArgs e)

@@ -87,7 +87,7 @@ namespace Bras_Robot
         private int Speed { get; set; } = 10;
         #endregion
         #region general robot fonctions
-        private void Connexion()
+        public void Connexion()
         {
             serialPort = new SerialPort("COM1", 19200);
             serialPort.Open();
