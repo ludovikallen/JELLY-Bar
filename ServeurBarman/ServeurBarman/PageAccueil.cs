@@ -10,19 +10,16 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Bras_Robot;
 
 namespace ServeurBarman
 {
     public partial class PageAccueil : MetroFramework.Forms.MetroForm
     {
         static Boolean check;
-        static SerialPort port;
         public OracleConnection connexion;
         int count = 0;
-        byte[] tab = new byte[] { 0x52, 0x21, 0x05 };
-        byte[] tab1 = new byte[] { 0x01, 0x21, 0x21, 0x00, 0x48, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x03, 0x8B };
-        byte[] tab2 = new byte[] { 0x06 };
-        byte[] tab3 = new byte[] { 0x04 };
+        CRS_A255 robot;
 
         public PageAccueil()
         {
@@ -30,9 +27,8 @@ namespace ServeurBarman
             connexion = new OracleConnection();
             PBX_EtatDeconnecté.Visible = true;
             check = true;
-            port = new SerialPort();
 
-            new Thread(() =>
+            Task.Run(() =>
             {
                 while (check)
                 {
@@ -116,7 +112,7 @@ namespace ServeurBarman
             Update_UI();
             Write_To_Robot(); // Envoie des paramètres de configuration au robot
             Read_From_Robot(); // Réception de la réponse du robot suite aux paramètres envoyés
-            if (port.IsOpen)
+            if (robot.Connected)
             {
                 MessageBox.Show("Connexion robot réussie");
                 ConnexionRobot();
@@ -124,7 +120,7 @@ namespace ServeurBarman
             else
             {
                 MessageBox.Show("Connexion robot impossible");
-                port.Close();
+                robot.Deconnexion();
             }
             
         }
@@ -137,7 +133,7 @@ namespace ServeurBarman
         private void ConnexionRobot()
         {
             PBX_EtatDeconnecté.Visible = false;
-            new Thread(() =>
+            Task.Run(() =>
             {
                 while (check)
                 {
