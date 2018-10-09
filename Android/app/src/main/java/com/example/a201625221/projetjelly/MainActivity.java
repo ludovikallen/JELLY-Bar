@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.res.ColorStateList;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
+import android.graphics.Rect;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 import android.os.StrictMode;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -28,6 +30,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Iterator;
+import java.util.Set;
 
 import static android.media.CamcorderProfile.get;
 
@@ -73,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
     String[] DrinksIngredients={"Vodka+OrangeJuice+Grenadine","xxx","Rhum+Coke","Beer","Beer+Coke","Water"};
     String[] Notes={"1.9","2.8","5.7","3","2","1","6","8"};
 
+    int indexItemModification=-1;
     String drinkCourantNote;
     Integer note=0;
     /**
@@ -287,6 +292,9 @@ public class MainActivity extends AppCompatActivity {
         final TextView noteExitBTN=findViewById(R.id.exitNoteBTN);
         final TextView noteSendBTN=findViewById(R.id.sendNote_BTN);
         final TextView triNoteBTN=findViewById(R.id.triNote_BTN);
+        final Button acceptChangesBTN=findViewById(R.id.acceptChange_BTN);
+        final Button cancelChangesBTN=findViewById(R.id.cancelChange_BTN);
+
         final ImageButton etoile1= findViewById(R.id.star1_IMGBTN);
         final ImageButton etoile2= findViewById(R.id.star2_IMGBTN);
         final ImageButton etoile3= findViewById(R.id.star3_IMGBTN);
@@ -403,6 +411,30 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        acceptChangesBTN.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if(indexItemModification!=-1) {
+                    arrayListCart.remove(indexItemModification);
+                }
+                indexItemModification=-1;
+                arrayListCart.add(arrayListItemCourant.get(0));
+                arrayListItemCourant.clear();
+                modifyLYT.setVisibility(View.INVISIBLE);
+                cartLYT.setVisibility(View.VISIBLE);
+                refreshCartItemCount();
+                fillCartList();
+            }
+        });
+
+        cancelChangesBTN.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                indexItemModification=-1;
+                arrayListItemCourant.clear();
+                modifyLYT.setVisibility(View.INVISIBLE);
+                listDrinkLYT.setVisibility(View.VISIBLE);
+            }
+        });
+
         etoile1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 etoile1.setImageDrawable(getResources().getDrawable(R.drawable.star_active));
@@ -484,8 +516,19 @@ public class MainActivity extends AppCompatActivity {
                 HashMap<String, String> itemActuel=arrayListItemCourant.get(0);
                 arrayListItemCourant.clear();
                 HashMap<String, String> nouvelItemActuel=new HashMap<String, String>();
+
+                HashMap<String, Integer> ingredients=défaireDescription(itemActuel.get("desc"));
+                if(ingredients.containsKey(nouveauIngredient.get("nom")))
+                {
+                    int nbOz=ingredients.get(nouveauIngredient.get("nom"));
+                    ingredients.remove(nouveauIngredient.get("nom"));
+                    ingredients.put(nouveauIngredient.get("nom"),  nbOz + 1);
+                }
+                else
+                    ingredients.put(nouveauIngredient.get("nom"), 1);
+                String nouvelleDescription=faireDescription(ingredients);
                 nouvelItemActuel.put("nom", itemActuel.get("nom"));
-                nouvelItemActuel.put("desc", itemActuel.get("desc")+", "+nouveauIngredient.get("nom"));
+                nouvelItemActuel.put("desc", nouvelleDescription);
                 nouvelItemActuel.put("note", itemActuel.get("note"));
                 arrayListItemCourant.add(nouvelItemActuel);
                 refreshItemCourant();
@@ -547,9 +590,67 @@ public class MainActivity extends AppCompatActivity {
                     modifyLYT.setVisibility(View.VISIBLE);
                     fillIngList();
                     refreshIngList();
+                    indexItemModification=position;
                 return true;
             }
         });
+
+        listIngLVIEW.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position,
+                                    long id) {
+
+                HashMap<String, String> nouveauIngredient = ( HashMap<String, String>)adapterView.getItemAtPosition(position);
+
+                HashMap<String, String> itemActuel=arrayListItemCourant.get(0);
+                HashMap<String, Integer> ingredients=défaireDescription(itemActuel.get("desc"));
+                if(ingredients.containsKey(nouveauIngredient.get("nom")))
+                {
+                    arrayListItemCourant.clear();
+                    HashMap<String, String> nouvelItemActuel = new HashMap<String, String>();
+
+
+                    int nbOz=ingredients.get(nouveauIngredient.get("nom"));
+                    ingredients.remove(nouveauIngredient.get("nom"));
+                    if(nbOz-1!=0)
+                        ingredients.put(nouveauIngredient.get("nom"),  nbOz - 1);
+
+                    nouvelItemActuel.put("nom", itemActuel.get("nom"));
+                    nouvelItemActuel.put("desc", faireDescription(ingredients));
+                    nouvelItemActuel.put("note", itemActuel.get("note"));
+                    faireToast("x1 " + nouveauIngredient.values().toArray()[0] + " enlevé du drink");
+                    arrayListItemCourant.add(nouvelItemActuel);
+                }
+                else
+                {
+                    faireToast(nouveauIngredient.values().toArray()[0] + " pas dans le drink");
+                }
+                refreshItemCourant();
+                return true;
+            }
+        });
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        Rect viewRect = new Rect();
+        notesLYT.getGlobalVisibleRect(viewRect);
+        if(notesLYT.getVisibility()==View.VISIBLE) {
+            if (!viewRect.contains((int) ev.getRawX(), (int) ev.getRawY())) {
+                notesLYT.setVisibility(View.INVISIBLE);
+                fillCartList();
+                arrayListCart.clear();
+
+                final ImageButton commandBTN=findViewById(R.id.command_IMGBTN);
+                commandBTN.setVisibility(View.INVISIBLE);
+                faireToast("Notes annulées");
+                final TextView panierTXT=findViewById(R.id.cart_TXT);
+                panierTXT.setText(getResources().getString(R.string.cart_str));
+                panierTXT.setPaintFlags(panierTXT.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);
+            }
+        }
+
+        return super.dispatchTouchEvent(ev);
     }
 
     /**
@@ -744,6 +845,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         DemanderNote(arrayListCart.get(0).get("nom"));
+        faireToast("Merci de votre commande. Veuillez noter s'il vous plait.");
         selectedCartPositions.clear();
         fillCartList();
         fillDrinksList();
@@ -920,5 +1022,22 @@ public class MainActivity extends AppCompatActivity {
             ingredients.put(ElementCommande[1].trim(), Integer.valueOf(ElementCommande[0].trim()));
         }
         return ingredients;
+    }
+
+    String faireDescription(HashMap<String, Integer> ingredients)
+    {
+        Set keys = ingredients.keySet();
+        Collection<Integer> items=ingredients.values();
+        String desc="";
+        for (Iterator i = keys.iterator(); i.hasNext(); )
+        {
+            String key = (String) i.next();
+            Integer value = ingredients.get(key);
+            if(i.hasNext())
+                desc+=value+" oz "+key+", ";
+            else
+                desc+=value+" oz "+key;
+        }
+        return desc;
     }
 }
