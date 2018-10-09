@@ -43,6 +43,8 @@
             this.BTN_Open_Pliers = new System.Windows.Forms.Button();
             this.panel5 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
+            this.button8 = new System.Windows.Forms.Button();
+            this.button10 = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
             this.button6 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
@@ -56,8 +58,6 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.Btn_Back = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.button10 = new System.Windows.Forms.Button();
-            this.button8 = new System.Windows.Forms.Button();
             this.panel4.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel6.SuspendLayout();
@@ -174,7 +174,7 @@
             this.BTN_Close_Pliers.TabIndex = 0;
             this.BTN_Close_Pliers.Text = "Fermé";
             this.BTN_Close_Pliers.UseVisualStyleBackColor = true;
-            this.BTN_Close_Pliers.Click += new System.EventHandler(this.BTN_Close_Pliers_Click);
+            this.BTN_Close_Pliers.Click += new System.EventHandler(this.BTN_Close_Pliers_Click_1);
             // 
             // label6
             // 
@@ -217,6 +217,30 @@
             this.label1.Size = new System.Drawing.Size(75, 23);
             this.label1.TabIndex = 19;
             this.label1.Text = "COUDE";
+            // 
+            // button8
+            // 
+            this.button8.BackgroundImage = global::ServeurBarman.Properties.Resources.if_Rounded_02_2024670;
+            this.button8.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.button8.Location = new System.Drawing.Point(119, 56);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(80, 77);
+            this.button8.TabIndex = 20;
+            this.button8.Text = "button3";
+            this.button8.UseVisualStyleBackColor = true;
+            this.button8.Click += new System.EventHandler(this.button8_Click);
+            // 
+            // button10
+            // 
+            this.button10.BackgroundImage = global::ServeurBarman.Properties.Resources.if_Rounded_01_2024671;
+            this.button10.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.button10.Location = new System.Drawing.Point(8, 56);
+            this.button10.Name = "button10";
+            this.button10.Size = new System.Drawing.Size(80, 77);
+            this.button10.TabIndex = 20;
+            this.button10.Text = "button3";
+            this.button10.UseVisualStyleBackColor = true;
+            this.button10.Click += new System.EventHandler(this.button10_Click);
             // 
             // panel2
             // 
@@ -360,30 +384,6 @@
             this.pictureBox1.TabIndex = 29;
             this.pictureBox1.TabStop = false;
             // 
-            // button10
-            // 
-            this.button10.BackgroundImage = global::ServeurBarman.Properties.Resources.if_Rounded_01_2024671;
-            this.button10.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.button10.Location = new System.Drawing.Point(8, 56);
-            this.button10.Name = "button10";
-            this.button10.Size = new System.Drawing.Size(80, 77);
-            this.button10.TabIndex = 20;
-            this.button10.Text = "button3";
-            this.button10.UseVisualStyleBackColor = true;
-            this.button10.Click += new System.EventHandler(this.button10_Click);
-            // 
-            // button8
-            // 
-            this.button8.BackgroundImage = global::ServeurBarman.Properties.Resources.if_Rounded_02_2024670;
-            this.button8.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.button8.Location = new System.Drawing.Point(119, 56);
-            this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(80, 77);
-            this.button8.TabIndex = 20;
-            this.button8.Text = "button3";
-            this.button8.UseVisualStyleBackColor = true;
-            this.button8.Click += new System.EventHandler(this.button8_Click);
-            // 
             // DLG_Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -407,6 +407,7 @@
             this.MinimumSize = new System.Drawing.Size(789, 561);
             this.Name = "DLG_Settings";
             this.Text = "Paramètres Robot";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DLG_Settings_FormClosing);
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
             this.panel3.ResumeLayout(false);
