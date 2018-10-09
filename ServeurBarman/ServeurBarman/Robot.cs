@@ -175,14 +175,10 @@ namespace Bras_Robot
         }
         public void OuvrirPince(int val)
         {
-            if (Calibration)
-                return;
             FuncNSleep(() => serialPort.Write("OPEN " + val.ToString() + "\r"), 200);
         }
         public void FermerPince(int val)
         {
-            if (Calibration)
-                return;
             FuncNSleep(() => serialPort.Write("CLOSE " + val.ToString() + "\r"), 200);
         }
         public void Home()

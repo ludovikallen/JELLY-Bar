@@ -19,10 +19,11 @@ namespace ServeurBarman
         static Boolean check;
         public OracleConnection connexion;
         int count = 0;
-        CRS_A255 robot;
         List<string> commande = new List<string>();
-        List<(Position,int)> commandeRobot=new List<(Position, int)>();
 
+        List<List<(Position,int)>> ListcommandeRobot = new List<List<(Position, int)>>();
+
+        CRS_A255 robot = CRS_A255.Instance;
 
         public PageAccueil()
         {
@@ -143,7 +144,9 @@ namespace ServeurBarman
                     count++;
                     commande.Add(divisionReader.GetString(0));
                     // Une tuple contenant l'emplacement et la quantité de l'ingrédient
-                    commandeRobot.Add((new Position(divisionReader.GetInt32(1), divisionReader.GetInt32(2), divisionReader.GetInt32(3)), divisionReader.GetInt32(4)));
+                    var list = new List<(Position, int)>();
+                    list.Add((new Position(divisionReader.GetInt32(1), divisionReader.GetInt32(2), divisionReader.GetInt32(3)), divisionReader.GetInt32(4)));
+                    ListcommandeRobot.Add(list);
                 }
                 
                 divisionReader.Close();
@@ -152,19 +155,30 @@ namespace ServeurBarman
             }
             catch (Exception sel) { MessageBox.Show(sel.Message.ToString()); }
         }
-
+        Task servir = Task.Run(() => { });
         private void ServirClient()
         {
-            foreach(var e in commandeRobot)
+            servir = Task.Run(() =>
             {
-                robot.MakeDrink(commandeRobot);
-            }
+                while (true)
+                {
+                    if(ListcommandeRobot.Count > 0)
+                    {
+                        if (!robot.EnMarche())
+                        {
+                            robot.MakeDrink(ListcommandeRobot[0]);
+                            ListcommandeRobot.Remove(ListcommandeRobot[0]);
+                        }
+                    }
+                }
+            });
         }
 
         private void mBtnConnexionRobot_Click(object sender, EventArgs e)
         {
             BTN_Setting.Enabled = true;
-            robot.Connexion();  
+            robot.Connexion();
+            DLG_Settings.port = port;
             if (robot.Connected)
             {
                 MessageBox.Show("Connexion robot réussie");
@@ -192,10 +206,9 @@ namespace ServeurBarman
                     PBX_EtatConnecté.Visible = true;
                     Thread.Sleep(500);
                     PBX_EtatConnecté.Visible = false;
-                    Thread.Sleep(500);  
+                    Thread.Sleep(500);
                 }
-            }).Start();
+            });
         }
-
     }
 }
