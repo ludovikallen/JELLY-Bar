@@ -52,7 +52,7 @@ namespace Bras_Robot
         #region robot attributes
         private static readonly Lazy<CRS_A255> lazy = new Lazy<CRS_A255>(() => new CRS_A255());
         public static CRS_A255 Instance { get { return lazy.Value; } }
-        private Task task { get; set; }
+        public Task task { get; set; }
         private int PosX { get; set; }
         private int PosY { get; set; }
         private int PosZ { get; set; }

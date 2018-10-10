@@ -30,9 +30,9 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DLG_Settings));
             this.panel4 = new System.Windows.Forms.Panel();
-            this.button7 = new System.Windows.Forms.Button();
+            this.Btn_Epaule_Right = new System.Windows.Forms.Button();
             this.label8 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
+            this.Btn_Epaule_Left = new System.Windows.Forms.Button();
             this.panel3 = new System.Windows.Forms.Panel();
             this.Btn_Base_Right = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
@@ -43,13 +43,13 @@
             this.BTN_Open_Pliers = new System.Windows.Forms.Button();
             this.panel5 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
-            this.button8 = new System.Windows.Forms.Button();
-            this.button10 = new System.Windows.Forms.Button();
+            this.Btn_Coude_Right = new System.Windows.Forms.Button();
+            this.Btn_Coude_Left = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.button6 = new System.Windows.Forms.Button();
-            this.button5 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
+            this.Btn_Main_Right = new System.Windows.Forms.Button();
+            this.Btn_Main_Left = new System.Windows.Forms.Button();
+            this.Btn_Poignet_Down = new System.Windows.Forms.Button();
+            this.Btn_Poignet_Up = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.Calibrer_Robot = new System.Windows.Forms.Button();
             this.BTN_Ready = new System.Windows.Forms.Button();
@@ -69,25 +69,25 @@
             // panel4
             // 
             this.panel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.panel4.Controls.Add(this.button7);
+            this.panel4.Controls.Add(this.Btn_Epaule_Right);
             this.panel4.Controls.Add(this.label8);
-            this.panel4.Controls.Add(this.button1);
+            this.panel4.Controls.Add(this.Btn_Epaule_Left);
             this.panel4.Location = new System.Drawing.Point(265, 389);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(218, 149);
             this.panel4.TabIndex = 21;
             // 
-            // button7
+            // Btn_Epaule_Right
             // 
-            this.button7.BackgroundImage = global::ServeurBarman.Properties.Resources.if_Rounded_14_2024661;
-            this.button7.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.button7.Location = new System.Drawing.Point(125, 56);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(80, 77);
-            this.button7.TabIndex = 20;
-            this.button7.Text = "button3";
-            this.button7.UseVisualStyleBackColor = true;
-            this.button7.Click += new System.EventHandler(this.button7_Click);
+            this.Btn_Epaule_Right.BackgroundImage = global::ServeurBarman.Properties.Resources.if_Rounded_14_2024661;
+            this.Btn_Epaule_Right.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.Btn_Epaule_Right.Location = new System.Drawing.Point(125, 56);
+            this.Btn_Epaule_Right.Name = "Btn_Epaule_Right";
+            this.Btn_Epaule_Right.Size = new System.Drawing.Size(80, 77);
+            this.Btn_Epaule_Right.TabIndex = 20;
+            this.Btn_Epaule_Right.Text = "button3";
+            this.Btn_Epaule_Right.UseVisualStyleBackColor = true;
+            this.Btn_Epaule_Right.Click += new System.EventHandler(this.Btn_Epaule_Right_Click);
             // 
             // label8
             // 
@@ -99,17 +99,17 @@
             this.label8.TabIndex = 19;
             this.label8.Text = "EPAULE";
             // 
-            // button1
+            // Btn_Epaule_Left
             // 
-            this.button1.BackgroundImage = global::ServeurBarman.Properties.Resources.if_Rounded_13_2024662;
-            this.button1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.button1.Location = new System.Drawing.Point(18, 56);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(80, 77);
-            this.button1.TabIndex = 20;
-            this.button1.Text = "button3";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.Btn_Epaule_Left.BackgroundImage = global::ServeurBarman.Properties.Resources.if_Rounded_13_2024662;
+            this.Btn_Epaule_Left.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.Btn_Epaule_Left.Location = new System.Drawing.Point(18, 56);
+            this.Btn_Epaule_Left.Name = "Btn_Epaule_Left";
+            this.Btn_Epaule_Left.Size = new System.Drawing.Size(80, 77);
+            this.Btn_Epaule_Left.TabIndex = 20;
+            this.Btn_Epaule_Left.Text = "button3";
+            this.Btn_Epaule_Left.UseVisualStyleBackColor = true;
+            this.Btn_Epaule_Left.Click += new System.EventHandler(this.Btn_Epaule_Left_Click);
             // 
             // panel3
             // 
@@ -201,8 +201,8 @@
             // 
             this.panel5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.panel5.Controls.Add(this.label1);
-            this.panel5.Controls.Add(this.button8);
-            this.panel5.Controls.Add(this.button10);
+            this.panel5.Controls.Add(this.Btn_Coude_Right);
+            this.panel5.Controls.Add(this.Btn_Coude_Left);
             this.panel5.Location = new System.Drawing.Point(23, 389);
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(212, 149);
@@ -218,90 +218,90 @@
             this.label1.TabIndex = 19;
             this.label1.Text = "COUDE";
             // 
-            // button8
+            // Btn_Coude_Right
             // 
-            this.button8.BackgroundImage = global::ServeurBarman.Properties.Resources.if_Rounded_02_2024670;
-            this.button8.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.button8.Location = new System.Drawing.Point(119, 56);
-            this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(80, 77);
-            this.button8.TabIndex = 20;
-            this.button8.Text = "button3";
-            this.button8.UseVisualStyleBackColor = true;
-            this.button8.Click += new System.EventHandler(this.button8_Click);
+            this.Btn_Coude_Right.BackgroundImage = global::ServeurBarman.Properties.Resources.if_Rounded_02_2024670;
+            this.Btn_Coude_Right.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.Btn_Coude_Right.Location = new System.Drawing.Point(119, 56);
+            this.Btn_Coude_Right.Name = "Btn_Coude_Right";
+            this.Btn_Coude_Right.Size = new System.Drawing.Size(80, 77);
+            this.Btn_Coude_Right.TabIndex = 20;
+            this.Btn_Coude_Right.Text = "button3";
+            this.Btn_Coude_Right.UseVisualStyleBackColor = true;
+            this.Btn_Coude_Right.Click += new System.EventHandler(this.Btn_Coude_Right_Click);
             // 
-            // button10
+            // Btn_Coude_Left
             // 
-            this.button10.BackgroundImage = global::ServeurBarman.Properties.Resources.if_Rounded_01_2024671;
-            this.button10.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.button10.Location = new System.Drawing.Point(8, 56);
-            this.button10.Name = "button10";
-            this.button10.Size = new System.Drawing.Size(80, 77);
-            this.button10.TabIndex = 20;
-            this.button10.Text = "button3";
-            this.button10.UseVisualStyleBackColor = true;
-            this.button10.Click += new System.EventHandler(this.button10_Click);
+            this.Btn_Coude_Left.BackgroundImage = global::ServeurBarman.Properties.Resources.if_Rounded_01_2024671;
+            this.Btn_Coude_Left.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.Btn_Coude_Left.Location = new System.Drawing.Point(8, 56);
+            this.Btn_Coude_Left.Name = "Btn_Coude_Left";
+            this.Btn_Coude_Left.Size = new System.Drawing.Size(80, 77);
+            this.Btn_Coude_Left.TabIndex = 20;
+            this.Btn_Coude_Left.Text = "button3";
+            this.Btn_Coude_Left.UseVisualStyleBackColor = true;
+            this.Btn_Coude_Left.Click += new System.EventHandler(this.Btn_Coude_Left_Click);
             // 
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.panel2.Controls.Add(this.button6);
-            this.panel2.Controls.Add(this.button5);
-            this.panel2.Controls.Add(this.button4);
-            this.panel2.Controls.Add(this.button3);
+            this.panel2.Controls.Add(this.Btn_Main_Right);
+            this.panel2.Controls.Add(this.Btn_Main_Left);
+            this.panel2.Controls.Add(this.Btn_Poignet_Down);
+            this.panel2.Controls.Add(this.Btn_Poignet_Up);
             this.panel2.Controls.Add(this.label4);
             this.panel2.Location = new System.Drawing.Point(524, 265);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(242, 273);
             this.panel2.TabIndex = 25;
             // 
-            // button6
+            // Btn_Main_Right
             // 
-            this.button6.BackgroundImage = global::ServeurBarman.Properties.Resources.if_Rounded_14_2024661;
-            this.button6.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.button6.Location = new System.Drawing.Point(154, 115);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(76, 77);
-            this.button6.TabIndex = 20;
-            this.button6.Text = "button3";
-            this.button6.UseVisualStyleBackColor = true;
-            this.button6.Click += new System.EventHandler(this.button6_Click);
+            this.Btn_Main_Right.BackgroundImage = global::ServeurBarman.Properties.Resources.if_Rounded_14_2024661;
+            this.Btn_Main_Right.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.Btn_Main_Right.Location = new System.Drawing.Point(154, 115);
+            this.Btn_Main_Right.Name = "Btn_Main_Right";
+            this.Btn_Main_Right.Size = new System.Drawing.Size(76, 77);
+            this.Btn_Main_Right.TabIndex = 20;
+            this.Btn_Main_Right.Text = "button3";
+            this.Btn_Main_Right.UseVisualStyleBackColor = true;
+            this.Btn_Main_Right.Click += new System.EventHandler(this.Btn_Main_Right_Click);
             // 
-            // button5
+            // Btn_Main_Left
             // 
-            this.button5.BackgroundImage = global::ServeurBarman.Properties.Resources.if_Rounded_13_2024662;
-            this.button5.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.button5.Location = new System.Drawing.Point(8, 115);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(76, 77);
-            this.button5.TabIndex = 20;
-            this.button5.Text = "button3";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
+            this.Btn_Main_Left.BackgroundImage = global::ServeurBarman.Properties.Resources.if_Rounded_13_2024662;
+            this.Btn_Main_Left.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.Btn_Main_Left.Location = new System.Drawing.Point(8, 115);
+            this.Btn_Main_Left.Name = "Btn_Main_Left";
+            this.Btn_Main_Left.Size = new System.Drawing.Size(76, 77);
+            this.Btn_Main_Left.TabIndex = 20;
+            this.Btn_Main_Left.Text = "button3";
+            this.Btn_Main_Left.UseVisualStyleBackColor = true;
+            this.Btn_Main_Left.Click += new System.EventHandler(this.Btn_Main_Left_Click);
             // 
-            // button4
+            // Btn_Poignet_Down
             // 
-            this.button4.BackgroundImage = global::ServeurBarman.Properties.Resources.if_Rounded_02_2024670;
-            this.button4.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.button4.Location = new System.Drawing.Point(81, 189);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(76, 77);
-            this.button4.TabIndex = 20;
-            this.button4.Text = "button3";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
+            this.Btn_Poignet_Down.BackgroundImage = global::ServeurBarman.Properties.Resources.if_Rounded_02_2024670;
+            this.Btn_Poignet_Down.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.Btn_Poignet_Down.Location = new System.Drawing.Point(81, 189);
+            this.Btn_Poignet_Down.Name = "Btn_Poignet_Down";
+            this.Btn_Poignet_Down.Size = new System.Drawing.Size(76, 77);
+            this.Btn_Poignet_Down.TabIndex = 20;
+            this.Btn_Poignet_Down.Text = "button3";
+            this.Btn_Poignet_Down.UseVisualStyleBackColor = true;
+            this.Btn_Poignet_Down.Click += new System.EventHandler(this.Btn_Poignet_Down_Click);
             // 
-            // button3
+            // Btn_Poignet_Up
             // 
-            this.button3.BackgroundImage = global::ServeurBarman.Properties.Resources.if_Rounded_01_2024671;
-            this.button3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.button3.Location = new System.Drawing.Point(81, 41);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(76, 77);
-            this.button3.TabIndex = 20;
-            this.button3.Text = "button3";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
+            this.Btn_Poignet_Up.BackgroundImage = global::ServeurBarman.Properties.Resources.if_Rounded_01_2024671;
+            this.Btn_Poignet_Up.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.Btn_Poignet_Up.Location = new System.Drawing.Point(81, 41);
+            this.Btn_Poignet_Up.Name = "Btn_Poignet_Up";
+            this.Btn_Poignet_Up.Size = new System.Drawing.Size(76, 77);
+            this.Btn_Poignet_Up.TabIndex = 20;
+            this.Btn_Poignet_Up.Text = "button3";
+            this.Btn_Poignet_Up.UseVisualStyleBackColor = true;
+            this.Btn_Poignet_Up.Click += new System.EventHandler(this.Btn_Poignet_Up_Click);
             // 
             // label4
             // 
@@ -322,6 +322,7 @@
             this.Calibrer_Robot.TabIndex = 28;
             this.Calibrer_Robot.Text = "CALIBRER";
             this.Calibrer_Robot.UseVisualStyleBackColor = true;
+            this.Calibrer_Robot.Click += new System.EventHandler(this.Calibrer_Robot_Click);
             // 
             // BTN_Ready
             // 
@@ -332,6 +333,7 @@
             this.BTN_Ready.TabIndex = 27;
             this.BTN_Ready.Text = "READY";
             this.BTN_Ready.UseVisualStyleBackColor = true;
+            this.BTN_Ready.Click += new System.EventHandler(this.BTN_Ready_Click);
             // 
             // BTN_Home
             // 
@@ -353,6 +355,7 @@
             this.button2.TabIndex = 28;
             this.button2.Text = "RESET";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // panel1
             // 
@@ -443,16 +446,16 @@
         private System.Windows.Forms.Button BTN_Home;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button6;
-        private System.Windows.Forms.Button button5;
-        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button Btn_Poignet_Up;
+        private System.Windows.Forms.Button Btn_Main_Right;
+        private System.Windows.Forms.Button Btn_Main_Left;
+        private System.Windows.Forms.Button Btn_Poignet_Down;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Button button7;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button Btn_Epaule_Right;
+        private System.Windows.Forms.Button Btn_Epaule_Left;
         private System.Windows.Forms.Button Btn_Base_Right;
         private System.Windows.Forms.Button Btn_Base_Left;
-        private System.Windows.Forms.Button button8;
-        private System.Windows.Forms.Button button10;
+        private System.Windows.Forms.Button Btn_Coude_Right;
+        private System.Windows.Forms.Button Btn_Coude_Left;
     }
 }

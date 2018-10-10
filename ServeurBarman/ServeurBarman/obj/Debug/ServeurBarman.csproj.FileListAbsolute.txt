@@ -258,3 +258,6 @@ C:\Users\201605878\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\bin\Debug\Syste
 C:\Users\201605878\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\bin\Debug\System.Threading.Tasks.Extensions.xml
 C:\Users\201605878\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\bin\Debug\System.ValueTuple.xml
 C:\Users\201605878\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.csproj.CopyComplete
+C:\Users\Jérémy\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\bin\Debug\ServeurBarman.exe.config
+C:\Users\Jérémy\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.exe
+C:\Users\Jérémy\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.pdb
