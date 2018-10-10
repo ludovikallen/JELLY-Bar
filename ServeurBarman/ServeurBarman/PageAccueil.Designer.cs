@@ -213,7 +213,6 @@
             this.LBX_WaitingList.Name = "LBX_WaitingList";
             this.LBX_WaitingList.ScrollAlwaysVisible = true;
             this.LBX_WaitingList.Size = new System.Drawing.Size(230, 164);
-            this.LBX_WaitingList.Sorted = true;
             this.LBX_WaitingList.TabIndex = 11;
             // 
             // pnlBar

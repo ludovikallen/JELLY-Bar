@@ -37,18 +37,7 @@ namespace Bras_Robot
     {
         private CRS_A255()
         {
-            task = Task.Run(() =>
-            {
-                //contourne un bug dans la connection avec le robot
-                //SetPosToStart();
-                //Connexion();
-                //Deconnexion();
-                //System.Threading.Thread.Sleep(100);
-                //Connexion();
-                //Connected = true;
-            });
         }
-
         #region robot attributes
         private static readonly Lazy<CRS_A255> lazy = new Lazy<CRS_A255>(() => new CRS_A255());
         public static CRS_A255 Instance { get { return lazy.Value; } }
@@ -87,7 +76,22 @@ namespace Bras_Robot
         private int Speed { get; set; } = 10;
         #endregion
         #region general robot fonctions
-        public void Connexion()
+        public int ConnexionRobot()
+        {
+            task = Task.Run(() =>
+            {
+                //contourne un bug dans la connection avec le robot
+                SetPosToStart();
+                Connexion();
+                Deconnexion();
+                System.Threading.Thread.Sleep(100);
+                Connexion();
+                Connected = true;
+            });
+            return 1;
+
+        }
+        private void Connexion()
         {
             serialPort = new SerialPort("COM1", 19200);
             serialPort.Open();
@@ -303,13 +307,13 @@ namespace Bras_Robot
         {
             var t = Task.Run(() => action);
             t.Wait();
-            System.Threading.Thread.Sleep(100);
+            System.Threading.Thread.Sleep(sleep);
         }
         private void FuncNSleep(Action<string> action, int sleep)
         {
             var t = Task.Run(() => action);
             t.Wait();
-            System.Threading.Thread.Sleep(100);
+            System.Threading.Thread.Sleep(sleep);
         }
         private void FuncNSleep(Action action, int sleep)
         {

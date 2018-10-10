@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 ﻿using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
@@ -23,6 +22,7 @@ namespace ServeurBarman
         List<string> commande = new List<string>();
         List<List<(Position,int)>> ListcommandeRobot = new List<List<(Position, int)>>();
         CRS_A255 robot = CRS_A255.Instance;
+        List<(Position, int)>  list = new List<(Position, int)>();
 
         public PageAccueil()
         {
@@ -35,7 +35,7 @@ namespace ServeurBarman
                 while (check)
                 {
                     Thread.Sleep(1000);
-                    //Show_WaitingDrinksList();
+                    Show_WaitingDrinksList();
                     Thread.Sleep(1000);
                 }
             });
@@ -44,7 +44,7 @@ namespace ServeurBarman
         private void BTN_Welcome_Click(object sender, EventArgs e)
         {
             welcomePage1.BringToFront();
-            Show_WaitingDrinksList();
+            //Show_WaitingDrinksList();
         }
 
         private void BTN_AddDrink_Click(object sender, EventArgs e)
@@ -104,7 +104,6 @@ namespace ServeurBarman
                     // Ici, on vérifie si une nouvelle commande a été ajoutée à la liste d'attente
                     commande.Clear();
                     Refresh_WaitingList();
-                    commande.Sort();
 
                     for (int i = 0; i < commande.Count; ++i)
                     {
@@ -146,9 +145,9 @@ namespace ServeurBarman
                     count++;
                     commande.Add(divisionReader.GetString(0));
                     // Une liste de commande contenant la position et la quantité des ingrédients
-                    var list = new List<(Position, int)>();
+                    //var list = new List<(Position, int)>();
                     list.Add((new Position(divisionReader.GetInt32(1), divisionReader.GetInt32(2), divisionReader.GetInt32(3)), divisionReader.GetInt32(4)));
-                    ListcommandeRobot.Add(list);
+                    //ListcommandeRobot.Add(list);
                 }
                 
                 divisionReader.Close();
@@ -172,8 +171,8 @@ namespace ServeurBarman
                     {
                         if (!robot.EnMarche())
                         {
-                            robot.MakeDrink(ListcommandeRobot[0]);
-                            ListcommandeRobot.Remove(ListcommandeRobot[0]);
+                            robot.MakeDrink(list);
+                            //ListcommandeRobot.Remove(ListcommandeRobot[0]);
                         }
                     }
                 }
@@ -182,21 +181,28 @@ namespace ServeurBarman
 
         private void mBtnConnexionRobot_Click(object sender, EventArgs e)
         {
-            BTN_Setting.Enabled = true;
+             BTN_Setting.Enabled = true;
 
             // On établie la connexion avec le robot
-            robot.Connexion();
-            if (robot.Connected)
+
+            robot.ConnexionRobot();
+
+            Task.Run(() =>
             {
-                MessageBox.Show("Connexion robot réussie");
-                ConnexionRobot();
-                ServirClient();
-            }
-            else
-            {
-                MessageBox.Show("Connexion robot impossible");
-                robot.Deconnexion();
-            } 
+                System.Threading.Thread.Sleep(2000);
+                if (robot.Connected)
+                {
+                    MessageBox.Show("Connexion robot réussie");
+                    ConnexionRobot();
+                    ServirClient();
+                }
+                else
+                {
+                    MessageBox.Show("Connexion robot impossible");
+                    robot.Deconnexion();
+                }
+            });
+            
         }
 
         private void button6_Click(object sender, EventArgs e)
