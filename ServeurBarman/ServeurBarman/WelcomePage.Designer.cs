@@ -29,13 +29,13 @@
         private void InitializeComponent()
         {
             this.label1 = new System.Windows.Forms.Label();
-            this.TBX_NombreClient = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.TbxNombreBouteille = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.TbxNombreVerres = new System.Windows.Forms.TextBox();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.metroLabel1 = new MetroFramework.Controls.MetroLabel();
+            this.mLB_CustomNumber = new MetroFramework.Controls.MetroLabel();
             this.SuspendLayout();
             // 
             // label1
@@ -47,16 +47,6 @@
             this.label1.Size = new System.Drawing.Size(174, 18);
             this.label1.TabIndex = 0;
             this.label1.Text = "Nombre de client en ligne";
-            // 
-            // TBX_NombreClient
-            // 
-            this.TBX_NombreClient.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TBX_NombreClient.Location = new System.Drawing.Point(204, 17);
-            this.TBX_NombreClient.Name = "TBX_NombreClient";
-            this.TBX_NombreClient.Size = new System.Drawing.Size(64, 26);
-            this.TBX_NombreClient.TabIndex = 1;
-            this.TBX_NombreClient.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.TBX_NombreClient.TextChanged += new System.EventHandler(this.TBX_NombreClient_TextChanged);
             // 
             // label2
             // 
@@ -113,17 +103,26 @@
             this.metroLabel1.TabIndex = 3;
             this.metroLabel1.Text = "Activités robot";
             // 
+            // mLB_CustomNumber
+            // 
+            this.mLB_CustomNumber.AutoSize = true;
+            this.mLB_CustomNumber.Location = new System.Drawing.Point(204, 20);
+            this.mLB_CustomNumber.Name = "mLB_CustomNumber";
+            this.mLB_CustomNumber.Size = new System.Drawing.Size(107, 25);
+            this.mLB_CustomNumber.TabIndex = 4;
+            this.mLB_CustomNumber.Text = "                   ";
+            // 
             // WelcomePage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.mLB_CustomNumber);
             this.Controls.Add(this.metroLabel1);
             this.Controls.Add(this.listBox1);
             this.Controls.Add(this.TbxNombreVerres);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.TbxNombreBouteille);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.TBX_NombreClient);
             this.Controls.Add(this.label1);
             this.MaximumSize = new System.Drawing.Size(659, 274);
             this.MinimumSize = new System.Drawing.Size(659, 274);
@@ -138,12 +137,12 @@
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox TBX_NombreClient;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox TbxNombreBouteille;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox TbxNombreVerres;
         private System.Windows.Forms.ListBox listBox1;
         private MetroFramework.Controls.MetroLabel metroLabel1;
+        private MetroFramework.Controls.MetroLabel mLB_CustomNumber;
     }
 }

@@ -40,12 +40,12 @@ namespace Bras_Robot
             task = Task.Run(() =>
             {
                 //contourne un bug dans la connection avec le robot
-                SetPosToStart();
-                Connexion();
-                Deconnexion();
-                System.Threading.Thread.Sleep(100);
-                Connexion();
-                Connected = true;
+                //SetPosToStart();
+                //Connexion();
+                //Deconnexion();
+                //System.Threading.Thread.Sleep(100);
+                //Connexion();
+                //Connected = true;
             });
         }
 

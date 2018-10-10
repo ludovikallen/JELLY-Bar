@@ -25,7 +25,7 @@ namespace ServeurBarman
 
         public void Init_UserUI()
         {
-            TBX_NombreClient.Text = nombreClient;
+            mLB_CustomNumber.Text = nombreClient;
             TbxNombreBouteille.Text = nombreBouteille;
             TbxNombreVerres.Text = nombreVerre;
         }

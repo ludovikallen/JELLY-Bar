@@ -237,6 +237,7 @@
             // 
             // mBtnConnexionRobot
             // 
+            this.mBtnConnexionRobot.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.mBtnConnexionRobot.FontSize = MetroFramework.MetroButtonSize.Tall;
             this.mBtnConnexionRobot.Location = new System.Drawing.Point(779, 140);
             this.mBtnConnexionRobot.Name = "mBtnConnexionRobot";

@@ -20,9 +20,7 @@ namespace ServeurBarman
         public OracleConnection connexion;
         int count = 0;
         List<string> commande = new List<string>();
-
         List<List<(Position,int)>> ListcommandeRobot = new List<List<(Position, int)>>();
-
         CRS_A255 robot = CRS_A255.Instance;
 
         public PageAccueil()
@@ -91,7 +89,8 @@ namespace ServeurBarman
         {
             Boolean check1 = true;
             if (check)
-                if (LBX_WaitingList.Items.Count == 0 || LBX_WaitingList.Items.Count != commande.Count)
+                // Premiere vérificcation de la liste de commande 
+                if (LBX_WaitingList.Items.Count == 0 )
                 {
                     commande.Clear();
                     LBX_WaitingList.Items.Clear();
@@ -101,6 +100,7 @@ namespace ServeurBarman
                 }
                 else
                 {
+                    // Ici, on vérifie si une nouvelle commande a été ajoutée à la liste d'attente
                     commande.Clear();
                     Refresh_WaitingList();
                     commande.Sort();
@@ -128,7 +128,8 @@ namespace ServeurBarman
                 }
         }
 
-
+        // Ici, on charge toutes les commandes disponible dans la table commande de la bd,
+        // puis on détermine le nombre de clients.
         private void Refresh_WaitingList()
         {
             count = 0;
@@ -143,7 +144,7 @@ namespace ServeurBarman
                 {
                     count++;
                     commande.Add(divisionReader.GetString(0));
-                    // Une tuple contenant l'emplacement et la quantité de l'ingrédient
+                    // Une liste de commande contenant la position et la quantité des ingrédients
                     var list = new List<(Position, int)>();
                     list.Add((new Position(divisionReader.GetInt32(1), divisionReader.GetInt32(2), divisionReader.GetInt32(3)), divisionReader.GetInt32(4)));
                     ListcommandeRobot.Add(list);
@@ -155,10 +156,14 @@ namespace ServeurBarman
             }
             catch (Exception sel) { MessageBox.Show(sel.Message.ToString()); }
         }
-        Task servir = Task.Run(() => { });
+
+        /// <summary>
+        /// Cette méthode permet de servir le client sur la base des commandes disponible 
+        /// dans la liste d'attante
+        /// </summary>
         private void ServirClient()
         {
-            servir = Task.Run(() =>
+            Task.Run(() =>
             {
                 while (true)
                 {
@@ -177,12 +182,14 @@ namespace ServeurBarman
         private void mBtnConnexionRobot_Click(object sender, EventArgs e)
         {
             BTN_Setting.Enabled = true;
+
+            // On établie la connexion avec le robot
             robot.Connexion();
-            DLG_Settings.port = port;
             if (robot.Connected)
             {
                 MessageBox.Show("Connexion robot réussie");
                 ConnexionRobot();
+                ServirClient();
             }
             else
             {
