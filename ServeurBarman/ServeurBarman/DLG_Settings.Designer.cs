@@ -87,7 +87,6 @@
             this.Btn_Epaule_Right.TabIndex = 20;
             this.Btn_Epaule_Right.Text = "button3";
             this.Btn_Epaule_Right.UseVisualStyleBackColor = true;
-            this.Btn_Epaule_Right.Click += new System.EventHandler(this.Btn_Epaule_Right_Click);
             // 
             // label8
             // 
@@ -109,7 +108,6 @@
             this.Btn_Epaule_Left.TabIndex = 20;
             this.Btn_Epaule_Left.Text = "button3";
             this.Btn_Epaule_Left.UseVisualStyleBackColor = true;
-            this.Btn_Epaule_Left.Click += new System.EventHandler(this.Btn_Epaule_Left_Click);
             // 
             // panel3
             // 
@@ -131,7 +129,6 @@
             this.Btn_Base_Right.Size = new System.Drawing.Size(80, 77);
             this.Btn_Base_Right.TabIndex = 20;
             this.Btn_Base_Right.UseVisualStyleBackColor = true;
-            this.Btn_Base_Right.Click += new System.EventHandler(this.Btn_Base_Right_Click);
             // 
             // label7
             // 
@@ -152,7 +149,6 @@
             this.Btn_Base_Left.Size = new System.Drawing.Size(80, 77);
             this.Btn_Base_Left.TabIndex = 20;
             this.Btn_Base_Left.UseVisualStyleBackColor = true;
-            this.Btn_Base_Left.Click += new System.EventHandler(this.Btn_Base_Left_Click);
             // 
             // panel6
             // 
@@ -228,7 +224,6 @@
             this.Btn_Coude_Right.TabIndex = 20;
             this.Btn_Coude_Right.Text = "button3";
             this.Btn_Coude_Right.UseVisualStyleBackColor = true;
-            this.Btn_Coude_Right.Click += new System.EventHandler(this.Btn_Coude_Right_Click);
             // 
             // Btn_Coude_Left
             // 
@@ -240,7 +235,6 @@
             this.Btn_Coude_Left.TabIndex = 20;
             this.Btn_Coude_Left.Text = "button3";
             this.Btn_Coude_Left.UseVisualStyleBackColor = true;
-            this.Btn_Coude_Left.Click += new System.EventHandler(this.Btn_Coude_Left_Click);
             // 
             // panel2
             // 
@@ -265,7 +259,6 @@
             this.Btn_Main_Right.TabIndex = 20;
             this.Btn_Main_Right.Text = "button3";
             this.Btn_Main_Right.UseVisualStyleBackColor = true;
-            this.Btn_Main_Right.Click += new System.EventHandler(this.Btn_Main_Right_Click);
             // 
             // Btn_Main_Left
             // 
@@ -277,7 +270,6 @@
             this.Btn_Main_Left.TabIndex = 20;
             this.Btn_Main_Left.Text = "button3";
             this.Btn_Main_Left.UseVisualStyleBackColor = true;
-            this.Btn_Main_Left.Click += new System.EventHandler(this.Btn_Main_Left_Click);
             // 
             // Btn_Poignet_Down
             // 
@@ -289,7 +281,6 @@
             this.Btn_Poignet_Down.TabIndex = 20;
             this.Btn_Poignet_Down.Text = "button3";
             this.Btn_Poignet_Down.UseVisualStyleBackColor = true;
-            this.Btn_Poignet_Down.Click += new System.EventHandler(this.Btn_Poignet_Down_Click);
             // 
             // Btn_Poignet_Up
             // 
@@ -301,7 +292,6 @@
             this.Btn_Poignet_Up.TabIndex = 20;
             this.Btn_Poignet_Up.Text = "button3";
             this.Btn_Poignet_Up.UseVisualStyleBackColor = true;
-            this.Btn_Poignet_Up.Click += new System.EventHandler(this.Btn_Poignet_Up_Click);
             // 
             // label4
             // 

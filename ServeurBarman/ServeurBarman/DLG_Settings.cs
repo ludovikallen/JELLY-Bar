@@ -7,21 +7,214 @@ namespace ServeurBarman
     public partial class DLG_Settings : MetroFramework.Forms.MetroForm
     {
         CRS_A255 robot = CRS_A255.Instance;
-        private bool isRunning;
+        private bool isRunning = false;
         public DLG_Settings()
         {
             InitializeComponent();
 
             Btn_Base_Left.MouseDown += (sender, args) =>
             {
-
+                isRunning = true;
+                Task.Run(() =>
+                {
+                    while (isRunning)
+                    {
+                        if (robot.task.IsCompleted)
+                        {
+                            robot.task = Task.Run(() =>
+                            {
+                                robot.DeplacerBase(5);
+                                System.Threading.Thread.Sleep(1000); //TODO
+                            });
+                        }
+                    }
+                });
             };
-            
+            Btn_Base_Right.MouseDown += (sender, args) =>
+            {
+                isRunning = true;
+
+                Task.Run(() =>
+                {
+                    while (isRunning)
+                    {
+                        if (robot.task.IsCompleted)
+                        {
+                            robot.task = Task.Run(() =>
+                            {
+                                robot.DeplacerBase(5);
+                                System.Threading.Thread.Sleep(1000); //TODO
+                            });
+                        }
+                    }
+                });
+            };
+            Btn_Epaule_Left.MouseDown += (sender, args) =>
+            {
+                isRunning = true;
+
+                Task.Run(() =>
+                {
+                    while (isRunning)
+                    {
+                        if (robot.task.IsCompleted)
+                        {
+                            robot.task = Task.Run(() =>
+                            {
+                                robot.DeplacerEpaule(-5);
+                                System.Threading.Thread.Sleep(1000); //TODO
+                            });
+                        }
+                    }
+                });
+            };
+            Btn_Epaule_Right.MouseDown += (sender, args) =>
+            {
+                isRunning = true;
+
+                Task.Run(() =>
+                {
+                    while (isRunning)
+                    {
+                        if (robot.task.IsCompleted)
+                        {
+                            robot.task = Task.Run(() =>
+                            {
+                                robot.DeplacerEpaule(5);
+                                System.Threading.Thread.Sleep(1000); //TODO
+                            });
+                        }
+                    }
+                });
+            };
+            Btn_Coude_Left.MouseDown += (sender, args) =>
+            {
+                isRunning = true;
+
+                Task.Run(() =>
+                {
+                    while (isRunning)
+                    {
+                        if (robot.task.IsCompleted)
+                        {
+                            robot.task = Task.Run(() =>
+                            {
+                                robot.DeplacerCoude(5);
+                                System.Threading.Thread.Sleep(1000); //TODO
+                            });
+                        }
+                    }
+                });
+                
+            };
+            Btn_Coude_Right.MouseDown += (sender, args) =>
+            {
+                isRunning = true;
+
+                Task.Run(() =>
+                {
+                    while (isRunning)
+                    {
+                        if (robot.task.IsCompleted)
+                        {
+                            robot.task = Task.Run(() =>
+                            {
+                                robot.DeplacerCoude(-5);
+                                System.Threading.Thread.Sleep(1000); //TODO
+                            });
+                        }
+                    }
+                });
+            };
+            Btn_Main_Right.MouseDown += (sender, args) =>
+            {
+                isRunning = true;
+
+                Task.Run(() =>
+                {
+                    while (isRunning)
+                    {
+                        if (robot.task.IsCompleted)
+                        {
+                            robot.task = Task.Run(() =>
+                            {
+                                robot.DeplacerCoude(-5);
+                                System.Threading.Thread.Sleep(1000); //TODO
+                            });
+                        }
+                    }
+                });
+                
+            };
+            Btn_Main_Left.MouseDown += (sender, args) =>
+            {
+                isRunning = true;
+
+                Task.Run(() =>
+                {
+                    while (isRunning)
+                    {
+                        if (robot.task.IsCompleted)
+                        {
+                            robot.task = Task.Run(() =>
+                            {
+                                robot.DeplacerMain(5);
+                                System.Threading.Thread.Sleep(1000); //TODO
+                            });
+                        }
+                    }
+                });
+            };
+            Btn_Poignet_Up.MouseDown += (sender, args) =>
+            {
+                isRunning = true;
+
+                Task.Run(() =>
+                {
+                    while (isRunning)
+                    {
+                        if (robot.task.IsCompleted)
+                        {
+                            robot.task = Task.Run(() =>
+                            {
+                                robot.DeplacerPoignet(5);
+                                System.Threading.Thread.Sleep(1000); //TODO
+                            });
+                        }
+                    }
+                });
+            };
+            Btn_Poignet_Down.MouseDown += (sender, args) =>
+            {
+                isRunning = true;
+
+                Task.Run(() =>
+                {
+                    while (isRunning)
+                    {
+                        if (robot.task.IsCompleted)
+                        {
+                            robot.task = Task.Run(() =>
+                            {
+                                robot.DeplacerPoignet(-5);
+                                System.Threading.Thread.Sleep(1000); //TODO
+                            });
+                        }
+                    }
+                });
+            };
+
             Btn_Base_Left.MouseUp += (sender, args) => isRunning = false;
-            //Btn_Base_Right;
-            //Btn_Epaule_Left;
-            //Btn_Epaule_Right;
-            
+            Btn_Base_Right.MouseUp += (sender, args) => isRunning = false;
+            Btn_Epaule_Left.MouseUp += (sender, args) => isRunning = false;
+            Btn_Epaule_Right.MouseUp += (sender, args) => isRunning = false;
+            Btn_Coude_Left.MouseUp += (sender, args) => isRunning = false;
+            Btn_Coude_Right.MouseUp += (sender, args) => isRunning = false;
+            Btn_Main_Right.MouseUp += (sender, args) => isRunning = false;
+            Btn_Main_Left.MouseUp += (sender, args) => isRunning = false;
+            Btn_Poignet_Up.MouseUp += (sender, args) => isRunning = false;
+            Btn_Poignet_Down.MouseUp += (sender, args) => isRunning = false;
+
 
             robot.task = Task.Run(() =>
             {
@@ -63,129 +256,9 @@ namespace ServeurBarman
             }
         }
 
-        private void Btn_Base_Right_Click(object sender, EventArgs e)
-        {
-            if (robot.task.IsCompleted)
-            {
-                robot.task = Task.Run(() =>
-                {
-                    robot.DeplacerBase(5);
-                    System.Threading.Thread.Sleep(1000); //TODO
-                });
-            }
-        }
-
-        private void Btn_Base_Left_Click(object sender, EventArgs e)
-        {
-            if (robot.task.IsCompleted)
-            {
-                robot.task = Task.Run(() =>
-                {
-                    robot.DeplacerBase(-5);
-                    System.Threading.Thread.Sleep(1000); //TODO
-                });
-            }
-        }
-
         private void DLG_Settings_FormClosing(object sender, System.Windows.Forms.FormClosingEventArgs e)
         {
             robot.Calibration = false;
-        }
-
-        private void Btn_Coude_Left_Click(object sender, EventArgs e)
-        {
-            if (robot.task.IsCompleted)
-            {
-                robot.task = Task.Run(() =>
-                {
-                    robot.DeplacerCoude(5);
-                    System.Threading.Thread.Sleep(1000); //TODO
-                });
-            }
-        }
-
-        private void Btn_Coude_Right_Click(object sender, EventArgs e)
-        {
-            if (robot.task.IsCompleted)
-            {
-                robot.task = Task.Run(() =>
-                {
-                    robot.DeplacerCoude(-5);
-                    System.Threading.Thread.Sleep(1000); //TODO
-                });
-            }
-        }
-
-        private void Btn_Epaule_Left_Click(object sender, EventArgs e)
-        {
-            if (robot.task.IsCompleted)
-            {
-                robot.task = Task.Run(() =>
-                {
-                    robot.DeplacerEpaule(-5);
-                    System.Threading.Thread.Sleep(1000); //TODO
-                });
-            }
-        }
-
-        private void Btn_Epaule_Right_Click(object sender, EventArgs e)
-        {
-            if (robot.task.IsCompleted)
-            {
-                robot.task = Task.Run(() =>
-                {
-                    robot.DeplacerEpaule(5);
-                    System.Threading.Thread.Sleep(1000); //TODO
-                });
-            }
-        }
-
-        private void Btn_Poignet_Up_Click(object sender, EventArgs e)
-        {
-            if (robot.task.IsCompleted)
-            {
-                robot.task = Task.Run(() =>
-                {
-                    robot.DeplacerPoignet(5);
-                    System.Threading.Thread.Sleep(1000); //TODO
-                });
-            }
-        }
-
-        private void Btn_Poignet_Down_Click(object sender, EventArgs e)
-        {
-            if (robot.task.IsCompleted)
-            {
-                robot.task = Task.Run(() =>
-                {
-                    robot.DeplacerPoignet(-5);
-                    System.Threading.Thread.Sleep(1000); //TODO
-                });
-            }
-        }
-
-        private void Btn_Main_Left_Click(object sender, EventArgs e)
-        {
-            if (robot.task.IsCompleted)
-            {
-                robot.task = Task.Run(() =>
-                {
-                    robot.DeplacerMain(5);
-                    System.Threading.Thread.Sleep(1000); //TODO
-                });
-            }
-        }
-
-        private void Btn_Main_Right_Click(object sender, EventArgs e)
-        {
-            if (robot.task.IsCompleted)
-            {
-                robot.task = Task.Run(() =>
-                {
-                    robot.DeplacerMain(-5);
-                    System.Threading.Thread.Sleep(1000); //TODO
-                });
-            }
         }
 
         private void BTN_Ready_Click(object sender, EventArgs e)
