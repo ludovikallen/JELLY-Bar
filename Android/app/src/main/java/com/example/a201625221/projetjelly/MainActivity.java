@@ -23,8 +23,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.os.StrictMode;
 
+<<<<<<< Updated upstream
 import org.w3c.dom.Text;
 
+=======
+import java.sql.PreparedStatement;
+>>>>>>> Stashed changes
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -731,25 +735,32 @@ public class MainActivity extends AppCompatActivity {
     void fillDrinksList() {
         arrayListDrink.clear();
         Statement stm1;
+        PreparedStatement stmlNote;
         ResultSet resultSet;
+        ResultSet resultSetNote;
         int nombreRecette = compterNombreRecettes();
 
         for (int i = 1; i <= nombreRecette; i++)
         {
             try {
                 String requeteDescription = "select recette.NOMRECETTE, NOMBOUTEILLE, INGREDIENTRECETTE.QTYSHOT,INGREDIENT.BOUTEILLEPRESENTE,INGREDIENT.QTYRESTANTE from INGREDIENT INNER JOIN INGREDIENTRECETTE ON INGREDIENT.CODEBOUTEILLE = INGREDIENTRECETTE.CODEBOUTEILLE INNER JOIN RECETTE ON INGREDIENTRECETTE.CODERECETTE = RECETTE.CODERECETTE WHERE RECETTE.CODERECETTE = " + i;
-
                 stm1 = conn_.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
 
                 resultSet = stm1.executeQuery(requeteDescription);
                 String nom = null;
                 String description = "";
+                String Notetrouver = "";
                 boolean drinkPossible = true;
                 while(resultSet.next())
                 {
-
+                    String Note = "select AVG(SATISFACTION) from NOTE where Nomrecette =?";
                     nom = resultSet.getString(1);
+                    stmlNote = conn_.prepareStatement(Note,ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
+                    stmlNote.setString(1,nom);
+                    resultSetNote = stmlNote.executeQuery();
+                    resultSetNote.next();
                     description += resultSet.getString(3) +" oz " + resultSet.getString(2) +", ";
+                    Notetrouver =  resultSetNote.getString(1);
                     if (resultSet.getString(4).equals("0") || resultSet.getInt(5) == 0)
                     {
                         drinkPossible = false;
@@ -759,10 +770,9 @@ public class MainActivity extends AppCompatActivity {
                     description = description.substring(0, description.length() - 2);
                 }
                 HashMap<String,String> hashMap=new HashMap<>();//create a hashmap to store the data in key value pair
-
                 hashMap.put("nom", nom);
                 hashMap.put("desc",description);
-                hashMap.put("note", Notes[i]);
+                hashMap.put("note",String.valueOf(Notetrouver));
                 if (drinkPossible)
                 {
                     arrayListDrink.add(hashMap);//add the hashmap into arrayList
