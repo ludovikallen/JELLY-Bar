@@ -972,12 +972,14 @@ public class MainActivity extends AppCompatActivity {
             public int compare(HashMap<String,String> o1,
                                HashMap<String,String> o2)
             {
-                    float o1note = Float.valueOf(o1.get("note"));
-                    float o2note = Float.valueOf(o2.get("note"));
-                    if (o1note < o2note) {
-                        return -1;
-                    } else if (o1note > o2note) {
-                        return 1;
+                    if(!o1.get("note").equals("NA")) {
+                        float o1note = Float.valueOf(o1.get("note"));
+                        float o2note = Float.valueOf(o2.get("note"));
+                        if (o1note < o2note) {
+                            return -1;
+                        } else if (o1note > o2note) {
+                            return 1;
+                        }
                     }
                     return 0;
             }
@@ -995,12 +997,14 @@ public class MainActivity extends AppCompatActivity {
             public int compare(HashMap<String,String> o1,
                                HashMap<String,String> o2)
             {
-                    float o1note = Float.valueOf(o1.get("note"));
-                    float o2note = Float.valueOf(o2.get("note"));
-                    if (o1note < o2note) {
-                        return 1;
-                    } else if (o1note > o2note) {
-                        return -1;
+                    if(!o1.get("note").equals("NA")) {
+                        float o1note = Float.valueOf(o1.get("note"));
+                        float o2note = Float.valueOf(o2.get("note"));
+                        if (o1note < o2note) {
+                            return 1;
+                        } else if (o1note > o2note) {
+                            return -1;
+                        }
                     }
                     return 0;
                 }
