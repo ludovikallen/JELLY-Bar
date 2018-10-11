@@ -22,13 +22,8 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.os.StrictMode;
-
-<<<<<<< Updated upstream
 import org.w3c.dom.Text;
-
-=======
 import java.sql.PreparedStatement;
->>>>>>> Stashed changes
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -772,7 +767,14 @@ public class MainActivity extends AppCompatActivity {
                 HashMap<String,String> hashMap=new HashMap<>();//create a hashmap to store the data in key value pair
                 hashMap.put("nom", nom);
                 hashMap.put("desc",description);
-                hashMap.put("note",String.valueOf(Notetrouver));
+                if(Notetrouver != null)
+                {
+                    hashMap.put("note",String.valueOf(Notetrouver));
+                }
+                else{
+                    hashMap.put("note","NA");
+                }
+
                 if (drinkPossible)
                 {
                     arrayListDrink.add(hashMap);//add the hashmap into arrayList
@@ -879,7 +881,12 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < arrayListCart.size(); i++)
         {
             drink=défaireDescription(arrayListCart.get(i).get("desc"));
-            //REQUETES BD ICI
+            try {
+                Statement statement = conn_.createStatement();
+                statement.executeUpdate("INSERT INTO COMMANDE " + "VALUES (1001, 'Simpson', 'Mr.', 'Springfield', 2001)");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
 
         }
 
