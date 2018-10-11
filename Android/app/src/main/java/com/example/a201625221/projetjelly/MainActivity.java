@@ -2,6 +2,7 @@ package com.example.a201625221.projetjelly;
 
 import android.annotation.SuppressLint;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
@@ -15,10 +16,14 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.os.StrictMode;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -144,6 +149,7 @@ public class MainActivity extends AppCompatActivity {
         InitLists();
         setTouchListeners();
         setClickListeners();
+        setCheckedListeners();
     }
 
     /**
@@ -631,6 +637,29 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public void setCheckedListeners()
+    {
+        RadioGroup radioGroup = findViewById(R.id.changerCouleur_RBTNGRP);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+        {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if(checkedId==R.id.changerBlanc_RBTN)
+                {
+                    changerBlanc();
+                }
+                else if(checkedId==R.id.changerNoir_RBTN)
+                {
+                    changerNoir();
+                }
+                else if(checkedId==R.id.changerJelly_RBTN)
+                {
+                    changerJELLY();
+                }
+            }
+        });
+    }
+
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         Rect viewRect = new Rect();
@@ -1039,5 +1068,116 @@ public class MainActivity extends AppCompatActivity {
                 desc+=value+" oz "+key;
         }
         return desc;
+    }
+
+    void changerBlanc()
+    {
+        findViewById(R.id.background_LYT).setBackgroundColor(getResources().getColor(R.color.white));
+
+        TextView optionLBL=findViewById(R.id.options_TXT);
+        RadioButton blancRBTN = findViewById(R.id.changerBlanc_RBTN);
+        RadioButton noirRBTN = findViewById(R.id.changerNoir_RBTN);
+        RadioButton jellyRBTN = findViewById(R.id.changerJelly_RBTN);
+
+        optionLBL.setTextColor(getResources().getColor(R.color.black));
+
+        blancRBTN.setTextColor(getResources().getColor(R.color.black));
+        noirRBTN.setTextColor(getResources().getColor(R.color.black));
+        jellyRBTN.setTextColor(getResources().getColor(R.color.black));
+
+        ColorStateList colorStateList = new ColorStateList(
+                new int[][]{
+                        new int[]{-android.R.attr.state_checked},
+                        new int[]{android.R.attr.state_checked}
+                },
+                new int[]{
+
+                        getResources().getColor(R.color.darkgrey)
+                        , getResources().getColor(R.color.yellow)
+                }
+        );
+        blancRBTN.setButtonTintList(colorStateList);
+        noirRBTN.setButtonTintList(colorStateList);
+        jellyRBTN.setButtonTintList(colorStateList);
+
+        findViewById(R.id.backgroundFooter_TView).setBackgroundColor(getResources().getColor(R.color.black));
+        drinkBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
+        cartBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
+        optionsBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
+        infoBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
+    }
+
+    void changerNoir()
+    {
+        findViewById(R.id.background_LYT).setBackgroundColor(getResources().getColor(R.color.black));
+
+        TextView optionLBL=findViewById(R.id.options_TXT);
+        RadioButton noirRBTN = findViewById(R.id.changerNoir_RBTN);
+        RadioButton blancRBTN = findViewById(R.id.changerBlanc_RBTN);
+        RadioButton jellyRBTN = findViewById(R.id.changerJelly_RBTN);
+
+        optionLBL.setTextColor(getResources().getColor(R.color.white));
+
+        blancRBTN.setTextColor(getResources().getColor(R.color.white));
+        noirRBTN.setTextColor(getResources().getColor(R.color.white));
+        jellyRBTN.setTextColor(getResources().getColor(R.color.white));
+
+        ColorStateList colorStateList = new ColorStateList(
+                new int[][]{
+                        new int[]{-android.R.attr.state_checked},
+                        new int[]{android.R.attr.state_checked}
+                },
+                new int[]{
+
+                        getResources().getColor(R.color.white)
+                        , getResources().getColor(R.color.yellow)
+                }
+        );
+        blancRBTN.setButtonTintList(colorStateList);
+        noirRBTN.setButtonTintList(colorStateList);
+        jellyRBTN.setButtonTintList(colorStateList);
+
+        findViewById(R.id.backgroundFooter_TView).setBackgroundColor(getResources().getColor(R.color.white));
+        drinkBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.black)));
+        cartBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.black)));
+        optionsBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.black)));
+        infoBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.black)));
+    }
+
+    void changerJELLY()
+    {
+        findViewById(R.id.background_LYT).setBackgroundColor(getResources().getColor(R.color.yellow));
+
+        TextView optionLBL=findViewById(R.id.options_TXT);
+        RadioButton noirRBTN = findViewById(R.id.changerNoir_RBTN);
+        RadioButton blancRBTN = findViewById(R.id.changerBlanc_RBTN);
+        RadioButton jellyRBTN = findViewById(R.id.changerJelly_RBTN);
+
+        optionLBL.setTextColor(getResources().getColor(R.color.white));
+
+        blancRBTN.setTextColor(getResources().getColor(R.color.white));
+        noirRBTN.setTextColor(getResources().getColor(R.color.white));
+        jellyRBTN.setTextColor(getResources().getColor(R.color.white));
+
+        ColorStateList colorStateList = new ColorStateList(
+                new int[][]{
+                        new int[]{-android.R.attr.state_checked},
+                        new int[]{android.R.attr.state_checked}
+                },
+                new int[]{
+
+                        getResources().getColor(R.color.grey)
+                        , getResources().getColor(R.color.black)
+                }
+        );
+        blancRBTN.setButtonTintList(colorStateList);
+        noirRBTN.setButtonTintList(colorStateList);
+        jellyRBTN.setButtonTintList(colorStateList);
+
+        findViewById(R.id.backgroundFooter_TView).setBackgroundColor(getResources().getColor(R.color.black));
+        drinkBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.yellow)));
+        cartBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.yellow)));
+        optionsBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.yellow)));
+        infoBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.yellow)));
     }
 }
