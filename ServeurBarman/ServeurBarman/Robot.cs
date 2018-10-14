@@ -342,10 +342,13 @@ namespace Bras_Robot
             });
         }
         #endregion
-        public void MakeDrink(List<(Position pos, int nbShots)> positions)
+        public bool MakeDrink(List<(Position pos, int nbShots)> positions)
         {
-            if (task.IsCompleted && positions.Capacity != 0 && !Calibration)
+            if (task.IsCompleted && positions.Capacity != 0 && !Calibration){
                 task = DrinkOperation(positions);
+                return true;
+            }
+            return false;
         }
         public List<(Position position, int nbShots)> Exemple = new List<(Position pos, int nbShots)>
         {

@@ -494,3 +494,15 @@ C:\Users\201646963\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\bin\Debug\Syste
 C:\Users\201646963\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\bin\Debug\System.Threading.Tasks.Extensions.xml
 C:\Users\201646963\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\bin\Debug\System.ValueTuple.xml
 C:\Users\201646963\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.csproj.CopyComplete
+C:\Users\Jérémy\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.csprojResolveAssemblyReference.cache
+C:\Users\Jérémy\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.csproj.ServeurBarman.exe.config
+C:\Users\Jérémy\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.AddCups.resources
+C:\Users\Jérémy\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.Add_Drinks.resources
+C:\Users\Jérémy\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.Developers.resources
+C:\Users\Jérémy\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.DLG_Settings.resources
+C:\Users\Jérémy\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.PageAccueil.resources
+C:\Users\Jérémy\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.PageConnexion.resources
+C:\Users\Jérémy\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.Properties.Resources.resources
+C:\Users\Jérémy\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.Setting.resources
+C:\Users\Jérémy\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.WelcomePage.resources
+C:\Users\Jérémy\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.csproj.GenerateResource.Cache

@@ -165,15 +165,12 @@ namespace ServeurBarman
         {
             Task.Run(() =>
             {
-                while (true)
+                while (check)
                 {
-                    if(ListcommandeRobot.Count > 0)
+                    if(ListcommandeRobot.Count > 0 && !robot.EnMarche())
                     {
-                        if (!robot.EnMarche())
-                        {
-                            robot.MakeDrink(list);
-                            //ListcommandeRobot.Remove(ListcommandeRobot[0]);
-                        }
+                        if(robot.MakeDrink(list))
+                            ListcommandeRobot.Remove(ListcommandeRobot[0]);
                     }
                 }
             });
