@@ -12,13 +12,14 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Bras_Robot;
 
+
 namespace ServeurBarman
 {
+
     public partial class PageAccueil : MetroFramework.Forms.MetroForm
     {
-        static Boolean check;
+        static bool check;
         public OracleConnection connexion;
-        int count = 0;
         List<(Position, int)> listeIngredients = new List<(Position, int)>();
         List<List<(Position, int)>> ListcommandeRobot = new List<List<(Position, int)>>();
         CRS_A255 robot = CRS_A255.Instance;
@@ -28,18 +29,19 @@ namespace ServeurBarman
         public PageAccueil()
         {
             InitializeComponent();
+            
             connexion = new OracleConnection();
             PBX_EtatDeconnecté.Visible = true;
             check = true;
-            new Thread(async () =>
+            Task.Run(() =>
             {
                 while (check)
                 {
-                    await Task.Delay(1000);
+                    Thread.Sleep(1000);
                     Show_WaitingDrinksList();
-                    await Task.Delay(1000);
+                    Thread.Sleep(1000);
                 }
-            }).Start();
+            });
         }
 
         private void BTN_Welcome_Click(object sender, EventArgs e)
@@ -86,7 +88,6 @@ namespace ServeurBarman
         {
             BTN_Setting.Enabled = false;
         }
-
         private void Show_WaitingDrinksList()
         {
             Boolean check1 = true;
@@ -95,10 +96,12 @@ namespace ServeurBarman
                 if (LBX_WaitingList.Items.Count == 0)
                 {
                     numcommande.Clear();
-                    LBX_WaitingList.Items.Clear();
+                        LBX_WaitingList.Items.Clear();
                     Refresh_WaitingList();
                     foreach (var e in numcommande)
+                    {
                         LBX_WaitingList.Items.Add(e);
+                    }
                 }
                 else
                 {
@@ -111,10 +114,12 @@ namespace ServeurBarman
                         if (LBX_WaitingList.Items.Count != numcommande.Count)
                         {
                             numcommande.Clear();
-                            LBX_WaitingList.Items.Clear();
+                                LBX_WaitingList.Items.Clear();
                             Refresh_WaitingList();
                             foreach (var e in numcommande)
+                            {
                                 LBX_WaitingList.Items.Add(e);
+                            }
                         }
                         else if (!LBX_WaitingList.Items[i].Equals(numcommande[i]))
                             check1 = false;
@@ -122,9 +127,12 @@ namespace ServeurBarman
 
                     if (!check1)
                     {
+
                         LBX_WaitingList.Items.Clear();
                         foreach (var e in numcommande)
+                        {
                             LBX_WaitingList.Items.Add(e);
+                        }
                     }
                 }
         }
@@ -150,6 +158,7 @@ namespace ServeurBarman
                     numcommande.Add(divisionReader.GetInt32(0));
                 }
                 divisionReader.Close();
+                listeIngredients.Clear();
             }
             catch (Exception sel) { MessageBox.Show(sel.Message.ToString()); }
         }
@@ -157,7 +166,6 @@ namespace ServeurBarman
 
         private void ListerIngredients()
         {
-            count = 0;
             for (int i = 0; i < numcommande.Count; ++i)
             {
                 for (int j = 0; j < numcommande.Count; ++j)
@@ -192,24 +200,26 @@ namespace ServeurBarman
         /// </summary>
         private void ServirClient()
         {
+            robot.AjouterCup(5);
             while (true)
             {
                 if (numcommande.Count > 0)
                 {
                     if (robot.EnMarche())
                     {
-                        robot.MakeDrink(listeIngredients);
-
-                        string cmd = "delete from commande where numcommande=" + numcommande[0].ToString();
-                        listeIngredients.Clear();
-
-                        try
+                        if(robot.MakeDrink(listeIngredients))
                         {
-                            OracleCommand delete = new OracleCommand(cmd, connexion);
-                            delete.CommandType = CommandType.Text;
-                            delete.ExecuteNonQuery();
+                            string cmd = "delete from commande where numcommande=" + numcommande[0].ToString();
+                            listeIngredients.Clear();
+
+                            try
+                            {
+                                OracleCommand delete = new OracleCommand(cmd, connexion);
+                                delete.CommandType = CommandType.Text;
+                                delete.ExecuteNonQuery();
+                            }
+                            catch (Exception sel) { MessageBox.Show(sel.Message.ToString()); }
                         }
-                        catch (Exception sel) { MessageBox.Show(sel.Message.ToString()); }
                     }
                 }
             }
@@ -224,8 +234,9 @@ namespace ServeurBarman
             {
                 MessageBox.Show("Connexion robot réussie");
                 BTN_Setting.Enabled = true;
-                ConnexionRobot();
-                ServirClient();
+                Task.Run(() => BOUTONQUIFLASH());
+                Task.Run(() => ServirClient());
+                //robot.TEST();
             }
             else
             {
@@ -239,19 +250,17 @@ namespace ServeurBarman
             connexion.Close();
         }
 
-        private void ConnexionRobot()
+        private void BOUTONQUIFLASH()
         {
             PBX_EtatDeconnecté.Visible = false;
-            Task.Run(async () =>
+            while (true)
             {
-                while (check)
-                {
-                    PBX_EtatConnecté.Visible = true;
-                    await Task.Delay(1000);
-                    PBX_EtatConnecté.Visible = false;
-                    await Task.Delay(1000);
-                }
-            });
+                PBX_EtatConnecté.Visible =
+                false;
+                Thread.Sleep(1000);
+                PBX_EtatConnecté.Visible = false;
+                Thread.Sleep(1000);
+            }
         }
     }
 }

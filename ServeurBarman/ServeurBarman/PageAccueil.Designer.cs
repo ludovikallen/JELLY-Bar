@@ -49,8 +49,6 @@
             this.add_Drinks1 = new ServeurBarman.Add_Drinks();
             this.addCups1 = new ServeurBarman.AddCups();
             this.welcomePage1 = new ServeurBarman.WelcomePage();
-            this.btnSpeed2x = new System.Windows.Forms.Button();
-            this.btnSpeed = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PBX_Logo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -312,33 +310,11 @@
             this.welcomePage1.Size = new System.Drawing.Size(659, 274);
             this.welcomePage1.TabIndex = 7;
             // 
-            // btnSpeed2x
-            // 
-            this.btnSpeed2x.Location = new System.Drawing.Point(637, 244);
-            this.btnSpeed2x.Name = "btnSpeed2x";
-            this.btnSpeed2x.Size = new System.Drawing.Size(88, 40);
-            this.btnSpeed2x.TabIndex = 32;
-            this.btnSpeed2x.Text = "Speed 2x";
-            this.btnSpeed2x.UseVisualStyleBackColor = true;
-            this.btnSpeed2x.Click += new System.EventHandler(this.btnSpeed_Click);
-            // 
-            // btnSpeed
-            // 
-            this.btnSpeed.Location = new System.Drawing.Point(551, 244);
-            this.btnSpeed.Name = "btnSpeed";
-            this.btnSpeed.Size = new System.Drawing.Size(88, 40);
-            this.btnSpeed.TabIndex = 33;
-            this.btnSpeed.Text = "Speed";
-            this.btnSpeed.UseVisualStyleBackColor = true;
-            this.btnSpeed.Click += new System.EventHandler(this.btnSpeed_Click);
-            // 
             // PageAccueil
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(973, 607);
-            this.Controls.Add(this.btnSpeed2x);
-            this.Controls.Add(this.btnSpeed);
             this.Controls.Add(this.mBtnConnexionRobot);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.pnlBar);
@@ -389,7 +365,5 @@
         private System.Windows.Forms.Panel pnlBar;
         private System.Windows.Forms.Panel panel2;
         private MetroFramework.Controls.MetroButton mBtnConnexionRobot;
-        private System.Windows.Forms.Button btnSpeed2x;
-        private System.Windows.Forms.Button btnSpeed;
     }
 }

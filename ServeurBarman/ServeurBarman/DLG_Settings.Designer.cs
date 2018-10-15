@@ -151,6 +151,7 @@
             this.Btn_Base_Left.Size = new System.Drawing.Size(80, 77);
             this.Btn_Base_Left.TabIndex = 20;
             this.Btn_Base_Left.UseVisualStyleBackColor = true;
+            this.Btn_Base_Left.Click += new System.EventHandler(this.Btn_Base_Left_Click);
             // 
             // panel6
             // 

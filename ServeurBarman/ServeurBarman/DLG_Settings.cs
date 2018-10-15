@@ -23,7 +23,7 @@ namespace ServeurBarman
                         {
                             robot.task = Task.Run(() =>
                             {
-                                robot.DeplacerBase(5);
+                                robot.DeplacerBase(-5);
                                 System.Threading.Thread.Sleep(1000); //TODO
                             });
                         }
@@ -288,6 +288,11 @@ namespace ServeurBarman
         private void Calibrer_Robot_Click(object sender, EventArgs e)
         {
             robot.CALIBRE();
+        }
+
+        private void Btn_Base_Left_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
