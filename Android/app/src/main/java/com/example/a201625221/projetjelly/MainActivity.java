@@ -2,6 +2,7 @@ package com.example.a201625221.projetjelly;
 
 import android.annotation.SuppressLint;
 import android.content.res.ColorStateList;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
@@ -12,6 +13,7 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -23,7 +25,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.os.StrictMode;
 import org.w3c.dom.Text;
+
+import java.math.RoundingMode;
 import java.sql.PreparedStatement;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -45,8 +50,9 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Variables pour contenir les layouts pour pouvoir changer d'onglet dans l'application
      */
-    ConstraintLayout listDrinkLYT, modifyLYT,optionsLYT,cartLYT,infosLYT,notesLYT;
+    ConstraintLayout listDrinkLYT, modifyLYT,optionsLYT,cartLYT,infosLYT,notesLYT, connexionLYT;
 
+    RadioGroup radioGRP;
     /**
      * Variables pour contenir les boutons pour pouvoir changer d'onglet dans l'application
      */
@@ -64,8 +70,9 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Tableau la destination graphique de l'adapter
      */
-    int to[]={R.id.name_TXT,R.id.ing_TXT,R.id.note_TXT};
-
+    int toDrink[]={R.id.nameDrink_TXT,R.id.descDrink_TXT,R.id.noteDrink_TXT};
+    int toIng[]={R.id.nameIng_TXT,R.id.descIng_TXT};
+    int toCourant[]={R.id.nameCourant_TXT,R.id.descCourant_TXT,R.id.noteCourant_TXT};
     /**
      * Listes contenant les éléments de la BD et le panier
      */
@@ -76,13 +83,10 @@ public class MainActivity extends AppCompatActivity {
      * Variable contenant l'objet selectionné dans le panier
      */
 
-    String[] IngName ={"Orange juice","Ice","Salt","Water","Grenadine","Gold powder"};
-    String[] DrinkName={"Sex on the beach","Cosmopolitan","Rhum and coke","Beer","Diesel","Water"};
-    String[] DrinksIngredients={"Vodka+OrangeJuice+Grenadine","xxx","Rhum+Coke","Beer","Beer+Coke","Water"};
-    String[] Notes={"1.9","2.8","5.7","3","2","1","6","8"};
+   HashMap<String, ColorStateList> couleurs=new HashMap<>();
 
     int indexItemModification=-1;
-    String drinkCourantNote;
+    String couleurCourante;
     Integer note=0;
     /**
      * Fonction lancée à la création de l'activité
@@ -146,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
     {
         InitializeComponents();
         InitLists();
+        InitColors();
         setTouchListeners();
         setClickListeners();
         setCheckedListeners();
@@ -162,6 +167,7 @@ public class MainActivity extends AppCompatActivity {
         cartLYT=findViewById(R.id.cart_LYT);
         infosLYT=findViewById(R.id.infos_LYT);
         notesLYT=findViewById(R.id.notes_LYT);
+        connexionLYT=findViewById(R.id.connexion_LYT);
 
         drinkBTN=findViewById(R.id.drinklist_BTN);
         infoBTN=findViewById(R.id.infos_BTN);
@@ -172,6 +178,8 @@ public class MainActivity extends AppCompatActivity {
         listIngLVIEW=findViewById(R.id.ing_LVIEW);
         cartLVIEW=findViewById(R.id.cart_LVIEW);
         drinkItemLVIEW=findViewById(R.id.drinkItem_LVIEW);
+
+        radioGRP=findViewById(R.id.changerCouleur_RBTNGRP);
     }
 
     /**
@@ -183,6 +191,39 @@ public class MainActivity extends AppCompatActivity {
         fillIngList();
         fillCartList();
        // refreshCartItemCount();
+    }
+
+    void InitColors()
+    {
+        int[][] states = new int[][] {
+                new int[] { }
+        };
+        int[] colors = new int[] {
+                getResources().getColor(R.color.yellow),
+        };
+
+        ColorStateList jaune = new ColorStateList(states, colors);
+        couleurs.put("jaune",jaune);
+
+        states = new int[][] {
+                new int[] { }
+        };
+        colors = new int[] {
+                getResources().getColor(R.color.black),
+        };
+
+        ColorStateList noir = new ColorStateList(states, colors);
+        couleurs.put("noir",noir);
+
+        states = new int[][] {
+                new int[] { }
+        };
+        colors = new int[] {
+                getResources().getColor(R.color.white),
+        };
+
+        ColorStateList blanc = new ColorStateList(states, colors);
+        couleurs.put("blanc",blanc);
     }
 
     /**
@@ -200,7 +241,6 @@ public class MainActivity extends AppCompatActivity {
         final ImageButton etoile3= findViewById(R.id.star3_IMGBTN);
         final ImageButton etoile4= findViewById(R.id.star4_IMGBTN);
         final ImageButton etoile5= findViewById(R.id.star5_IMGBTN);
-
 
         drinkBTN.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
@@ -299,6 +339,7 @@ public class MainActivity extends AppCompatActivity {
         final TextView triNoteBTN=findViewById(R.id.triNote_BTN);
         final Button acceptChangesBTN=findViewById(R.id.acceptChange_BTN);
         final Button cancelChangesBTN=findViewById(R.id.cancelChange_BTN);
+        final Button connect= findViewById(R.id.connexion_BTN);
 
         final ImageButton etoile1= findViewById(R.id.star1_IMGBTN);
         final ImageButton etoile2= findViewById(R.id.star2_IMGBTN);
@@ -308,7 +349,12 @@ public class MainActivity extends AppCompatActivity {
 
         drinkBTN.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                drinkBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
+                if(radioGRP.getCheckedRadioButtonId() ==R.id.changerBlanc_RBTN)
+                    changeMenuButtonsColor(couleurs.get("blanc"));
+                else if(radioGRP.getCheckedRadioButtonId() ==R.id.changerNoir_RBTN)
+                    changeMenuButtonsColor(couleurs.get("noir"));
+                else if(radioGRP.getCheckedRadioButtonId() ==R.id.changerJelly_RBTN)
+                    changeMenuButtonsColor(couleurs.get("jaune"));
                 drinkBTN.setBackgroundResource(R.drawable.icondrink);
 
                 listDrinkLYT.setVisibility(View.VISIBLE);
@@ -324,7 +370,12 @@ public class MainActivity extends AppCompatActivity {
 
         cartBTN.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                cartBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
+                if(radioGRP.getCheckedRadioButtonId() ==R.id.changerBlanc_RBTN)
+                    changeMenuButtonsColor(couleurs.get("blanc"));
+                else if(radioGRP.getCheckedRadioButtonId() ==R.id.changerNoir_RBTN)
+                    changeMenuButtonsColor(couleurs.get("noir"));
+                else if(radioGRP.getCheckedRadioButtonId() ==R.id.changerJelly_RBTN)
+                    changeMenuButtonsColor(couleurs.get("jaune"));
                 cartBTN.setBackgroundResource(R.drawable.iconcart);
 
                 listDrinkLYT.setVisibility(View.INVISIBLE);
@@ -337,7 +388,12 @@ public class MainActivity extends AppCompatActivity {
 
         optionsBTN.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                optionsBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
+                if(radioGRP.getCheckedRadioButtonId() ==R.id.changerBlanc_RBTN)
+                    changeMenuButtonsColor(couleurs.get("blanc"));
+                else if(radioGRP.getCheckedRadioButtonId() ==R.id.changerNoir_RBTN)
+                    changeMenuButtonsColor(couleurs.get("noir"));
+                else if(radioGRP.getCheckedRadioButtonId() ==R.id.changerJelly_RBTN)
+                    changeMenuButtonsColor(couleurs.get("jaune"));
                 optionsBTN.setBackgroundResource(R.drawable.iconoptions);
 
                 listDrinkLYT.setVisibility(View.INVISIBLE);
@@ -350,7 +406,12 @@ public class MainActivity extends AppCompatActivity {
 
         infoBTN.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                infoBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
+                if(radioGRP.getCheckedRadioButtonId() ==R.id.changerBlanc_RBTN)
+                    changeMenuButtonsColor(couleurs.get("blanc"));
+                else if(radioGRP.getCheckedRadioButtonId() ==R.id.changerNoir_RBTN)
+                    changeMenuButtonsColor(couleurs.get("noir"));
+                else if(radioGRP.getCheckedRadioButtonId() ==R.id.changerJelly_RBTN)
+                    changeMenuButtonsColor(couleurs.get("jaune"));
                 infoBTN.setBackgroundResource(R.drawable.iconinfo);
 
                 listDrinkLYT.setVisibility(View.INVISIBLE);
@@ -363,7 +424,13 @@ public class MainActivity extends AppCompatActivity {
 
         trashBTN.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                trashBTN.setBackgroundColor(getResources().getColor(R.color.white));
+
+                if(radioGRP.getCheckedRadioButtonId() ==R.id.changerBlanc_RBTN)
+                    changeMenuButtonsColor(couleurs.get("blanc"));
+                else if(radioGRP.getCheckedRadioButtonId() ==R.id.changerNoir_RBTN)
+                    changeMenuButtonsColor(couleurs.get("noir"));
+                else if(radioGRP.getCheckedRadioButtonId() ==R.id.changerJelly_RBTN)
+                    changeMenuButtonsColor(couleurs.get("jaune"));
                 RetirerPanier();
                 trashBTN.setVisibility(View.INVISIBLE);
             }
@@ -437,6 +504,12 @@ public class MainActivity extends AppCompatActivity {
                 arrayListItemCourant.clear();
                 modifyLYT.setVisibility(View.INVISIBLE);
                 listDrinkLYT.setVisibility(View.VISIBLE);
+            }
+        });
+
+        connect.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                connexionLYT.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -557,11 +630,17 @@ public class MainActivity extends AppCompatActivity {
 
                     if (selectedCartPositions.size() > 0) {
                         if (arrayListCart.size() < position)
-                            cartLVIEW.getChildAt(0).setBackgroundColor(getResources().getColor(R.color.yellow));
+                            cartLVIEW.getChildAt(0).setBackgroundColor(getResources().getColor(R.color.listSelector));
                         if (selectedCartPositions.contains(position))
-                            cartLVIEW.getChildAt(position).setBackgroundColor(getResources().getColor(R.color.yellow));
-                        else
-                            cartLVIEW.getChildAt(position).setBackgroundColor(getResources().getColor(R.color.white));
+                            cartLVIEW.getChildAt(position).setBackgroundColor(getResources().getColor(R.color.listSelector));
+                        else {
+                            if(radioGRP.getCheckedRadioButtonId() ==R.id.changerBlanc_RBTN)
+                                cartLVIEW.getChildAt(position).setBackgroundColor(couleurs.get("blanc").getDefaultColor());
+                            else if(radioGRP.getCheckedRadioButtonId() ==R.id.changerNoir_RBTN)
+                                cartLVIEW.getChildAt(position).setBackgroundColor(couleurs.get("noir").getDefaultColor());
+                            else if(radioGRP.getCheckedRadioButtonId() ==R.id.changerJelly_RBTN)
+                                cartLVIEW.getChildAt(position).setBackgroundColor(couleurs.get("jaune").getDefaultColor());
+                        }
                     }
                 }
             }
@@ -638,7 +717,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void setCheckedListeners()
     {
-        RadioGroup radioGroup = findViewById(R.id.changerCouleur_RBTNGRP);
+        final RadioGroup radioGroup = findViewById(R.id.changerCouleur_RBTNGRP);
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
         {
             @Override
@@ -655,6 +734,11 @@ public class MainActivity extends AppCompatActivity {
                 {
                     changerJELLY();
                 }
+
+                refreshItemCourant();
+                fillDrinksList();
+                fillIngList();
+                fillCartList();
             }
         });
     }
@@ -701,6 +785,7 @@ public class MainActivity extends AppCompatActivity {
             arrayListCart.remove(retrait);
             fillCartList();
             faireToast("x1 " + retrait.values().toArray()[0] + " retiré du panier");
+
         }
     }
 
@@ -769,7 +854,7 @@ public class MainActivity extends AppCompatActivity {
                 hashMap.put("desc",description);
                 if(Notetrouver != null)
                 {
-                    hashMap.put("note",String.valueOf(Notetrouver));
+                    hashMap.put("note",arrondir(Float.valueOf(Notetrouver)));
                 }
                 else{
                     hashMap.put("note","NA");
@@ -788,7 +873,46 @@ public class MainActivity extends AppCompatActivity {
 
     void refreshDrinkList()
     {
-        SimpleAdapter simpleAdapter=new SimpleAdapter(this, arrayListDrink,R.layout.custom_list_drink,from,to);
+        SimpleAdapter simpleAdapter=new SimpleAdapter(this, arrayListDrink,R.layout.custom_list_drink,from,toDrink);
+        SimpleAdapter.ViewBinder binder = new SimpleAdapter.ViewBinder() {
+            @Override
+            public boolean setViewValue(View view, Object object, String value) {
+
+                if (view.equals((TextView) view.findViewById(R.id.nameDrink_TXT))) {
+                    TextView nomTXT = (TextView) view.findViewById(R.id.nameDrink_TXT);
+                    if(radioGRP.getCheckedRadioButtonId()==R.id.changerBlanc_RBTN) {
+                        nomTXT.setTextColor(getResources().getColor(R.color.darkgrey));
+                    } else if(radioGRP.getCheckedRadioButtonId()==R.id.changerNoir_RBTN) {
+                        nomTXT.setTextColor(getResources().getColor(R.color.white));
+                    } else if(radioGRP.getCheckedRadioButtonId()==R.id.changerJelly_RBTN) {
+                        nomTXT.setTextColor(getResources().getColor(R.color.black));
+                    }
+                }
+                if (view.equals((TextView) view.findViewById(R.id.descDrink_TXT))) {
+                    TextView descTXT = (TextView) view.findViewById(R.id.descDrink_TXT);
+                    if (radioGRP.getCheckedRadioButtonId() == R.id.changerBlanc_RBTN) {
+                        descTXT.setTextColor(getResources().getColor(R.color.darkgrey));
+                    } else if (radioGRP.getCheckedRadioButtonId() == R.id.changerNoir_RBTN) {
+                        descTXT.setTextColor(getResources().getColor(R.color.white));
+                    } else if (radioGRP.getCheckedRadioButtonId() == R.id.changerJelly_RBTN) {
+                        descTXT.setTextColor(getResources().getColor(R.color.black));
+                    }
+                }
+                if(view.equals((TextView) view.findViewById(R.id.noteDrink_TXT))) {
+                    TextView noteTXT = (TextView) view.findViewById(R.id.noteDrink_TXT);
+                    if (radioGRP.getCheckedRadioButtonId() == R.id.changerBlanc_RBTN) {
+                        noteTXT.setTextColor(getResources().getColor(R.color.darkgrey));
+                    } else if (radioGRP.getCheckedRadioButtonId() == R.id.changerNoir_RBTN) {
+                        noteTXT.setTextColor(getResources().getColor(R.color.white));
+                    } else if (radioGRP.getCheckedRadioButtonId() == R.id.changerJelly_RBTN) {
+                        noteTXT.setTextColor(getResources().getColor(R.color.black));
+                    }
+                }
+                return false;
+            }
+        };
+        simpleAdapter.setViewBinder(binder);
+
         listDrinkLVIEW.setAdapter(simpleAdapter);//sets the adapter for listView
     }
 
@@ -838,13 +962,81 @@ public class MainActivity extends AppCompatActivity {
 
     void refreshIngList()
     {
-        SimpleAdapter simpleAdapter=new SimpleAdapter(this,arrayListIng,R.layout.custom_list_ing,from,to);
+        SimpleAdapter simpleAdapter=new SimpleAdapter(this,arrayListIng,R.layout.custom_list_ing,from,toIng);
+        SimpleAdapter.ViewBinder binder = new SimpleAdapter.ViewBinder() {
+            @Override
+            public boolean setViewValue(View view, Object object, String value) {
+
+                if (view.equals((TextView) view.findViewById(R.id.nameIng_TXT))) {
+                    TextView nomTXT = (TextView) view.findViewById(R.id.nameIng_TXT);
+                    if(radioGRP.getCheckedRadioButtonId()==R.id.changerBlanc_RBTN) {
+                        nomTXT.setTextColor(getResources().getColor(R.color.darkgrey));
+                    } else if(radioGRP.getCheckedRadioButtonId()==R.id.changerNoir_RBTN) {
+                        nomTXT.setTextColor(getResources().getColor(R.color.white));
+                    } else if(radioGRP.getCheckedRadioButtonId()==R.id.changerJelly_RBTN) {
+                        nomTXT.setTextColor(getResources().getColor(R.color.black));
+                    }
+                }
+                if (view.equals((TextView) view.findViewById(R.id.descIng_TXT))) {
+                    TextView descTXT = (TextView) view.findViewById(R.id.descIng_TXT);
+                    if (radioGRP.getCheckedRadioButtonId() == R.id.changerBlanc_RBTN) {
+                        descTXT.setTextColor(getResources().getColor(R.color.darkgrey));
+                    } else if (radioGRP.getCheckedRadioButtonId() == R.id.changerNoir_RBTN) {
+                        descTXT.setTextColor(getResources().getColor(R.color.white));
+                    } else if (radioGRP.getCheckedRadioButtonId() == R.id.changerJelly_RBTN) {
+                        descTXT.setTextColor(getResources().getColor(R.color.black));
+                    }
+                }
+                return false;
+            }
+        };
+
+        simpleAdapter.setViewBinder(binder);
         listIngLVIEW.setAdapter(simpleAdapter);//sets the adapter for listView
     }
 
     void refreshItemCourant()
     {
-        SimpleAdapter simpleAdapter=new SimpleAdapter(this,arrayListItemCourant,R.layout.custom_list_itemcourant,from,to);
+        SimpleAdapter simpleAdapter=new SimpleAdapter(this,arrayListItemCourant,R.layout.custom_list_itemcourant,from,toCourant);
+        SimpleAdapter.ViewBinder binder = new SimpleAdapter.ViewBinder() {
+            @Override
+            public boolean setViewValue(View view, Object object, String value) {
+
+                if (view.equals((TextView) view.findViewById(R.id.nameCourant_TXT))) {
+                    TextView nomTXT = (TextView) view.findViewById(R.id.nameCourant_TXT);
+                    if(radioGRP.getCheckedRadioButtonId()==R.id.changerBlanc_RBTN) {
+                        nomTXT.setTextColor(getResources().getColor(R.color.darkgrey));
+                    } else if(radioGRP.getCheckedRadioButtonId()==R.id.changerNoir_RBTN) {
+                        nomTXT.setTextColor(getResources().getColor(R.color.white));
+                    } else if(radioGRP.getCheckedRadioButtonId()==R.id.changerJelly_RBTN) {
+                        nomTXT.setTextColor(getResources().getColor(R.color.black));
+                    }
+                }
+                if (view.equals((TextView) view.findViewById(R.id.descCourant_TXT))) {
+                    TextView descTXT = (TextView) view.findViewById(R.id.descCourant_TXT);
+                    if (radioGRP.getCheckedRadioButtonId() == R.id.changerBlanc_RBTN) {
+                        descTXT.setTextColor(getResources().getColor(R.color.darkgrey));
+                    } else if (radioGRP.getCheckedRadioButtonId() == R.id.changerNoir_RBTN) {
+                        descTXT.setTextColor(getResources().getColor(R.color.white));
+                    } else if (radioGRP.getCheckedRadioButtonId() == R.id.changerJelly_RBTN) {
+                        descTXT.setTextColor(getResources().getColor(R.color.black));
+                    }
+                }
+                if(view.equals((TextView) view.findViewById(R.id.noteCourant_TXT))) {
+                    TextView noteTXT = (TextView) view.findViewById(R.id.noteCourant_TXT);
+                    if (radioGRP.getCheckedRadioButtonId() == R.id.changerBlanc_RBTN) {
+                        noteTXT.setTextColor(getResources().getColor(R.color.darkgrey));
+                    } else if (radioGRP.getCheckedRadioButtonId() == R.id.changerNoir_RBTN) {
+                        noteTXT.setTextColor(getResources().getColor(R.color.white));
+                    } else if (radioGRP.getCheckedRadioButtonId() == R.id.changerJelly_RBTN) {
+                        noteTXT.setTextColor(getResources().getColor(R.color.black));
+                    }
+                }
+                return false;
+            }
+        };
+        simpleAdapter.setViewBinder(binder);
+
         drinkItemLVIEW.setAdapter(simpleAdapter);//sets the adapter for listView
     }
 
@@ -859,7 +1051,37 @@ public class MainActivity extends AppCompatActivity {
         else
             commandBTN.setVisibility(View.INVISIBLE);
 
-        SimpleAdapter simpleAdapter=new SimpleAdapter(this,arrayListCart,R.layout.custom_list_ing,from,to);
+        SimpleAdapter simpleAdapter=new SimpleAdapter(this,arrayListCart,R.layout.custom_list_ing,from,toIng);
+
+        SimpleAdapter.ViewBinder binder = new SimpleAdapter.ViewBinder() {
+            @Override
+            public boolean setViewValue(View view, Object object, String value) {
+
+                if (view.equals((TextView) view.findViewById(R.id.nameIng_TXT))) {
+                    TextView nomTXT = (TextView) view.findViewById(R.id.nameIng_TXT);
+                    if(radioGRP.getCheckedRadioButtonId()==R.id.changerBlanc_RBTN) {
+                        nomTXT.setTextColor(getResources().getColor(R.color.darkgrey));
+                    } else if(radioGRP.getCheckedRadioButtonId()==R.id.changerNoir_RBTN) {
+                        nomTXT.setTextColor(getResources().getColor(R.color.white));
+                    } else if(radioGRP.getCheckedRadioButtonId()==R.id.changerJelly_RBTN) {
+                        nomTXT.setTextColor(getResources().getColor(R.color.black));
+                    }
+                }
+                if (view.equals((TextView) view.findViewById(R.id.descIng_TXT))) {
+                    TextView descTXT = (TextView) view.findViewById(R.id.descIng_TXT);
+                    if (radioGRP.getCheckedRadioButtonId() == R.id.changerBlanc_RBTN) {
+                        descTXT.setTextColor(getResources().getColor(R.color.darkgrey));
+                    } else if (radioGRP.getCheckedRadioButtonId() == R.id.changerNoir_RBTN) {
+                        descTXT.setTextColor(getResources().getColor(R.color.white));
+                    } else if (radioGRP.getCheckedRadioButtonId() == R.id.changerJelly_RBTN) {
+                        descTXT.setTextColor(getResources().getColor(R.color.black));
+                    }
+                }
+                return false;
+            }
+        };
+        simpleAdapter.setViewBinder(binder);
+
         cartLVIEW.setAdapter(simpleAdapter);//sets the adapter for listView
     }
 
@@ -933,7 +1155,7 @@ public class MainActivity extends AppCompatActivity {
         //ENVOYER ICI A LA BD arrayListCart.get(0).get("nom") et note
         {
 
-
+            fillDrinksList();
         }
 
 
@@ -972,7 +1194,7 @@ public class MainActivity extends AppCompatActivity {
             public int compare(HashMap<String,String> o1,
                                HashMap<String,String> o2)
             {
-                    if(!o1.get("note").equals("NA")) {
+                    if(!o1.get("note").equals("NA")&&!o2.get("note").equals("NA")) {
                         float o1note = Float.valueOf(o1.get("note"));
                         float o2note = Float.valueOf(o2.get("note"));
                         if (o1note < o2note) {
@@ -980,6 +1202,14 @@ public class MainActivity extends AppCompatActivity {
                         } else if (o1note > o2note) {
                             return 1;
                         }
+                    }
+                    else if(!o1.get("note").equals("NA")&&o2.get("note").equals("NA"))
+                    {
+                        return -1;
+                    }
+                    else if(o1.get("note").equals("NA")&&!o2.get("note").equals("NA"))
+                    {
+                        return 1;
                     }
                     return 0;
             }
@@ -997,7 +1227,7 @@ public class MainActivity extends AppCompatActivity {
             public int compare(HashMap<String,String> o1,
                                HashMap<String,String> o2)
             {
-                    if(!o1.get("note").equals("NA")) {
+                    if(!o1.get("note").equals("NA")&&!o2.get("note").equals("NA")) {
                         float o1note = Float.valueOf(o1.get("note"));
                         float o2note = Float.valueOf(o2.get("note"));
                         if (o1note < o2note) {
@@ -1005,6 +1235,14 @@ public class MainActivity extends AppCompatActivity {
                         } else if (o1note > o2note) {
                             return -1;
                         }
+                    }
+                    else if(!o1.get("note").equals("NA")&&o2.get("note").equals("NA"))
+                    {
+                        return -1;
+                    }
+                    else if(o1.get("note").equals("NA")&&!o2.get("note").equals("NA"))
+                    {
+                        return 1;
                     }
                     return 0;
                 }
@@ -1091,96 +1329,16 @@ public class MainActivity extends AppCompatActivity {
         return desc;
     }
 
+    String arrondir(float nombre)
+    {
+        DecimalFormat df = new DecimalFormat("#.##");
+        df.setRoundingMode(RoundingMode.DOWN);
+        return df.format(nombre);
+    }
+
     void changerBlanc()
     {
-        findViewById(R.id.background_LYT).setBackgroundColor(getResources().getColor(R.color.white));
-
-        TextView optionLBL=findViewById(R.id.options_TXT);
-        RadioButton blancRBTN = findViewById(R.id.changerBlanc_RBTN);
-        RadioButton noirRBTN = findViewById(R.id.changerNoir_RBTN);
-        RadioButton jellyRBTN = findViewById(R.id.changerJelly_RBTN);
-
-        optionLBL.setTextColor(getResources().getColor(R.color.black));
-
-        blancRBTN.setTextColor(getResources().getColor(R.color.black));
-        noirRBTN.setTextColor(getResources().getColor(R.color.black));
-        jellyRBTN.setTextColor(getResources().getColor(R.color.black));
-
-        ColorStateList colorStateList = new ColorStateList(
-                new int[][]{
-                        new int[]{-android.R.attr.state_checked},
-                        new int[]{android.R.attr.state_checked}
-                },
-                new int[]{
-
-                        getResources().getColor(R.color.darkgrey)
-                        , getResources().getColor(R.color.yellow)
-                }
-        );
-        blancRBTN.setButtonTintList(colorStateList);
-        noirRBTN.setButtonTintList(colorStateList);
-        jellyRBTN.setButtonTintList(colorStateList);
-
-        findViewById(R.id.backgroundFooter_TView).setBackgroundColor(getResources().getColor(R.color.black));
-        drinkBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
-        cartBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
-        optionsBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
-        infoBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
-    }
-
-    void changerNoir()
-    {
-        findViewById(R.id.background_LYT).setBackgroundColor(getResources().getColor(R.color.black));
-
-        TextView optionLBL=findViewById(R.id.options_TXT);
-        RadioButton noirRBTN = findViewById(R.id.changerNoir_RBTN);
-        RadioButton blancRBTN = findViewById(R.id.changerBlanc_RBTN);
-        RadioButton jellyRBTN = findViewById(R.id.changerJelly_RBTN);
-
-        optionLBL.setTextColor(getResources().getColor(R.color.white));
-
-        blancRBTN.setTextColor(getResources().getColor(R.color.white));
-        noirRBTN.setTextColor(getResources().getColor(R.color.white));
-        jellyRBTN.setTextColor(getResources().getColor(R.color.white));
-
-        ColorStateList colorStateList = new ColorStateList(
-                new int[][]{
-                        new int[]{-android.R.attr.state_checked},
-                        new int[]{android.R.attr.state_checked}
-                },
-                new int[]{
-
-                        getResources().getColor(R.color.white)
-                        , getResources().getColor(R.color.yellow)
-                }
-        );
-        blancRBTN.setButtonTintList(colorStateList);
-        noirRBTN.setButtonTintList(colorStateList);
-        jellyRBTN.setButtonTintList(colorStateList);
-
-        findViewById(R.id.backgroundFooter_TView).setBackgroundColor(getResources().getColor(R.color.white));
-        drinkBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.black)));
-        cartBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.black)));
-        optionsBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.black)));
-        infoBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.black)));
-    }
-
-    void changerJELLY()
-    {
-        findViewById(R.id.background_LYT).setBackgroundColor(getResources().getColor(R.color.yellow));
-
-        TextView optionLBL=findViewById(R.id.options_TXT);
-        RadioButton noirRBTN = findViewById(R.id.changerNoir_RBTN);
-        RadioButton blancRBTN = findViewById(R.id.changerBlanc_RBTN);
-        RadioButton jellyRBTN = findViewById(R.id.changerJelly_RBTN);
-
-        optionLBL.setTextColor(getResources().getColor(R.color.white));
-
-        blancRBTN.setTextColor(getResources().getColor(R.color.white));
-        noirRBTN.setTextColor(getResources().getColor(R.color.white));
-        jellyRBTN.setTextColor(getResources().getColor(R.color.white));
-
-        ColorStateList colorStateList = new ColorStateList(
+        ColorStateList colorRBTN = new ColorStateList(
                 new int[][]{
                         new int[]{-android.R.attr.state_checked},
                         new int[]{android.R.attr.state_checked}
@@ -1188,17 +1346,97 @@ public class MainActivity extends AppCompatActivity {
                 new int[]{
 
                         getResources().getColor(R.color.grey)
+                        , getResources().getColor(R.color.yellow)
+                }
+        );
+
+        findViewById(R.id.background_LYT).setBackgroundColor(getResources().getColor(R.color.white));
+        findViewById(R.id.backgroundFooter_TView).setBackgroundColor(getResources().getColor(R.color.black));
+
+        changeMenuButtonsColor(couleurs.get("blanc"));
+        changeTextColor(couleurs.get("noir"));
+        changeRadioButtonColor(colorRBTN);
+    }
+
+    void changerNoir()
+    {
+        ColorStateList colorRBTN = new ColorStateList(
+                new int[][]{
+                        new int[]{-android.R.attr.state_checked},
+                        new int[]{android.R.attr.state_checked}
+                },
+                new int[]{
+
+                        getResources().getColor(R.color.white)
+                        , getResources().getColor(R.color.white)
+                }
+        );
+
+        findViewById(R.id.background_LYT).setBackgroundColor(getResources().getColor(R.color.black));
+        findViewById(R.id.backgroundFooter_TView).setBackgroundColor(getResources().getColor(R.color.white));
+
+        changeMenuButtonsColor(couleurs.get("noir"));
+        changeTextColor(couleurs.get("blanc"));
+        changeRadioButtonColor(colorRBTN);
+    }
+
+    void changerJELLY()
+    {
+        ColorStateList colorRBTN = new ColorStateList(
+                new int[][]{
+                        new int[]{-android.R.attr.state_checked},
+                        new int[]{android.R.attr.state_checked}
+                },
+                new int[]{
+
+                        getResources().getColor(R.color.black)
                         , getResources().getColor(R.color.black)
                 }
         );
-        blancRBTN.setButtonTintList(colorStateList);
-        noirRBTN.setButtonTintList(colorStateList);
-        jellyRBTN.setButtonTintList(colorStateList);
-
+        findViewById(R.id.background_LYT).setBackgroundColor(getResources().getColor(R.color.yellow));
         findViewById(R.id.backgroundFooter_TView).setBackgroundColor(getResources().getColor(R.color.black));
-        drinkBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.yellow)));
-        cartBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.yellow)));
-        optionsBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.yellow)));
-        infoBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.yellow)));
+
+        changeMenuButtonsColor(couleurs.get("jaune"));
+        changeTextColor(couleurs.get("blanc"));
+        changeRadioButtonColor(colorRBTN);
     }
+
+    void changeMenuButtonsColor(ColorStateList color)
+    {
+        drinkBTN.setBackgroundTintList(color);
+        cartBTN.setBackgroundTintList(color);
+        optionsBTN.setBackgroundTintList(color);
+        infoBTN.setBackgroundTintList(color);
+    }
+
+    void changeTextColor(ColorStateList color)
+    {
+        TextView optionLBL=findViewById(R.id.options_TXT);
+        RadioButton noirRBTN = findViewById(R.id.changerNoir_RBTN);
+        RadioButton blancRBTN = findViewById(R.id.changerBlanc_RBTN);
+        RadioButton jellyRBTN = findViewById(R.id.changerJelly_RBTN);
+
+        TextView infosLBL=findViewById(R.id.infos_TXT);
+        TextView infosTXT=findViewById(R.id.informations_TXT);
+
+        blancRBTN.setTextColor(color);
+        noirRBTN.setTextColor(color);
+        jellyRBTN.setTextColor(color);
+        optionLBL.setTextColor(color);
+
+        infosLBL.setTextColor(color);
+        infosTXT.setTextColor(color);
+    }
+
+    void changeRadioButtonColor(ColorStateList color)
+    {
+        RadioButton noirRBTN = findViewById(R.id.changerNoir_RBTN);
+        RadioButton blancRBTN = findViewById(R.id.changerBlanc_RBTN);
+        RadioButton jellyRBTN = findViewById(R.id.changerJelly_RBTN);
+
+        blancRBTN.setButtonTintList(color);
+        noirRBTN.setButtonTintList(color);
+        jellyRBTN.setButtonTintList(color);
+    }
+
 }

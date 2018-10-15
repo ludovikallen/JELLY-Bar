@@ -7,7 +7,9 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     tools:context=".MainActivity">
-
+    <include layout="@layout/custom_list_drink" />
+    <include layout="@layout/custom_list_ing" />
+    <include layout="@layout/custom_list_itemcourant" />
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/listDrink_LYT"
@@ -17,7 +19,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/backgroundFooter_TView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -47,9 +49,9 @@
             android:layout_alignParentTop="true"
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
-            android:divider="#000"
+            android:divider="@color/listSelector"
             android:dividerHeight="2dp"
-            android:listSelector="@color/colorAccent"
+            android:listSelector="@color/listSelector"
             android:paddingLeft="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -153,9 +155,9 @@
             android:layout_alignParentTop="true"
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
-            android:divider="#000"
+            android:divider="@color/listSelector"
             android:dividerHeight="2dp"
-            android:listSelector="@color/colorAccent"
+            android:listSelector="@color/listSelector"
             android:paddingLeft="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -170,9 +172,9 @@
             android:layout_alignParentTop="true"
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
-            android:divider="#000"
+            android:divider="@color/listSelector"
             android:dividerHeight="2dp"
-            android:listSelector="@color/white"
+            android:listSelector="@color/listSelector"
             android:paddingLeft="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -206,13 +208,13 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/backgroundFooter_TView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/backgroundTitle_TView"
-        app:layout_constraintVertical_bias="0.317">
+        app:layout_constraintVertical_bias="1.0">
 
         <TextView
             android:id="@+id/options_TXT"
@@ -239,10 +241,10 @@
             android:layout_marginTop="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.017"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.322">
+            app:layout_constraintVertical_bias="0.132">
 
             <RadioButton
                 android:id="@+id/changerBlanc_RBTN"
@@ -308,9 +310,9 @@
             android:layout_alignParentTop="true"
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
-            android:divider="#000"
+            android:divider="@color/listSelector"
             android:dividerHeight="2dp"
-            android:listSelector="@color/colorAccent"
+            android:listSelector="@color/listSelector"
             android:paddingLeft="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -405,7 +407,7 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/informations_TXT"
             android:layout_width="571dp"
             android:layout_height="588dp"
             android:layout_marginBottom="8dp"
@@ -768,5 +770,52 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/backgroundFooter_TView"
         app:layout_constraintVertical_bias="0.929" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/connexion_LYT"
+        android:layout_width="636dp"
+        android:layout_height="1137dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/white"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/backgroundTitle_TView"
+        app:layout_constraintVertical_bias="0.022">
+
+        <TextView
+            android:id="@+id/connexion_TXT"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="612dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/aldrich"
+            android:text="@string/connexion_str"
+            android:textColor="@color/black"
+            android:textSize="50sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.501"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <Button
+            android:id="@+id/connexion_BTN"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginBottom="872dp"
+            android:layout_marginStart="324dp"
+            android:text="Button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>
