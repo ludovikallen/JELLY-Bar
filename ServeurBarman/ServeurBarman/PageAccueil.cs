@@ -30,13 +30,13 @@ namespace ServeurBarman
             connexion = new OracleConnection();
             PBX_EtatDeconnecté.Visible = true;
             check = true;
-            Task.Run(() =>
+            Task.Run(async () =>
             {
                 while (check)
                 {
-                    Thread.Sleep(1000);
+                    await Task.Delay(1000);
                     Show_WaitingDrinksList();
-                    Thread.Sleep(1000);
+                    await Task.Delay(1000);
                 }
             });
         }
@@ -210,14 +210,14 @@ namespace ServeurBarman
         private void ConnexionRobot()
         {
             PBX_EtatDeconnecté.Visible = false;
-            Task.Run(() =>
+            Task.Run(async () =>
             {
                 while (check)
                 {
                     PBX_EtatConnecté.Visible = true;
-                    Thread.Sleep(500);
+                    await Task.Delay(500);
                     PBX_EtatConnecté.Visible = false;
-                    Thread.Sleep(500);
+                    await Task.Delay(500);
                 }
             });
         }

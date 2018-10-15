@@ -78,13 +78,13 @@ namespace Bras_Robot
         #region general robot fonctions
         public int ConnexionRobot()
         {
-            task = Task.Run(() =>
+            task = Task.Run(async () =>
             {
                 //contourne un bug dans la connection avec le robot
                 SetPosToStart();
                 Connexion();
                 Deconnexion();
-                System.Threading.Thread.Sleep(100);
+                await Task.Delay(100);
                 Connexion();
                 Connected = true;
             });
@@ -116,11 +116,11 @@ namespace Bras_Robot
         }
         private void SetSartPos()
         {
-            FuncNSleep(() => serialPort.Write("HERE START\r"), 200);
+            FuncNSleepAsync(() => serialPort.Write("HERE START\r"), 200);
         }
         public void GoToStart()
         {
-            FuncNSleep(() => serialPort.Write("MOVE START\r"), 200);
+            FuncNSleepAsync(() => serialPort.Write("MOVE START\r"), 200);
             SetPosToStart();
         }
         private void SetPosToStart()
@@ -133,7 +133,7 @@ namespace Bras_Robot
         }
         public void ManuelCommand(String command)
         {
-            FuncNSleep(() => serialPort.Write(command), 200);
+            FuncNSleepAsync(() => serialPort.Write(command), 200);
         }
         public bool EnMarche() => task.IsCompleted;
         public int AjouterCup(int ajout) => nbCup += ajout;
@@ -142,70 +142,70 @@ namespace Bras_Robot
             if (!Calibration)
                 return;
             Base += val;
-            FuncNSleep(() => serialPort.Write("JOINT 1, " + val.ToString() + "\r"), 200);
+            FuncNSleepAsync(() => serialPort.Write("JOINT 1, " + val.ToString() + "\r"), 200);
         }
         public void DeplacerPoignet(int val)
         {
             if (!Calibration)
                 return;
             Poignet += val;
-            FuncNSleep(() => serialPort.Write("JOINT 4, " + val.ToString() + "\r"), 200);
+            FuncNSleepAsync(() => serialPort.Write("JOINT 4, " + val.ToString() + "\r"), 200);
         }
         public void DeplacerEpaule(int val)
         {
             if (!Calibration)
                 return;
             Epaule += val;
-            FuncNSleep(() => serialPort.Write("JOINT 2, " + val.ToString() + "\r"), 200);
+            FuncNSleepAsync(() => serialPort.Write("JOINT 2, " + val.ToString() + "\r"), 200);
         }
         public void DeplacerMain(int val)
         {
             if (!Calibration)
                 return;
             Main += val;
-            FuncNSleep(() => serialPort.Write("JOINT 5, " + val.ToString() + "\r"), 200);
+            FuncNSleepAsync(() => serialPort.Write("JOINT 5, " + val.ToString() + "\r"), 200);
         }
         private void DeplacerMainPriv(int val)
         {
             Main += val;
-            FuncNSleep(() => serialPort.Write("JOINT 5, " + val.ToString() + "\r"), 200);
+            FuncNSleepAsync(() => serialPort.Write("JOINT 5, " + val.ToString() + "\r"), 200);
         }
         public void DeplacerCoude(int val)
         {
             if (!Calibration)
                 return;
             Coude += val;
-            FuncNSleep(() => serialPort.Write("JOINT 3, " + val.ToString() + "\r"), 200);
+            FuncNSleepAsync(() => serialPort.Write("JOINT 3, " + val.ToString() + "\r"), 200);
         }
         public void OuvrirPince(int val)
         {
-            FuncNSleep(() => serialPort.Write("OPEN " + val.ToString() + "\r"), 200);
+            FuncNSleepAsync(() => serialPort.Write("OPEN " + val.ToString() + "\r"), 200);
         }
         public void FermerPince(int val)
         {
-            FuncNSleep(() => serialPort.Write("CLOSE " + val.ToString() + "\r"), 200);
+            FuncNSleepAsync(() => serialPort.Write("CLOSE " + val.ToString() + "\r"), 200);
         }
         public void Home()
         {
             if (!Calibration)
                 return;
-            FuncNSleep(() => serialPort.Write("HOME\r"), 200);
+            FuncNSleepAsync(() => serialPort.Write("HOME\r"), 200);
         }
         public void Ready()
         {
             if (!Calibration)
                 return;
-            FuncNSleep(() => serialPort.Write("READY\r"), 200);
+            FuncNSleepAsync(() => serialPort.Write("READY\r"), 200);
         }
         public void Halt()
         {
             if (!Calibration)
                 return;
-            FuncNSleep(() => serialPort.Write("HALT\r"), 200);
+            FuncNSleepAsync(() => serialPort.Write("HALT\r"), 200);
         }
         public void SetSpeed(decimal speed)
         {
-            FuncNSleep(() => serialPort.Write("SPEED " + speed + "\r"), 200);
+            FuncNSleepAsync(() => serialPort.Write("SPEED " + speed + "\r"), 200);
             Speed = (int)speed;
         }
         private void JOG(int x, int y, int z)
@@ -214,15 +214,15 @@ namespace Bras_Robot
             PosY += y;
             PosZ += z;
 
-            FuncNSleep(() => serialPort.Write("JOG " + x + "," + y + "," + z + "\r"), 200);
-            FuncNSleep(() => serialPort.Write("FINISH\r"), 200);
+            FuncNSleepAsync(() => serialPort.Write("JOG " + x + "," + y + "," + z + "\r"), 200);
+            FuncNSleepAsync(() => serialPort.Write("FINISH\r"), 200);
         }
         public void CALIBRE()
         {
-            FuncNSleep(() => serialPort.Write("PASSWORD 255\r"), 1000);
-            FuncNSleep(() => serialPort.Write("@ZERO\r"), 1000);
-            FuncNSleep(() => serialPort.Write("MOTOR 2, -18000\r"), 1000);
-            FuncNSleep(() => serialPort.Write("@@CAL\r"), 1000);
+            FuncNSleepAsync(() => serialPort.Write("PASSWORD 255\r"), 1000);
+            FuncNSleepAsync(() => serialPort.Write("@ZERO\r"), 1000);
+            FuncNSleepAsync(() => serialPort.Write("MOTOR 2, -18000\r"), 1000);
+            FuncNSleepAsync(() => serialPort.Write("@@CAL\r"), 1000);
         }
         #endregion
         #region Barman fonction
@@ -232,27 +232,27 @@ namespace Bras_Robot
             SetSpeed(100);
             //------Prendre bouteille------//
             JOG(0, 0, 0); // wait
-            FuncNSleep(() => OuvrirPince(100), 1000);
+            FuncNSleepAsync(() => OuvrirPince(100), 1000);
 
             JOG(pos.pos.X - PosX, pos.pos.Y - PosY, (pos.pos.Z - PosZ) + 280);
             SetSpeed(75);
             JOG(pos.pos.X - PosX, pos.pos.Y - PosY, pos.pos.Z - PosZ);
 
             JOG(0, 0, 0); // wait
-            FuncNSleep(() => FermerPince(100), 2000);
+            FuncNSleepAsync(() => FermerPince(100), 2000);
 
             //------Apporter le bouteille a la station de travail------//
             JOG(0, 0, 280);
             JOG(CreateStation.X - PosX, CreateStation.Y - PosY, 0);
             JOG(0, 0, CreateStation.Z - PosZ);
-            FuncNSleep(() => JOG(0, 0, 0), 2000);
+            FuncNSleepAsync(() => JOG(0, 0, 0), 2000);
             //------Verser------//
             for (int i = 0; i < pos.nbShots; ++i)
             {
                 SetSpeed(7);
-                FuncNSleep(() => DeplacerMainPriv(130), 7000);
+                FuncNSleepAsync(() => DeplacerMainPriv(130), 7000);
                 SetSpeed(75);
-                FuncNSleep(() => DeplacerMainPriv(-130), 500);
+                FuncNSleepAsync(() => DeplacerMainPriv(-130), 500);
             }
             SetSpeed(50);
             //------Rapporter la bouteille a sa place d'origine------//
@@ -262,7 +262,7 @@ namespace Bras_Robot
             JOG(pos.pos.X - PosX, pos.pos.Y - PosY, pos.pos.Z - PosZ + 1);
 
             JOG(0, 0, 0); // wait
-            FuncNSleep(() => OuvrirPince(50), 5000);
+            FuncNSleepAsync(() => OuvrirPince(50), 5000);
             JOG(pos.pos.X - PosX, pos.pos.Y - PosY, (pos.pos.Z - PosZ) + 280);
             JOG(0, 0, 0);
         }
@@ -276,8 +276,8 @@ namespace Bras_Robot
             VersPosition(ref cup);
 
             JOG(0, 0, 0); // wait
-            FuncNSleep(() => FermerPince(15), 8000);
-            FuncNSleep(() => VersPosition(ref RedCupHauteur), 2000);
+            FuncNSleepAsync(() => FermerPince(15), 8000);
+            FuncNSleepAsync(() => VersPosition(ref RedCupHauteur), 2000);
 
             SetSpeed(50);
         }
@@ -290,7 +290,7 @@ namespace Bras_Robot
             VersPosition(ref cuptemp);
             VersPosition(ref cup);
             JOG(0, 0, 0); // wait
-            FuncNSleep(() => OuvrirPince(100), 3000);
+            FuncNSleepAsync(() => OuvrirPince(100), 3000);
 
             Position RedCupFinHauteur = new Position(cup.X, cup.Y, cup.Z + 200);
             VersPosition(ref RedCupFinHauteur);
@@ -303,22 +303,22 @@ namespace Bras_Robot
         }
         #endregion
         #region Tasks
-        private void FuncNSleep(Action<int> action, int sleep)
+        private async void FuncNSleepAsync(Action<int> action, int sleep)
         {
             var t = Task.Run(() => action);
             t.Wait();
-            System.Threading.Thread.Sleep(sleep);
+            await Task.Delay(sleep);
         }
-        private void FuncNSleep(Action<string> action, int sleep)
+        private async void FuncNSleepAsync(Action<string> action, int sleep)
         {
             var t = Task.Run(() => action);
             t.Wait();
-            System.Threading.Thread.Sleep(sleep);
+            await Task.Delay(sleep);
         }
-        private void FuncNSleep(Action action, int sleep)
+        private async void FuncNSleepAsync(Action action, int sleep)
         {
             action.Invoke();
-            System.Threading.Thread.Sleep(sleep);
+            await Task.Delay(sleep);
         }
         private Task DrinkOperation(List<(Position pos, int nbShots)> positions)
         {

@@ -13,7 +13,5 @@ namespace ServeurBarman
     {
         public OracleConnection Connexion { get; set; }
         public List<string> Commands { get; private set; }
-
-
     }
 }

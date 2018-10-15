@@ -8,6 +8,7 @@ namespace ServeurBarman
     {
         CRS_A255 robot = CRS_A255.Instance;
         private bool isRunning = false;
+        private int speed = 5;
         public DLG_Settings()
         {
             InitializeComponent();
@@ -21,10 +22,10 @@ namespace ServeurBarman
                     {
                         if (robot.task.IsCompleted)
                         {
-                            robot.task = Task.Run(() =>
+                            robot.task = Task.Run(async () =>
                             {
-                                robot.DeplacerBase(5);
-                                System.Threading.Thread.Sleep(1000); //TODO
+                                robot.DeplacerBase(speed);
+                                await Task.Delay(1000);
                             });
                         }
                     }
@@ -40,10 +41,10 @@ namespace ServeurBarman
                     {
                         if (robot.task.IsCompleted)
                         {
-                            robot.task = Task.Run(() =>
+                            robot.task = Task.Run(async () =>
                             {
-                                robot.DeplacerBase(5);
-                                System.Threading.Thread.Sleep(1000); //TODO
+                                robot.DeplacerBase(-speed);
+                                await Task.Delay(1000);
                             });
                         }
                     }
@@ -59,10 +60,10 @@ namespace ServeurBarman
                     {
                         if (robot.task.IsCompleted)
                         {
-                            robot.task = Task.Run(() =>
+                            robot.task = Task.Run(async () =>
                             {
-                                robot.DeplacerEpaule(-5);
-                                System.Threading.Thread.Sleep(1000); //TODO
+                                robot.DeplacerEpaule(-speed);
+                                await Task.Delay(1000);
                             });
                         }
                     }
@@ -78,10 +79,10 @@ namespace ServeurBarman
                     {
                         if (robot.task.IsCompleted)
                         {
-                            robot.task = Task.Run(() =>
+                            robot.task = Task.Run(async () =>
                             {
-                                robot.DeplacerEpaule(5);
-                                System.Threading.Thread.Sleep(1000); //TODO
+                                robot.DeplacerEpaule(speed);
+                                await Task.Delay(1000);
                             });
                         }
                     }
@@ -97,10 +98,10 @@ namespace ServeurBarman
                     {
                         if (robot.task.IsCompleted)
                         {
-                            robot.task = Task.Run(() =>
+                            robot.task = Task.Run(async () =>
                             {
-                                robot.DeplacerCoude(5);
-                                System.Threading.Thread.Sleep(1000); //TODO
+                                robot.DeplacerCoude(speed);
+                                await Task.Delay(1000);
                             });
                         }
                     }
@@ -117,10 +118,10 @@ namespace ServeurBarman
                     {
                         if (robot.task.IsCompleted)
                         {
-                            robot.task = Task.Run(() =>
+                            robot.task = Task.Run(async () =>
                             {
-                                robot.DeplacerCoude(-5);
-                                System.Threading.Thread.Sleep(1000); //TODO
+                                robot.DeplacerCoude(-speed);
+                                await Task.Delay(1000);
                             });
                         }
                     }
@@ -136,10 +137,10 @@ namespace ServeurBarman
                     {
                         if (robot.task.IsCompleted)
                         {
-                            robot.task = Task.Run(() =>
+                            robot.task = Task.Run(async () =>
                             {
-                                robot.DeplacerCoude(-5);
-                                System.Threading.Thread.Sleep(1000); //TODO
+                                robot.DeplacerCoude(-speed);
+                                await Task.Delay(1000);
                             });
                         }
                     }
@@ -156,10 +157,10 @@ namespace ServeurBarman
                     {
                         if (robot.task.IsCompleted)
                         {
-                            robot.task = Task.Run(() =>
+                            robot.task = Task.Run(async () =>
                             {
-                                robot.DeplacerMain(5);
-                                System.Threading.Thread.Sleep(1000); //TODO
+                                robot.DeplacerMain(speed);
+                                await Task.Delay(1000);
                             });
                         }
                     }
@@ -175,10 +176,10 @@ namespace ServeurBarman
                     {
                         if (robot.task.IsCompleted)
                         {
-                            robot.task = Task.Run(() =>
+                            robot.task = Task.Run(async () =>
                             {
-                                robot.DeplacerPoignet(5);
-                                System.Threading.Thread.Sleep(1000); //TODO
+                                robot.DeplacerPoignet(speed);
+                                await Task.Delay(1000);
                             });
                         }
                     }
@@ -194,10 +195,10 @@ namespace ServeurBarman
                     {
                         if (robot.task.IsCompleted)
                         {
-                            robot.task = Task.Run(() =>
+                            robot.task = Task.Run(async () =>
                             {
-                                robot.DeplacerPoignet(-5);
-                                System.Threading.Thread.Sleep(1000); //TODO
+                                robot.DeplacerPoignet(-speed);
+                                await Task.Delay(1000);
                             });
                         }
                     }
