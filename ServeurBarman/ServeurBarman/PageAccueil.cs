@@ -16,11 +16,11 @@ namespace ServeurBarman
 {
     public partial class PageAccueil : MetroFramework.Forms.MetroForm
     {
-        static Boolean check;
+        static bool check;
         public OracleConnection connexion;
         int count = 0;
         List<string> commande = new List<string>();
-        List<List<(Position,int)>> ListcommandeRobot = new List<List<(Position, int)>>();
+        List<List<(Position,int)>> listcommandeRobot = new List<List<(Position, int)>>();
         CRS_A255 robot = CRS_A255.Instance;
         List<(Position, int)>  list = new List<(Position, int)>();
 
@@ -85,10 +85,10 @@ namespace ServeurBarman
         {
             BTN_Setting.Enabled = false;
         }
-
+        
         private void Show_WaitingDrinksList()
         {
-            Boolean check1 = true;
+            bool check1 = true;
             if (check)
                 // Premiere vérificcation de la liste de commande 
                 if (LBX_WaitingList.Items.Count == 0 )
@@ -167,10 +167,10 @@ namespace ServeurBarman
             {
                 while (check)
                 {
-                    if(ListcommandeRobot.Count > 0 && !robot.EnMarche())
+                    if(listcommandeRobot.Count > 0 && !robot.EnMarche())
                     {
                         if(robot.MakeDrink(list))
-                            ListcommandeRobot.Remove(ListcommandeRobot[0]);
+                            listcommandeRobot.Remove(listcommandeRobot[0]);
                     }
                 }
             });
@@ -184,9 +184,9 @@ namespace ServeurBarman
 
             robot.ConnexionRobot();
 
-            Task.Run(() =>
+            Task.Run(async () =>
             {
-                System.Threading.Thread.Sleep(2000);
+                await Task.Delay(2000);
                 if (robot.Connected)
                 {
                     MessageBox.Show("Connexion robot réussie");

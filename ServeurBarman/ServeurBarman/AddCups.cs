@@ -21,7 +21,7 @@ namespace ServeurBarman
         private void BTN_Valider_Click(object sender, EventArgs e)
         {
             int nbverre = 0;
-            Int32.TryParse(TB_NbVerre.Text, out nbverre);
+            int.TryParse(TB_NbVerre.Text, out nbverre);
             CRS_A255.Instance.AjouterCup(nbverre);
         }
     }

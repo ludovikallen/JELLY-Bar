@@ -8,7 +8,7 @@ namespace ServeurBarman
 {
     class Drinks
     {
-        public String nomRecette { get; private set; }
+        public string nomRecette { get; private set; }
 
 
     }
