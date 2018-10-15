@@ -16,13 +16,14 @@ namespace ServeurBarman
 {
     public partial class PageAccueil : MetroFramework.Forms.MetroForm
     {
-        static bool check;
+        static Boolean check;
         public OracleConnection connexion;
         int count = 0;
-        List<string> commande = new List<string>();
-        List<List<(Position,int)>> listcommandeRobot = new List<List<(Position, int)>>();
+        List<int> commande = new List<int>();
+        List<List<(Position,int)>> ListcommandeRobot = new List<List<(Position, int)>>();
         CRS_A255 robot = CRS_A255.Instance;
         List<(Position, int)>  list = new List<(Position, int)>();
+        List<int> numcommande = new List<int>();
 
         public PageAccueil()
         {
@@ -30,13 +31,13 @@ namespace ServeurBarman
             connexion = new OracleConnection();
             PBX_EtatDeconnecté.Visible = true;
             check = true;
-            Task.Run(async () =>
+            Task.Run(() =>
             {
                 while (check)
                 {
-                    await Task.Delay(1000);
-                    Show_WaitingDrinksList();
-                    await Task.Delay(1000);
+                    Thread.Sleep(1000);
+                    //Show_WaitingDrinksList();
+                    Thread.Sleep(1000);
                 }
             });
         }
@@ -44,7 +45,7 @@ namespace ServeurBarman
         private void BTN_Welcome_Click(object sender, EventArgs e)
         {
             welcomePage1.BringToFront();
-            //Show_WaitingDrinksList();
+            Show_WaitingDrinksList();
         }
 
         private void BTN_AddDrink_Click(object sender, EventArgs e)
@@ -85,10 +86,10 @@ namespace ServeurBarman
         {
             BTN_Setting.Enabled = false;
         }
-        
+
         private void Show_WaitingDrinksList()
         {
-            bool check1 = true;
+            Boolean check1 = true;
             if (check)
                 // Premiere vérificcation de la liste de commande 
                 if (LBX_WaitingList.Items.Count == 0 )
@@ -132,8 +133,10 @@ namespace ServeurBarman
         // puis on détermine le nombre de clients.
         private void Refresh_WaitingList()
         {
+            
             count = 0;
-            string cmd = "select e.descriptions, e.POSITIONX,e.POSITIONY,e.POSITIONZ,c.QTY from ingredient e inner join commande c on e.codebouteille=c.ingredient";
+            //string cmd = "select e.descriptions, e.POSITIONX,e.POSITIONY,e.POSITIONZ,c.QTY from ingredient e inner join commande c on e.codebouteille=c.ingredient";
+            string cmd = "select codebouteille from ingredient inner join commande on ingredient.codebouteille=commande.ingredient where commande.numcommande=3";
             try
             {
                 OracleCommand listeDiv = new OracleCommand(cmd, connexion);
@@ -143,13 +146,18 @@ namespace ServeurBarman
                 while (divisionReader.Read())
                 {
                     count++;
-                    commande.Add(divisionReader.GetString(0));
+                    commande.Add(divisionReader.GetInt32(0));
                     // Une liste de commande contenant la position et la quantité des ingrédients
                     //var list = new List<(Position, int)>();
-                    list.Add((new Position(divisionReader.GetInt32(1), divisionReader.GetInt32(2), divisionReader.GetInt32(3)), divisionReader.GetInt32(4)));
+                    //list.Add((new Position(divisionReader.GetInt32(1), divisionReader.GetInt32(2), divisionReader.GetInt32(3)), divisionReader.GetInt32(4)));
                     //ListcommandeRobot.Add(list);
                 }
+
+
                 
+
+
+
                 divisionReader.Close();
                 welcomePage1.nombreClient = count.ToString();
                 welcomePage1.Init_UserUI();
@@ -165,12 +173,15 @@ namespace ServeurBarman
         {
             Task.Run(() =>
             {
-                while (check)
+                while (true)
                 {
-                    if(listcommandeRobot.Count > 0 && !robot.EnMarche())
+                    if(ListcommandeRobot.Count > 0)
                     {
-                        if(robot.MakeDrink(list))
-                            listcommandeRobot.Remove(listcommandeRobot[0]);
+                        if (!robot.EnMarche())
+                        {
+                            robot.MakeDrink(list);
+                            //ListcommandeRobot.Remove(ListcommandeRobot[0]);
+                        }
                     }
                 }
             });
@@ -184,9 +195,9 @@ namespace ServeurBarman
 
             robot.ConnexionRobot();
 
-            Task.Run(async () =>
+            Task.Run(() =>
             {
-                await Task.Delay(2000);
+                System.Threading.Thread.Sleep(2000);
                 if (robot.Connected)
                 {
                     MessageBox.Show("Connexion robot réussie");
@@ -210,16 +221,29 @@ namespace ServeurBarman
         private void ConnexionRobot()
         {
             PBX_EtatDeconnecté.Visible = false;
-            Task.Run(async () =>
+            Task.Run(() =>
             {
                 while (check)
                 {
                     PBX_EtatConnecté.Visible = true;
-                    await Task.Delay(500);
+                    Thread.Sleep(500);
                     PBX_EtatConnecté.Visible = false;
-                    await Task.Delay(500);
+                    Thread.Sleep(500);
                 }
             });
+        }
+
+        private void btnSpeed_Click(object sender, EventArgs e)
+        {
+            if (btnSpeed.Enabled)
+            {
+                btnSpeed.Enabled = false;
+                btnSpeed2x.Enabled = true;
+            }else if(btnSpeed2x.Enabled)
+            {
+                btnSpeed2x.Enabled = false;
+                btnSpeed.Enabled = true;
+            }
         }
     }
 }

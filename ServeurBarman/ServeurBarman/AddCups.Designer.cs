@@ -32,11 +32,11 @@
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.TB_NbVerre = new System.Windows.Forms.TextBox();
+            this.textBox2 = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.BTN_Valider = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -78,13 +78,13 @@
             this.label3.TabIndex = 9;
             this.label3.Text = "Emplacement";
             // 
-            // TB_NbVerre
+            // textBox2
             // 
-            this.TB_NbVerre.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TB_NbVerre.Location = new System.Drawing.Point(184, 69);
-            this.TB_NbVerre.Name = "TB_NbVerre";
-            this.TB_NbVerre.Size = new System.Drawing.Size(63, 26);
-            this.TB_NbVerre.TabIndex = 14;
+            this.textBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox2.Location = new System.Drawing.Point(184, 69);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(63, 26);
+            this.textBox2.TabIndex = 14;
             // 
             // label2
             // 
@@ -114,16 +114,15 @@
             this.label1.TabIndex = 11;
             this.label1.Text = "Type de verres";
             // 
-            // BTN_Valider
+            // button2
             // 
-            this.BTN_Valider.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BTN_Valider.Location = new System.Drawing.Point(394, 222);
-            this.BTN_Valider.Name = "BTN_Valider";
-            this.BTN_Valider.Size = new System.Drawing.Size(114, 37);
-            this.BTN_Valider.TabIndex = 16;
-            this.BTN_Valider.Text = "Valider";
-            this.BTN_Valider.UseVisualStyleBackColor = true;
-            this.BTN_Valider.Click += new System.EventHandler(this.BTN_Valider_Click);
+            this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button2.Location = new System.Drawing.Point(394, 222);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(114, 37);
+            this.button2.TabIndex = 16;
+            this.button2.Text = "Valider";
+            this.button2.UseVisualStyleBackColor = true;
             // 
             // button1
             // 
@@ -150,13 +149,13 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.pictureBox1);
-            this.Controls.Add(this.BTN_Valider);
+            this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.textBox4);
             this.Controls.Add(this.textBox3);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.TB_NbVerre);
+            this.Controls.Add(this.textBox2);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label1);
@@ -176,11 +175,11 @@
         private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox TB_NbVerre;
+        private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button BTN_Valider;
+        private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.PictureBox pictureBox1;
     }

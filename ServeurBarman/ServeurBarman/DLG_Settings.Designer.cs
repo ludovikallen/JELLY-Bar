@@ -58,6 +58,8 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.Btn_Back = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.btnSpeed = new System.Windows.Forms.Button();
+            this.btnSpeed2x = new System.Windows.Forms.Button();
             this.panel4.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel6.SuspendLayout();
@@ -91,10 +93,10 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("Berlin Sans FB", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label8.Location = new System.Drawing.Point(73, 23);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(83, 23);
+            this.label8.Size = new System.Drawing.Size(90, 24);
             this.label8.TabIndex = 19;
             this.label8.Text = "EPAULE";
             // 
@@ -133,10 +135,10 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Berlin Sans FB", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label7.Location = new System.Drawing.Point(85, 17);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(57, 23);
+            this.label7.Size = new System.Drawing.Size(64, 24);
             this.label7.TabIndex = 19;
             this.label7.Text = "BASE";
             // 
@@ -163,7 +165,7 @@
             // 
             // BTN_Close_Pliers
             // 
-            this.BTN_Close_Pliers.Font = new System.Drawing.Font("Showcard Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BTN_Close_Pliers.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BTN_Close_Pliers.Location = new System.Drawing.Point(109, 63);
             this.BTN_Close_Pliers.Name = "BTN_Close_Pliers";
             this.BTN_Close_Pliers.Size = new System.Drawing.Size(90, 63);
@@ -175,16 +177,16 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Berlin Sans FB", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label6.Location = new System.Drawing.Point(73, 18);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(68, 23);
+            this.label6.Size = new System.Drawing.Size(71, 24);
             this.label6.TabIndex = 19;
             this.label6.Text = "PINCE";
             // 
             // BTN_Open_Pliers
             // 
-            this.BTN_Open_Pliers.Font = new System.Drawing.Font("Showcard Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BTN_Open_Pliers.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BTN_Open_Pliers.Location = new System.Drawing.Point(8, 63);
             this.BTN_Open_Pliers.Name = "BTN_Open_Pliers";
             this.BTN_Open_Pliers.Size = new System.Drawing.Size(80, 63);
@@ -207,10 +209,10 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Berlin Sans FB", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(72, 16);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(75, 23);
+            this.label1.Size = new System.Drawing.Size(82, 24);
             this.label1.TabIndex = 19;
             this.label1.Text = "COUDE";
             // 
@@ -296,10 +298,10 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Berlin Sans FB", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label4.Location = new System.Drawing.Point(71, 10);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(96, 23);
+            this.label4.Size = new System.Drawing.Size(101, 24);
             this.label4.TabIndex = 19;
             this.label4.Text = "POIGNET";
             // 
@@ -377,12 +379,32 @@
             this.pictureBox1.TabIndex = 29;
             this.pictureBox1.TabStop = false;
             // 
+            // btnSpeed
+            // 
+            this.btnSpeed.Location = new System.Drawing.Point(566, 219);
+            this.btnSpeed.Name = "btnSpeed";
+            this.btnSpeed.Size = new System.Drawing.Size(88, 40);
+            this.btnSpeed.TabIndex = 31;
+            this.btnSpeed.Text = "Speed";
+            this.btnSpeed.UseVisualStyleBackColor = true;
+            // 
+            // btnSpeed2x
+            // 
+            this.btnSpeed2x.Location = new System.Drawing.Point(652, 219);
+            this.btnSpeed2x.Name = "btnSpeed2x";
+            this.btnSpeed2x.Size = new System.Drawing.Size(88, 40);
+            this.btnSpeed2x.TabIndex = 31;
+            this.btnSpeed2x.Text = "Speed 2x";
+            this.btnSpeed2x.UseVisualStyleBackColor = true;
+            // 
             // DLG_Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.Btn_Back;
             this.ClientSize = new System.Drawing.Size(789, 561);
+            this.Controls.Add(this.btnSpeed2x);
+            this.Controls.Add(this.btnSpeed);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.Calibrer_Robot);
@@ -447,5 +469,7 @@
         private System.Windows.Forms.Button Btn_Base_Left;
         private System.Windows.Forms.Button Btn_Coude_Right;
         private System.Windows.Forms.Button Btn_Coude_Left;
+        private System.Windows.Forms.Button btnSpeed;
+        private System.Windows.Forms.Button btnSpeed2x;
     }
 }
