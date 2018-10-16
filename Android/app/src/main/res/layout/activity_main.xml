@@ -27,6 +27,23 @@
         app:layout_constraintTop_toTopOf="@+id/backgroundTitle_TView"
         app:layout_constraintVertical_bias="0.86">
 
+        <ListView
+            android:id="@+id/shooter_LVIEW"
+            android:layout_width="592dp"
+            android:layout_height="261dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:divider="@color/listSelector"
+            android:dividerHeight="2dp"
+            android:listSelector="@color/listSelector"
+            android:paddingLeft="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
+
         <Button
             android:id="@+id/triNote_BTN"
             android:layout_width="59dp"
@@ -45,7 +62,7 @@
         <ListView
             android:id="@+id/drink_LVIEW"
             android:layout_width="592dp"
-            android:layout_height="593dp"
+            android:layout_height="261dp"
             android:layout_alignParentTop="true"
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
@@ -55,18 +72,36 @@
             android:paddingLeft="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.86" />
+            app:layout_constraintVertical_bias="0.175">
+
+        </ListView>
 
         <TextView
-            android:id="@+id/labeldrink_TXT"
+            android:id="@+id/drink_TXT"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="612dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:text="@string/drinks_str"
+            android:textColor="@color/black"
+            android:textSize="36sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/shooter_TXT"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="280dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:text="@string/shooters_str"
             android:textColor="@color/black"
             android:textSize="36sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -627,7 +662,7 @@
     <TextView
         android:id="@+id/backgroundTitle_TView"
         android:layout_width="607dp"
-        android:layout_height="113dp"
+        android:layout_height="115dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
