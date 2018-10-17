@@ -60,6 +60,7 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.btnSpeed = new System.Windows.Forms.Button();
             this.btnSpeed2x = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.panel4.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel6.SuspendLayout();
@@ -151,7 +152,6 @@
             this.Btn_Base_Left.Size = new System.Drawing.Size(80, 77);
             this.Btn_Base_Left.TabIndex = 20;
             this.Btn_Base_Left.UseVisualStyleBackColor = true;
-            this.Btn_Base_Left.Click += new System.EventHandler(this.Btn_Base_Left_Click);
             // 
             // panel6
             // 
@@ -262,6 +262,7 @@
             this.Btn_Main_Right.TabIndex = 20;
             this.Btn_Main_Right.Text = "button3";
             this.Btn_Main_Right.UseVisualStyleBackColor = true;
+            this.Btn_Main_Right.Click += new System.EventHandler(this.Btn_Main_Right_Click);
             // 
             // Btn_Main_Left
             // 
@@ -388,6 +389,7 @@
             this.btnSpeed.TabIndex = 31;
             this.btnSpeed.Text = "Speed";
             this.btnSpeed.UseVisualStyleBackColor = true;
+            this.btnSpeed.Click += new System.EventHandler(this.btnSpeed_Click);
             // 
             // btnSpeed2x
             // 
@@ -397,6 +399,17 @@
             this.btnSpeed2x.TabIndex = 31;
             this.btnSpeed2x.Text = "Speed 2x";
             this.btnSpeed2x.UseVisualStyleBackColor = true;
+            this.btnSpeed2x.Click += new System.EventHandler(this.btnSpeed2x_Click);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(678, 141);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 32;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // DLG_Settings
             // 
@@ -404,6 +417,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.Btn_Back;
             this.ClientSize = new System.Drawing.Size(789, 561);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.btnSpeed2x);
             this.Controls.Add(this.btnSpeed);
             this.Controls.Add(this.panel1);
@@ -472,5 +486,6 @@
         private System.Windows.Forms.Button Btn_Coude_Left;
         private System.Windows.Forms.Button btnSpeed;
         private System.Windows.Forms.Button btnSpeed2x;
+        private System.Windows.Forms.Button button1;
     }
 }

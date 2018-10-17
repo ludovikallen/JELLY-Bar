@@ -96,11 +96,11 @@ namespace ServeurBarman
                 if (LBX_WaitingList.Items.Count == 0)
                 {
                     numcommande.Clear();
-                        LBX_WaitingList.Items.Clear();
+                        //LBX_WaitingList.Items.Clear();
                     Refresh_WaitingList();
                     foreach (var e in numcommande)
                     {
-                        LBX_WaitingList.Items.Add(e);
+                        //LBX_WaitingList.Items.Add(e);
                     }
                 }
                 else
@@ -114,11 +114,11 @@ namespace ServeurBarman
                         if (LBX_WaitingList.Items.Count != numcommande.Count)
                         {
                             numcommande.Clear();
-                                LBX_WaitingList.Items.Clear();
+                                //LBX_WaitingList.Items.Clear();
                             Refresh_WaitingList();
                             foreach (var e in numcommande)
                             {
-                                LBX_WaitingList.Items.Add(e);
+                                //LBX_WaitingList.Items.Add(e);
                             }
                         }
                         else if (!LBX_WaitingList.Items[i].Equals(numcommande[i]))
@@ -128,10 +128,10 @@ namespace ServeurBarman
                     if (!check1)
                     {
 
-                        LBX_WaitingList.Items.Clear();
+                        //LBX_WaitingList.Items.Clear();
                         foreach (var e in numcommande)
                         {
-                            LBX_WaitingList.Items.Add(e);
+                            //LBX_WaitingList.Items.Add(e);
                         }
                     }
                 }
@@ -200,7 +200,6 @@ namespace ServeurBarman
         /// </summary>
         private void ServirClient()
         {
-            robot.AjouterCup(5);
             while (true)
             {
                 if (numcommande.Count > 0)
@@ -234,9 +233,8 @@ namespace ServeurBarman
             {
                 MessageBox.Show("Connexion robot réussie");
                 BTN_Setting.Enabled = true;
-                Task.Run(() => BOUTONQUIFLASH());
-                Task.Run(() => ServirClient());
-                //robot.TEST();
+                //Task.Run(() => BOUTONQUIFLASH());
+                //Task.Run(() => ServirClient());
             }
             else
             {
@@ -255,10 +253,9 @@ namespace ServeurBarman
             PBX_EtatDeconnecté.Visible = false;
             while (true)
             {
-                PBX_EtatConnecté.Visible =
-                false;
+                //PBX_EtatConnecté.Visible = true;
                 Thread.Sleep(1000);
-                PBX_EtatConnecté.Visible = false;
+                //PBX_EtatConnecté.Visible = false;
                 Thread.Sleep(1000);
             }
         }

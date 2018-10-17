@@ -121,8 +121,6 @@ namespace Bras_Robot
         }
         private void SetPosToStart()
         {
-            if (Calibration)
-                return;
             PosX = 0;
             PosY = 0;
             PosZ = 0;
@@ -211,9 +209,10 @@ namespace Bras_Robot
             PosZ += z;
 
             FuncNSleep(() => serialPort.Write("JOG " + x + "," + y + "," + z + "\r"), 200);
+
             FuncNSleep(() => serialPort.Write("FINISH\r"), 200);
         }
-        public void CALIBRE()
+        private void CALIBRE()
         {
             FuncNSleep(() => serialPort.Write("PASSWORD 255\r"), 1000);
             FuncNSleep(() => serialPort.Write("@ZERO\r"), 1000);
@@ -222,7 +221,7 @@ namespace Bras_Robot
         }
         #endregion
         #region Barman fonction
-        public void VersPosition(ref Position pos) => JOG(pos.X - PosX, pos.Y - PosY, pos.Z - PosZ);
+        private void VersPosition(ref Position pos) => JOG(pos.X - PosX, pos.Y - PosY, pos.Z - PosZ);
         private void VerserBouteille(ref (Position pos, int nbShots) pos)
         {
             SetSpeed(100);
@@ -361,9 +360,12 @@ namespace Bras_Robot
         };
         public void TEST()
         {
-            //Calibration = true;
-            //VersPosition(ref CreateStation);
-            GoToStart();
+            //SetSartPos();
+            //GoToStart();
+            //AjouterCup(4);
+            //CALIBRE();
+            VersPosition(ref RedCupStackStation);
+            //FuncNSleep(() => serialPort.Write("MOTOR 2, -4000\r"), 200);
         }
     }
 }
