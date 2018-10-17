@@ -78,13 +78,13 @@ namespace Bras_Robot
         #region general robot fonctions
         public int ConnexionRobot()
         {
-            task = Task.Run(() =>
+            task = Task.Run(async () =>
             {
                 //contourne un bug dans la connection avec le robot
                 SetPosToStart();
                 Connexion();
                 Deconnexion();
-                System.Threading.Thread.Sleep(100);
+                await Task.Delay(100);
                 Connexion();
                 Connected = true;
             });
@@ -99,15 +99,11 @@ namespace Bras_Robot
             byte[] Entrer2 = { 0x01, 0x21, 0x21, 0x00, 0x48, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x03, 0x8B };
             byte[] Entrer3 = { 0x06 };
             byte[] Entrer4 = { 0x04 };
-            serialPort.Write(Entrer1, 0, 3);
-            System.Threading.Thread.Sleep(100);
-            serialPort.Write(Entrer2, 0, Entrer2.Length);
-            System.Threading.Thread.Sleep(100);
-            serialPort.Write(Entrer3, 0, 1);
-            System.Threading.Thread.Sleep(100);
-            serialPort.Write(Entrer4, 0, 1);
-            System.Threading.Thread.Sleep(100);
-            serialPort.Write("NOHELP\r");
+            FuncNSleep(() => serialPort.Write(Entrer1, 0, 3), 100);
+            FuncNSleep(() => serialPort.Write(Entrer2, 0, Entrer2.Length), 100);
+            FuncNSleep(() => serialPort.Write(Entrer3, 0, 1), 100);
+            FuncNSleep(() => serialPort.Write(Entrer4, 0, 1), 100);
+            FuncNSleep(() => serialPort.Write("NOHELP\r"), 100);
         }
         public void Deconnexion()
         {
@@ -125,8 +121,6 @@ namespace Bras_Robot
         }
         private void SetPosToStart()
         {
-            if (Calibration)
-                return;
             PosX = 0;
             PosY = 0;
             PosZ = 0;
@@ -215,9 +209,10 @@ namespace Bras_Robot
             PosZ += z;
 
             FuncNSleep(() => serialPort.Write("JOG " + x + "," + y + "," + z + "\r"), 200);
+
             FuncNSleep(() => serialPort.Write("FINISH\r"), 200);
         }
-        public void CALIBRE()
+        private void CALIBRE()
         {
             FuncNSleep(() => serialPort.Write("PASSWORD 255\r"), 1000);
             FuncNSleep(() => serialPort.Write("@ZERO\r"), 1000);
@@ -226,7 +221,7 @@ namespace Bras_Robot
         }
         #endregion
         #region Barman fonction
-        public void VersPosition(ref Position pos) => JOG(pos.X - PosX, pos.Y - PosY, pos.Z - PosZ);
+        private void VersPosition(ref Position pos) => JOG(pos.X - PosX, pos.Y - PosY, pos.Z - PosZ);
         private void VerserBouteille(ref (Position pos, int nbShots) pos)
         {
             SetSpeed(100);
@@ -307,18 +302,20 @@ namespace Bras_Robot
         {
             var t = Task.Run(() => action);
             t.Wait();
-            System.Threading.Thread.Sleep(sleep);
+            Thread.Sleep(sleep);
+
         }
         private void FuncNSleep(Action<string> action, int sleep)
         {
             var t = Task.Run(() => action);
             t.Wait();
-            System.Threading.Thread.Sleep(sleep);
+            Thread.Sleep(sleep);
         }
         private void FuncNSleep(Action action, int sleep)
         {
             action.Invoke();
-            System.Threading.Thread.Sleep(sleep);
+            Thread.Sleep(sleep);
+
         }
         private Task DrinkOperation(List<(Position pos, int nbShots)> positions)
         {
@@ -342,10 +339,14 @@ namespace Bras_Robot
             });
         }
         #endregion
-        public void MakeDrink(List<(Position pos, int nbShots)> positions)
+        public bool MakeDrink(List<(Position pos, int nbShots)> positions)
         {
             if (task.IsCompleted && positions.Capacity != 0 && !Calibration)
+            {
                 task = DrinkOperation(positions);
+                return true;
+            }
+            return false;
         }
         public List<(Position position, int nbShots)> Exemple = new List<(Position pos, int nbShots)>
         {
@@ -359,8 +360,12 @@ namespace Bras_Robot
         };
         public void TEST()
         {
-            Calibration = true;
-            //VersPosition(ref CreateStation);
+            //SetSartPos();
+            //GoToStart();
+            //AjouterCup(4);
+            //CALIBRE();
+            VersPosition(ref RedCupStackStation);
+            //FuncNSleep(() => serialPort.Write("MOTOR 2, -4000\r"), 200);
         }
     }
 }

@@ -1,11 +1,12 @@
 package com.example.a201625221.projetjelly;
 
+//region Imports
 import android.annotation.SuppressLint;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
+import android.media.Image;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -23,12 +25,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.os.StrictMode;
 
-<<<<<<< Updated upstream
-import org.w3c.dom.Text;
-
-=======
+import java.math.RoundingMode;
 import java.sql.PreparedStatement;
->>>>>>> Stashed changes
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -41,54 +40,83 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Iterator;
 import java.util.Set;
-
 import static android.media.CamcorderProfile.get;
+//endregion
 
 public class MainActivity extends AppCompatActivity {
     public static Connection conn_ = null;
-    int toast_height=420;
+    static int hauteur_toast =420;
+
     /**
      * Variables pour contenir les layouts pour pouvoir changer d'onglet dans l'application
      */
-    ConstraintLayout listDrinkLYT, modifyLYT,optionsLYT,cartLYT,infosLYT,notesLYT;
+    ConstraintLayout listeDrinkShotLYT, modifierLYT,optionsLYT, panierLYT,infosLYT,notesLYT,connexionLYT;
 
     /**
      * Variables pour contenir les boutons pour pouvoir changer d'onglet dans l'application
      */
-    Button drinkBTN,cartBTN,optionsBTN,infoBTN;
+    Button drinkBTN, panierBTN,optionsBTN, infosBTN;
 
     /**
      * Variables permettant d'afficher dans la ListView les éléments des ArrayList<HashMap<String,String>> en passant par l'adapter
      */
-    ListView listDrinkLVIEW,listIngLVIEW,cartLVIEW, drinkItemLVIEW;
+    ListView listeDrinksLVIEW, listeShootersLVIEW, listeIngredientsLVIEW, panierLVIEW, drinkItemLVIEW;
 
     /**
      * Tableaux pour indiquer l'origine des données de l'adapter
      */
     String from[]={"nom","desc","note"};
-    /**
-     * Tableau la destination graphique de l'adapter
-     */
-    int to[]={R.id.name_TXT,R.id.ing_TXT,R.id.note_TXT};
 
     /**
-     * Listes contenant les éléments de la BD et le panier
+     * Tableau contenant la destination graphique de l'adapter pour la liste des drinks
      */
-    ArrayList<HashMap<String,String>> arrayListDrink =new ArrayList<>(),arrayListIng=new ArrayList<>(),arrayListCart=new ArrayList<>(), arrayListItemCourant=new ArrayList<>();
+    int toDrink[]={R.id.nameDrink_TXT,R.id.descDrink_TXT,R.id.noteDrink_TXT};
 
-    ArrayList<Integer>selectedCartPositions=new ArrayList<>();
     /**
-     * Variable contenant l'objet selectionné dans le panier
+     * Tableau contenant la destination graphique de l'adapter pour la liste des ingrédients/panier
      */
+    int toIng[]={R.id.nameIng_TXT,R.id.descIng_TXT};
 
-    String[] IngName ={"Orange juice","Ice","Salt","Water","Grenadine","Gold powder"};
-    String[] DrinkName={"Sex on the beach","Cosmopolitan","Rhum and coke","Beer","Diesel","Water"};
-    String[] DrinksIngredients={"Vodka+OrangeJuice+Grenadine","xxx","Rhum+Coke","Beer","Beer+Coke","Water"};
-    String[] Notes={"1.9","2.8","5.7","3","2","1","6","8"};
+    /**
+     * Tableau contenant la destination graphique de l'adapter pour le drink en cours de modification
+     */
+    int toCourant[]={R.id.nameCourant_TXT,R.id.descCourant_TXT,R.id.noteCourant_TXT};
 
+    /**
+     * Listes qui vont être les contenants des éléments de la BD et le panier
+     */
+    ArrayList<HashMap<String,String>> arrayListDrink =new ArrayList<>(),arrayListIng=new ArrayList<>(), arrayListPanier =new ArrayList<>(), arrayListItemCourant=new ArrayList<>();
+
+    /**
+     * Liste contenant les éléments sélectionnés du panier
+     */
+    ArrayList<Integer> selectionPositionsPanier = new ArrayList<>();
+
+    /**
+     * Radiogroup de sélection de couleur
+     */
+    RadioGroup couleursRDGRP;
+
+    /**
+     * Hashmap où les couleurs principales du programme seront stockées
+     */
+    HashMap<String, ColorStateList> couleurs=new HashMap<>();
+
+    /**
+     * Couleur choisie lors de l'ouverture de l'application
+     */
+    String couleurChoisie="blanc";
+
+    /**
+     * Index dans la liste de l'article en cours de modification
+     */
     int indexItemModification=-1;
-    String drinkCourantNote;
+
+    /**
+     * Note présentement choisie pour le drink courant
+     */
     Integer note=0;
+
     /**
      * Fonction lancée à la création de l'activité
      */
@@ -109,8 +137,8 @@ public class MainActivity extends AppCompatActivity {
                 .penaltyLog()
                 .penaltyDeath()
                 .build());
-        OracleConnexion();
 
+                OracleConnexion();
     }
 
     private void OracleConnexion(){
@@ -132,8 +160,14 @@ public class MainActivity extends AppCompatActivity {
                 try
                 {
                     conn_ = DriverManager.getConnection(jdbcURL,user,passwd);
-                    Initialize();
 
+                    Thread thread = new Thread(){
+                        public void run(){
+                            Initialiser();
+                        }
+                    };
+
+                    runOnUiThread(thread);
                 }
                 catch (java.sql.SQLException se)
                 {
@@ -144,13 +178,16 @@ public class MainActivity extends AppCompatActivity {
         t.start();
     }
 
+    //region Initialiser
+
     /**
      * Appel de toutes les fonctions d'initialisation
      */
-    void Initialize()
+    void Initialiser()
     {
-        InitializeComponents();
-        InitLists();
+        InitialiserComposantes();
+        InitialiserListes();
+        InitialiserCouleurs();
         setTouchListeners();
         setClickListeners();
         setCheckedListeners();
@@ -159,36 +196,81 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Initialise les composantes globales utilisées plusieurs fois pour ne pas avoir à les rechercher dans les fonctions
      */
-     void InitializeComponents()
+     void InitialiserComposantes()
     {
-        listDrinkLYT=findViewById(R.id.listDrink_LYT);
-        modifyLYT =findViewById(R.id.listIng_LYT);
+        listeDrinkShotLYT =findViewById(R.id.listDrink_LYT);
+        modifierLYT =findViewById(R.id.listIng_LYT);
         optionsLYT=findViewById(R.id.options_LYT);
-        cartLYT=findViewById(R.id.cart_LYT);
+        panierLYT =findViewById(R.id.cart_LYT);
         infosLYT=findViewById(R.id.infos_LYT);
         notesLYT=findViewById(R.id.notes_LYT);
+        connexionLYT=findViewById(R.id.connexion_LYT);
 
         drinkBTN=findViewById(R.id.drinklist_BTN);
-        infoBTN=findViewById(R.id.infos_BTN);
-        cartBTN=findViewById(R.id.cart_BTN);
+        infosBTN =findViewById(R.id.infos_BTN);
+        panierBTN =findViewById(R.id.cart_BTN);
         optionsBTN=findViewById(R.id.options_BTN);
 
-        listDrinkLVIEW=findViewById(R.id.drink_LVIEW);
-        listIngLVIEW=findViewById(R.id.ing_LVIEW);
-        cartLVIEW=findViewById(R.id.cart_LVIEW);
+        listeDrinksLVIEW =findViewById(R.id.drink_LVIEW);
+        listeShootersLVIEW=findViewById(R.id.shooter_LVIEW);
+        listeIngredientsLVIEW =findViewById(R.id.ing_LVIEW);
+        panierLVIEW =findViewById(R.id.cart_LVIEW);
         drinkItemLVIEW=findViewById(R.id.drinkItem_LVIEW);
+
+        couleursRDGRP =findViewById(R.id.changerCouleur_RBTNGRP);
     }
 
     /**
      * Initialise les trois listes principales, puis les remplis à partir de la BD
      */
-    void InitLists()
+    void InitialiserListes()
     {
-        fillDrinksList();
-        fillIngList();
-        fillCartList();
-       // refreshCartItemCount();
+        remplirListeDrinks();
+        remplirListeIngredients();
+        remplirListePanier();
+
+        rafraichirListeDrinks();
+        rafraichirListeIngredients();
+        rafraichirListeShooters();
+        rafraichirItemCourant();
     }
+
+    void InitialiserCouleurs()
+    {
+        int[][] etats = new int[][] {
+                new int[] { }
+        };
+        int[] couleurs = new int[] {
+                getResources().getColor(R.color.yellow),
+        };
+
+        ColorStateList jaune = new ColorStateList(etats, couleurs);
+        this.couleurs.put("jaune",jaune);
+
+        etats = new int[][] {
+                new int[] { }
+        };
+        couleurs = new int[] {
+                getResources().getColor(R.color.black),
+        };
+
+        ColorStateList noir = new ColorStateList(etats, couleurs);
+        this.couleurs.put("noir",noir);
+
+        etats = new int[][] {
+                new int[] { }
+        };
+        couleurs = new int[] {
+                getResources().getColor(R.color.white),
+        };
+
+        ColorStateList blanc = new ColorStateList(etats, couleurs);
+        this.couleurs.put("blanc",blanc);
+    }
+
+    //endregion
+
+    //region setListeners
 
     /**
      * Initialise les touch listeners, pour effectuer des actions avant le relâchement du toucher
@@ -196,16 +278,15 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("ClickableViewAccessibility")
     void setTouchListeners()
     {
-        final ImageButton trashBTN=findViewById(R.id.trash_IMGBTN);
-        final ImageButton commandBTN=findViewById(R.id.command_IMGBTN);
-        final TextView noteExitBTN=findViewById(R.id.exitNoteBTN);
+        final ImageButton supprimerBTN=findViewById(R.id.trash_IMGBTN);
+        final ImageButton commanderBTN=findViewById(R.id.command_IMGBTN);
+        final TextView quitterNotesBTN=findViewById(R.id.exitNoteBTN);
 
         final ImageButton etoile1= findViewById(R.id.star1_IMGBTN);
         final ImageButton etoile2= findViewById(R.id.star2_IMGBTN);
         final ImageButton etoile3= findViewById(R.id.star3_IMGBTN);
         final ImageButton etoile4= findViewById(R.id.star4_IMGBTN);
         final ImageButton etoile5= findViewById(R.id.star5_IMGBTN);
-
 
         drinkBTN.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
@@ -215,18 +296,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        infoBTN.setOnTouchListener(new View.OnTouchListener() {
+        infosBTN.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
-                infoBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.grey)));
-                infoBTN.setBackgroundResource(R.drawable.iconinfo);
+                infosBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.grey)));
+                infosBTN.setBackgroundResource(R.drawable.iconinfo);
                 return false;
             }
         });
 
-        cartBTN.setOnTouchListener(new View.OnTouchListener() {
+        panierBTN.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
-                cartBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.grey)));
-                cartBTN.setBackgroundResource(R.drawable.iconcart);
+                panierBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.grey)));
+                panierBTN.setBackgroundResource(R.drawable.iconcart);
                 return false;
             }
         });
@@ -239,22 +320,22 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        trashBTN.setOnTouchListener(new View.OnTouchListener() {
+        supprimerBTN.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
-                trashBTN.setBackgroundColor(getResources().getColor(R.color.grey));
+                supprimerBTN.setBackgroundColor(getResources().getColor(R.color.grey));
                 return false;
             }
         });
 
-        noteExitBTN.setOnTouchListener(new View.OnTouchListener() {
+        quitterNotesBTN.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
-                noteExitBTN.setBackgroundColor(getResources().getColor(R.color.darkgrey));
+                quitterNotesBTN.setBackgroundColor(getResources().getColor(R.color.darkgrey));
                 return false;
             }
         });
-        commandBTN.setOnTouchListener(new View.OnTouchListener() {
+        commanderBTN.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
-                commandBTN.setBackgroundColor(getResources().getColor(R.color.grey));
+                commanderBTN.setBackgroundColor(getResources().getColor(R.color.grey));
                 return false;
             }
         });
@@ -296,14 +377,15 @@ public class MainActivity extends AppCompatActivity {
      */
     void setClickListeners()
     {
-        final ImageButton trashBTN=findViewById(R.id.trash_IMGBTN);
-        final ImageButton commandBTN=findViewById(R.id.command_IMGBTN);
-        final TextView trashAllBTN=findViewById(R.id.trashall_BTN);
-        final TextView noteExitBTN=findViewById(R.id.exitNoteBTN);
-        final TextView noteSendBTN=findViewById(R.id.sendNote_BTN);
-        final TextView triNoteBTN=findViewById(R.id.triNote_BTN);
-        final Button acceptChangesBTN=findViewById(R.id.acceptChange_BTN);
-        final Button cancelChangesBTN=findViewById(R.id.cancelChange_BTN);
+        final ImageButton supprimerBTN=findViewById(R.id.trash_IMGBTN);
+        final TextView supprimerToutBTN=findViewById(R.id.trashall_BTN);
+        final ImageButton commanderBTN=findViewById(R.id.command_IMGBTN);
+        final TextView quitterNotesBTN=findViewById(R.id.exitNoteBTN);
+        final TextView envoyerNoteBTN=findViewById(R.id.sendNote_BTN);
+        final TextView triNotesBTN=findViewById(R.id.triNote_BTN);
+        final Button accepterChangementsBTN=findViewById(R.id.acceptChange_BTN);
+        final Button annulerChangementsBTN=findViewById(R.id.cancelChange_BTN);
+        final Button connecterBTN= findViewById(R.id.connexion_BTN);
 
         final ImageButton etoile1= findViewById(R.id.star1_IMGBTN);
         final ImageButton etoile2= findViewById(R.id.star2_IMGBTN);
@@ -311,137 +393,186 @@ public class MainActivity extends AppCompatActivity {
         final ImageButton etoile4= findViewById(R.id.star4_IMGBTN);
         final ImageButton etoile5= findViewById(R.id.star5_IMGBTN);
 
-        drinkBTN.setOnClickListener(new View.OnClickListener() {
+        final ImageView logoIMG=findViewById(R.id.logo1_IMG);
+
+        logoIMG.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                drinkBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
-                drinkBTN.setBackgroundResource(R.drawable.icondrink);
-
-                listDrinkLYT.setVisibility(View.VISIBLE);
-                modifyLYT.setVisibility(View.INVISIBLE);
+                listeDrinkShotLYT.setVisibility(View.INVISIBLE);
+                modifierLYT.setVisibility(View.INVISIBLE);
                 optionsLYT.setVisibility(View.INVISIBLE);
-                cartLYT.setVisibility(View.INVISIBLE);
-                infosLYT.setVisibility(View.INVISIBLE);
-
-                fillDrinksList();
-                EnleverTri();
+                panierLYT.setVisibility(View.INVISIBLE);
+                infosLYT.setVisibility(View.VISIBLE);
             }
         });
 
-        cartBTN.setOnClickListener(new View.OnClickListener() {
+        drinkBTN.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                cartBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
-                cartBTN.setBackgroundResource(R.drawable.iconcart);
+                if(couleurChoisie.equals("blanc"))
+                    changerCouleurBoutonsMenu(couleurs.get("blanc"));
+                else if(couleurChoisie.equals("noir"))
+                    changerCouleurBoutonsMenu(couleurs.get("noir"));
+                else if(couleurChoisie.equals("jaune"))
+                    changerCouleurBoutonsMenu(couleurs.get("jaune"));
+                drinkBTN.setBackgroundResource(R.drawable.icondrink);
 
-                listDrinkLYT.setVisibility(View.INVISIBLE);
-                modifyLYT.setVisibility(View.INVISIBLE);
+                listeDrinkShotLYT.setVisibility(View.VISIBLE);
+                modifierLYT.setVisibility(View.INVISIBLE);
                 optionsLYT.setVisibility(View.INVISIBLE);
-                cartLYT.setVisibility(View.VISIBLE);
+                panierLYT.setVisibility(View.INVISIBLE);
+                infosLYT.setVisibility(View.INVISIBLE);
+
+                rafraichirListeDrinks();
+                rafraichirListeIngredients();
+                rafraichirListeShooters();
+                rafraichirItemCourant();
+                remplirListeDrinks();
+                remplirListeIngredients();
+                remplirListePanier();
+                enleverTri();
+            }
+        });
+
+        panierBTN.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if(couleurChoisie.equals("blanc"))
+                    changerCouleurBoutonsMenu(couleurs.get("blanc"));
+                else if(couleurChoisie.equals("noir"))
+                    changerCouleurBoutonsMenu(couleurs.get("noir"));
+                else if(couleurChoisie.equals("jaune"))
+                    changerCouleurBoutonsMenu(couleurs.get("jaune"));
+                panierBTN.setBackgroundResource(R.drawable.iconcart);
+
+                listeDrinkShotLYT.setVisibility(View.INVISIBLE);
+                modifierLYT.setVisibility(View.INVISIBLE);
+                optionsLYT.setVisibility(View.INVISIBLE);
+                panierLYT.setVisibility(View.VISIBLE);
                 infosLYT.setVisibility(View.INVISIBLE);
             }
         });
 
         optionsBTN.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                optionsBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
+                if(couleurChoisie.equals("blanc"))
+                    changerCouleurBoutonsMenu(couleurs.get("blanc"));
+                else if(couleurChoisie.equals("noir"))
+                    changerCouleurBoutonsMenu(couleurs.get("noir"));
+                else if(couleurChoisie.equals("jaune"))
+                    changerCouleurBoutonsMenu(couleurs.get("jaune"));
                 optionsBTN.setBackgroundResource(R.drawable.iconoptions);
 
-                listDrinkLYT.setVisibility(View.INVISIBLE);
-                modifyLYT.setVisibility(View.INVISIBLE);
+                listeDrinkShotLYT.setVisibility(View.INVISIBLE);
+                modifierLYT.setVisibility(View.INVISIBLE);
                 optionsLYT.setVisibility(View.VISIBLE);
-                cartLYT.setVisibility(View.INVISIBLE);
+                panierLYT.setVisibility(View.INVISIBLE);
                 infosLYT.setVisibility(View.INVISIBLE);
             }
         });
 
-        infoBTN.setOnClickListener(new View.OnClickListener() {
+        infosBTN.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                infoBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
-                infoBTN.setBackgroundResource(R.drawable.iconinfo);
+                if(couleurChoisie.equals("blanc"))
+                    changerCouleurBoutonsMenu(couleurs.get("blanc"));
+                else if(couleurChoisie.equals("noir"))
+                    changerCouleurBoutonsMenu(couleurs.get("noir"));
+                else if(couleurChoisie.equals("jaune"))
+                    changerCouleurBoutonsMenu(couleurs.get("jaune"));
+                infosBTN.setBackgroundResource(R.drawable.iconinfo);
 
-                listDrinkLYT.setVisibility(View.INVISIBLE);
-                modifyLYT.setVisibility(View.INVISIBLE);
+                listeDrinkShotLYT.setVisibility(View.INVISIBLE);
+                modifierLYT.setVisibility(View.INVISIBLE);
                 optionsLYT.setVisibility(View.INVISIBLE);
-                cartLYT.setVisibility(View.INVISIBLE);
+                panierLYT.setVisibility(View.INVISIBLE);
                 infosLYT.setVisibility(View.VISIBLE);
             }
         });
 
-        trashBTN.setOnClickListener(new View.OnClickListener() {
+        supprimerBTN.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                trashBTN.setBackgroundColor(getResources().getColor(R.color.white));
                 RetirerPanier();
-                trashBTN.setVisibility(View.INVISIBLE);
+                supprimerBTN.setVisibility(View.INVISIBLE);
+                afficherNombreItemsPanier();
             }
         });
 
-        commandBTN.setOnClickListener(new View.OnClickListener() {
+        supprimerToutBTN.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                commandBTN.setBackgroundColor(getResources().getColor(R.color.white));
-                Commander();
+                selectionPositionsPanier.clear();
+                arrayListPanier.clear();
+                remplirListePanier();
+                supprimerBTN.setVisibility(View.INVISIBLE);
+                afficherNombreItemsPanier();
             }
         });
 
-        trashAllBTN.setOnClickListener(new View.OnClickListener() {
+        commanderBTN.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                selectedCartPositions.clear();
-                arrayListCart.clear();
-                fillCartList();
-                trashBTN.setVisibility(View.INVISIBLE);
-                refreshCartItemCount();
+                commanderBTN.setBackgroundColor(getResources().getColor(R.color.white));
+                commander();
             }
         });
 
-        noteExitBTN.setOnClickListener(new View.OnClickListener() {
+        quitterNotesBTN.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                noteExitBTN.setBackgroundColor(getResources().getColor(R.color.grey));
-                AnnulerNote();
+                quitterNotesBTN.setBackgroundColor(getResources().getColor(R.color.grey));
+                annulerNote();
             }
         });
 
-        noteSendBTN.setOnClickListener(new View.OnClickListener() {
+        envoyerNoteBTN.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                EnvoyerNote();
+                envoyerNote();
             }
         });
 
-        triNoteBTN.setOnClickListener(new View.OnClickListener() {
+        triNotesBTN.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if(triNoteBTN.getText().equals("▼"))
+                if(triNotesBTN.getText().equals("▼"))
                 {
-                    TrierEtoileHaut();
+                    trierHaut();
                 }
-                else if(triNoteBTN.getText().equals("▲"))
+                else if(triNotesBTN.getText().equals("▲"))
                 {
-                    EnleverTri();
+                    enleverTri();
                 }
-                else if(triNoteBTN.getText().equals("A-B"))
+                else if(triNotesBTN.getText().equals("A-B"))
                 {
-                    TrierEtoileBas();
+                    trierBas();
                 }
             }
         });
 
-        acceptChangesBTN.setOnClickListener(new View.OnClickListener() {
+        accepterChangementsBTN.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if(indexItemModification!=-1) {
-                    arrayListCart.remove(indexItemModification);
+                    arrayListPanier.remove(indexItemModification);
                 }
                 indexItemModification=-1;
-                arrayListCart.add(arrayListItemCourant.get(0));
+                arrayListPanier.add(arrayListItemCourant.get(0));
                 arrayListItemCourant.clear();
-                modifyLYT.setVisibility(View.INVISIBLE);
-                cartLYT.setVisibility(View.VISIBLE);
-                refreshCartItemCount();
-                fillCartList();
+                modifierLYT.setVisibility(View.INVISIBLE);
+                panierLYT.setVisibility(View.VISIBLE);
+                afficherNombreItemsPanier();
+                remplirListePanier();
             }
         });
 
-        cancelChangesBTN.setOnClickListener(new View.OnClickListener() {
+        annulerChangementsBTN.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 indexItemModification=-1;
                 arrayListItemCourant.clear();
-                modifyLYT.setVisibility(View.INVISIBLE);
-                listDrinkLYT.setVisibility(View.VISIBLE);
+                modifierLYT.setVisibility(View.INVISIBLE);
+                listeDrinkShotLYT.setVisibility(View.VISIBLE);
+            }
+        });
+
+        connecterBTN.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                connexionLYT.setVisibility(View.INVISIBLE);
+                drinkBTN.setVisibility(View.VISIBLE);
+                panierBTN.setVisibility(View.VISIBLE);
+                optionsBTN.setVisibility(View.VISIBLE);
+                infosBTN.setVisibility(View.VISIBLE);
+                OracleConnexion();
             }
         });
 
@@ -501,7 +632,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        listDrinkLVIEW.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listeDrinksLVIEW.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position,
@@ -510,11 +641,11 @@ public class MainActivity extends AppCompatActivity {
                 HashMap<String, String> item = ( HashMap<String, String>)adapterView.getItemAtPosition(position);
                 faireToast("x1 " + item.values().toArray()[1] + " ajouté au panier");
 
-                AjouterPanier(item);
+                ajouterPanier(item);
             }
         });
 
-        listIngLVIEW.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listeIngredientsLVIEW.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position,
@@ -527,7 +658,7 @@ public class MainActivity extends AppCompatActivity {
                 arrayListItemCourant.clear();
                 HashMap<String, String> nouvelItemActuel=new HashMap<String, String>();
 
-                HashMap<String, Integer> ingredients=défaireDescription(itemActuel.get("desc"));
+                HashMap<String, Integer> ingredients= defaireDescription(itemActuel.get("desc"));
                 if(ingredients.containsKey(nouveauIngredient.get("nom")))
                 {
                     int nbOz=ingredients.get(nouveauIngredient.get("nom"));
@@ -541,71 +672,77 @@ public class MainActivity extends AppCompatActivity {
                 nouvelItemActuel.put("desc", nouvelleDescription);
                 nouvelItemActuel.put("note", itemActuel.get("note"));
                 arrayListItemCourant.add(nouvelItemActuel);
-                refreshItemCourant();
+                rafraichirItemCourant();
             }
         });
 
-        cartLVIEW.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        panierLVIEW.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position,
                                     long id) {
                 if(view != null && view.getContext() != null) {
-                    trashBTN.setVisibility(View.VISIBLE);
+                    supprimerBTN.setVisibility(View.VISIBLE);
 
-                    if (arrayListCart.size() < position)
-                        selectedCartPositions.add(0);
-                    if (selectedCartPositions.contains(position))
-                        selectedCartPositions.remove(selectedCartPositions.indexOf(position));
-                    else if (!selectedCartPositions.contains(position))
-                        selectedCartPositions.add(position);
+                    if (arrayListPanier.size() < position)
+                        selectionPositionsPanier.add(0);
+                    if (selectionPositionsPanier.contains(position))
+                        selectionPositionsPanier.remove(selectionPositionsPanier.indexOf(position));
+                    else if (!selectionPositionsPanier.contains(position))
+                        selectionPositionsPanier.add(position);
 
-                    if (selectedCartPositions.size() > 0) {
-                        if (arrayListCart.size() < position)
-                            cartLVIEW.getChildAt(0).setBackgroundColor(getResources().getColor(R.color.yellow));
-                        if (selectedCartPositions.contains(position))
-                            cartLVIEW.getChildAt(position).setBackgroundColor(getResources().getColor(R.color.yellow));
-                        else
-                            cartLVIEW.getChildAt(position).setBackgroundColor(getResources().getColor(R.color.white));
+                    if (selectionPositionsPanier.size() > 0) {
+                        if (arrayListPanier.size() < position)
+                            panierLVIEW.getChildAt(0).setBackgroundColor(getResources().getColor(R.color.listSelector));
+                        if (selectionPositionsPanier.contains(position))
+                            panierLVIEW.getChildAt(position).setBackgroundColor(getResources().getColor(R.color.listSelector));
+                        else {
+                            if(couleurChoisie.equals("blanc"))
+                                panierLVIEW.getChildAt(position).setBackgroundColor(couleurs.get("blanc").getDefaultColor());
+                            else if(couleurChoisie.equals("noir"))
+                                panierLVIEW.getChildAt(position).setBackgroundColor(couleurs.get("noir").getDefaultColor());
+                            else if(couleurChoisie.equals("jaune"))
+                                panierLVIEW.getChildAt(position).setBackgroundColor(couleurs.get("jaune").getDefaultColor());
+                        }
                     }
                 }
             }
         });
 
-        listDrinkLVIEW.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        listeDrinksLVIEW.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
                     arrayListItemCourant.clear();
                     HashMap<String, String> item = ( HashMap<String, String>)adapterView.getItemAtPosition(position);
                     arrayListItemCourant.add(item);
-                    refreshItemCourant();
+                    rafraichirItemCourant();
 
-                    listDrinkLYT.setVisibility(View.INVISIBLE);
-                    modifyLYT.setVisibility(View.VISIBLE);
-                    fillIngList();
-                    refreshIngList();
+                    listeDrinkShotLYT.setVisibility(View.INVISIBLE);
+                    modifierLYT.setVisibility(View.VISIBLE);
+                    remplirListeIngredients();
+                    rafraichirListeIngredients();
                 return true;
             }
         });
 
-        cartLVIEW.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        panierLVIEW.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
                     arrayListItemCourant.clear();
                     HashMap<String, String> item = ( HashMap<String, String>)adapterView.getItemAtPosition(position);
                     arrayListItemCourant.add(item);
-                    refreshItemCourant();
+                    rafraichirItemCourant();
 
-                    cartLYT.setVisibility(View.INVISIBLE);
-                    modifyLYT.setVisibility(View.VISIBLE);
-                    fillIngList();
-                    refreshIngList();
+                    panierLYT.setVisibility(View.INVISIBLE);
+                    modifierLYT.setVisibility(View.VISIBLE);
+                    remplirListeIngredients();
+                    rafraichirListeIngredients();
                     indexItemModification=position;
                 return true;
             }
         });
 
-        listIngLVIEW.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        listeIngredientsLVIEW.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position,
                                     long id) {
@@ -613,7 +750,7 @@ public class MainActivity extends AppCompatActivity {
                 HashMap<String, String> nouveauIngredient = ( HashMap<String, String>)adapterView.getItemAtPosition(position);
 
                 HashMap<String, String> itemActuel=arrayListItemCourant.get(0);
-                HashMap<String, Integer> ingredients=défaireDescription(itemActuel.get("desc"));
+                HashMap<String, Integer> ingredients= defaireDescription(itemActuel.get("desc"));
                 if(ingredients.containsKey(nouveauIngredient.get("nom")))
                 {
                     arrayListItemCourant.clear();
@@ -635,7 +772,7 @@ public class MainActivity extends AppCompatActivity {
                 {
                     faireToast(nouveauIngredient.values().toArray()[0] + " pas dans le drink");
                 }
-                refreshItemCourant();
+                rafraichirItemCourant();
                 return true;
             }
         });
@@ -643,22 +780,24 @@ public class MainActivity extends AppCompatActivity {
 
     public void setCheckedListeners()
     {
-        RadioGroup radioGroup = findViewById(R.id.changerCouleur_RBTNGRP);
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+        couleursRDGRP.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
         {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if(checkedId==R.id.changerBlanc_RBTN)
                 {
                     changerBlanc();
+                    couleurChoisie="blanc";
                 }
                 else if(checkedId==R.id.changerNoir_RBTN)
                 {
                     changerNoir();
+                    couleurChoisie="noir";
                 }
                 else if(checkedId==R.id.changerJelly_RBTN)
                 {
                     changerJELLY();
+                    couleurChoisie="jaune";
                 }
             }
         });
@@ -671,8 +810,9 @@ public class MainActivity extends AppCompatActivity {
         if(notesLYT.getVisibility()==View.VISIBLE) {
             if (!viewRect.contains((int) ev.getRawX(), (int) ev.getRawY())) {
                 notesLYT.setVisibility(View.INVISIBLE);
-                fillCartList();
-                arrayListCart.clear();
+                remplirListePanier();
+                arrayListPanier.clear();
+                afficherNombreItemsPanier();
 
                 final ImageButton commandBTN=findViewById(R.id.command_IMGBTN);
                 commandBTN.setVisibility(View.INVISIBLE);
@@ -682,18 +822,63 @@ public class MainActivity extends AppCompatActivity {
                 panierTXT.setPaintFlags(panierTXT.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);
             }
         }
-
         return super.dispatchTouchEvent(ev);
+    }
+
+    //endregion
+
+    //region Panier
+
+    void commander()
+    {
+        HashMap<String, Integer> drink;
+        String sql2 = "Select max(numcommande) from commande";
+        int Numcommande=0;
+        ResultSet resultSetMax = null;
+        try {
+            Statement stm12 = conn_.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            resultSetMax = stm12.executeQuery(sql2);
+            resultSetMax.next();
+            Numcommande = resultSetMax.getInt(1) + 1;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        for (int i = 0; i < arrayListPanier.size(); i++)
+        {
+            Statement stm1;
+            ResultSet resultSet;
+            drink= defaireDescription(arrayListPanier.get(i).get("desc"));
+            for ( String key : drink.keySet() ) {
+                Object value = drink.get(key);
+
+                String sql = "select codebouteille from INGREDIENT where nombouteille = '" + key +"'";
+                try {
+                    stm1 = conn_.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+                    resultSet = stm1.executeQuery(sql);
+                    resultSet.next();
+                    Statement statement = conn_.createStatement();
+                    statement.executeUpdate("INSERT INTO COMMANDE VALUES ( "+( Numcommande + i) + ","+ resultSet.getInt(1) +","+ value +")");
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        demanderNote(arrayListPanier.get(0).get("nom"));
+        faireToast("Merci de votre commande. Veuillez noter s'il vous plait.");
+        selectionPositionsPanier.clear();
+        remplirListePanier();
+        remplirListeDrinks();
     }
 
     /**
      * Ajoute l'élément envoyé en paramètre dans le panier
      */
-    void AjouterPanier(HashMap<String, String> ajout)
+    void ajouterPanier(HashMap<String, String> ajout)
     {
-        arrayListCart.add(ajout);
-        fillCartList();
-        refreshCartItemCount();
+        arrayListPanier.add(ajout);
+        remplirListePanier();
+        afficherNombreItemsPanier();
     }
 
     /**
@@ -703,8 +888,8 @@ public class MainActivity extends AppCompatActivity {
     void RetirerPanier(HashMap<String, String> retrait)
     {
         if(retrait!=null) {
-            arrayListCart.remove(retrait);
-            fillCartList();
+            arrayListPanier.remove(retrait);
+            remplirListePanier();
             faireToast("x1 " + retrait.values().toArray()[0] + " retiré du panier");
         }
     }
@@ -715,24 +900,42 @@ public class MainActivity extends AppCompatActivity {
     void RetirerPanier()
     {
         int compteurItems=0;
-        for (; compteurItems<selectedCartPositions.size();compteurItems++)
+        for (; compteurItems< selectionPositionsPanier.size(); compteurItems++)
         {
-            arrayListCart.set(selectedCartPositions.get(compteurItems),null);
+            arrayListPanier.set(selectionPositionsPanier.get(compteurItems),null);
         }
-        while(arrayListCart.remove(null));
-        selectedCartPositions.clear();
-        fillCartList();
+        while(arrayListPanier.remove(null));
+        selectionPositionsPanier.clear();
+        remplirListePanier();
         if(compteurItems==1)
             faireToast(compteurItems + " item retiré du panier");
         else
             faireToast(compteurItems + " items retirés du panier");
-        refreshCartItemCount();
+        afficherNombreItemsPanier();
     }
+
+    void afficherNombreItemsPanier()
+    {
+        final TextView itemCountTXT=findViewById(R.id.cartItemsCount_TXT);
+        itemCountTXT.setText(Integer.toString(arrayListPanier.size()));
+        final TextView panierTXT=findViewById(R.id.cart_TXT);
+        if(arrayListPanier.size()==0)
+
+            panierTXT.setText(getResources().getString(R.string.cartempty_str));
+        else {
+            panierTXT.setText(getResources().getString(R.string.cart_str));
+            panierTXT.setPaintFlags(panierTXT.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);
+        }
+    }
+
+    //endregion
+
+    //region Remplir listes
 
     /**
      * Vide puis rempli la liste des drinks disponibles à partir de la BD(Pour l'initialiser, puis la rafraîchir)
      */
-    void fillDrinksList() {
+    void remplirListeDrinks() {
         arrayListDrink.clear();
         Statement stm1;
         PreparedStatement stmlNote;
@@ -772,7 +975,14 @@ public class MainActivity extends AppCompatActivity {
                 HashMap<String,String> hashMap=new HashMap<>();//create a hashmap to store the data in key value pair
                 hashMap.put("nom", nom);
                 hashMap.put("desc",description);
-                hashMap.put("note",String.valueOf(Notetrouver));
+                if(Notetrouver != null&&!Notetrouver.trim().equals(""))
+                {
+                    hashMap.put("note",arrondir(Float.valueOf(Notetrouver)));
+                }
+                else{
+                    hashMap.put("note","NA");
+                }
+
                 if (drinkPossible)
                 {
                     arrayListDrink.add(hashMap);//add the hashmap into arrayList
@@ -781,36 +991,58 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-        EnleverTri();
+        enleverTri();
     }
 
-    void refreshDrinkList()
+    void rafraichirListeDrinks()
     {
-        SimpleAdapter simpleAdapter=new SimpleAdapter(this, arrayListDrink,R.layout.custom_list_drink,from,to);
-        listDrinkLVIEW.setAdapter(simpleAdapter);//sets the adapter for listView
-    }
+        SimpleAdapter simpleAdapter=new SimpleAdapter(this, arrayListDrink,R.layout.custom_list_drink,from,toDrink);
+        SimpleAdapter.ViewBinder binder = new SimpleAdapter.ViewBinder() {
+            @Override
+            public boolean setViewValue(View view, Object object, String value) {
 
-    int compterNombreRecettes()
-    {
-        Statement stm1s;
-        ResultSet setRecette;
+                if (view.equals((TextView) view.findViewById(R.id.nameDrink_TXT))) {
+                    TextView nomTXT = (TextView) view.findViewById(R.id.nameDrink_TXT);
+                    if(couleurChoisie.equals("blanc")) {
+                        nomTXT.setTextColor(getResources().getColor(R.color.darkgrey));
+                    } else if(couleurChoisie.equals("noir")) {
+                        nomTXT.setTextColor(getResources().getColor(R.color.white));
+                    } else if(couleurChoisie.equals("jaune")) {
+                        nomTXT.setTextColor(getResources().getColor(R.color.black));
+                    }
+                }
+                if (view.equals((TextView) view.findViewById(R.id.descDrink_TXT))) {
+                    TextView descTXT = (TextView) view.findViewById(R.id.descDrink_TXT);
+                    if (couleurChoisie.equals("blanc")) {
+                        descTXT.setTextColor(getResources().getColor(R.color.darkgrey));
+                    } else if (couleurChoisie.equals("noir")) {
+                        descTXT.setTextColor(getResources().getColor(R.color.white));
+                    } else if (couleurChoisie.equals("jaune")) {
+                        descTXT.setTextColor(getResources().getColor(R.color.black));
+                    }
+                }
+                if(view.equals((TextView) view.findViewById(R.id.noteDrink_TXT))) {
+                    TextView noteTXT = (TextView) view.findViewById(R.id.noteDrink_TXT);
+                    if (couleurChoisie.equals("blanc")) {
+                        noteTXT.setTextColor(getResources().getColor(R.color.darkgrey));
+                    } else if (couleurChoisie.equals("noir")) {
+                        noteTXT.setTextColor(getResources().getColor(R.color.white));
+                    } else if (couleurChoisie.equals("jaune")) {
+                        noteTXT.setTextColor(getResources().getColor(R.color.black));
+                    }
+                }
+                return false;
+            }
+        };
+        simpleAdapter.setViewBinder(binder);
 
-        String requeteNombreRecette = "select count(*) from recette";
-        try {
-            stm1s = conn_.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
-            setRecette = stm1s.executeQuery(requeteNombreRecette);
-            setRecette.next();
-            return setRecette.getInt(1);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return -1;
+        listeDrinksLVIEW.setAdapter(simpleAdapter);//sets the adapter for listView
     }
 
     /**
      * Vide puis rempli la liste des ingrédients disponibles à partir de la BD(Pour l'initialiser, puis la rafraîchir)
      */
-    void fillIngList()
+    void remplirListeIngredients()
     {
         arrayListIng.clear();
         Statement stm1;
@@ -834,87 +1066,211 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    void refreshIngList()
+    void rafraichirListeIngredients()
     {
-        SimpleAdapter simpleAdapter=new SimpleAdapter(this,arrayListIng,R.layout.custom_list_ing,from,to);
-        listIngLVIEW.setAdapter(simpleAdapter);//sets the adapter for listView
+        SimpleAdapter simpleAdapter=new SimpleAdapter(this,arrayListIng,R.layout.custom_list_ing,from,toIng);
+        SimpleAdapter.ViewBinder binder = new SimpleAdapter.ViewBinder() {
+            @Override
+            public boolean setViewValue(View view, Object object, String value) {
+
+                if (view.equals((TextView) view.findViewById(R.id.nameIng_TXT))) {
+                    TextView nomTXT = (TextView) view.findViewById(R.id.nameIng_TXT);
+                    if (couleurChoisie.equals("blanc")) {
+                        nomTXT.setTextColor(getResources().getColor(R.color.darkgrey));
+                    } else if (couleurChoisie.equals("noir")) {
+                        nomTXT.setTextColor(getResources().getColor(R.color.white));
+                    } else if (couleurChoisie.equals("jaune")) {
+                        nomTXT.setTextColor(getResources().getColor(R.color.black));
+                    }
+                }
+                if (view.equals((TextView) view.findViewById(R.id.descIng_TXT))) {
+                    TextView descTXT = (TextView) view.findViewById(R.id.descIng_TXT);
+                    if (couleurChoisie.equals("blanc")) {
+                        descTXT.setTextColor(getResources().getColor(R.color.darkgrey));
+                    } else if (couleurChoisie.equals("noir")) {
+                        descTXT.setTextColor(getResources().getColor(R.color.white));
+                    } else if (couleurChoisie.equals("jaune")) {
+                        descTXT.setTextColor(getResources().getColor(R.color.black));
+                    }
+                }
+                return false;
+            }
+        };
+
+        simpleAdapter.setViewBinder(binder);
+        listeIngredientsLVIEW.setAdapter(simpleAdapter);//sets the adapter for listView
+        listeIngredientsLVIEW.setVisibility(View.VISIBLE);
     }
 
-    void refreshItemCourant()
+    void rafraichirListeShooters()
     {
-        SimpleAdapter simpleAdapter=new SimpleAdapter(this,arrayListItemCourant,R.layout.custom_list_itemcourant,from,to);
+        SimpleAdapter simpleAdapter=new SimpleAdapter(this,arrayListIng,R.layout.custom_list_ing,from,toIng);
+        SimpleAdapter.ViewBinder binder = new SimpleAdapter.ViewBinder() {
+            @Override
+            public boolean setViewValue(View view, Object object, String value) {
+
+                if (view.equals((TextView) view.findViewById(R.id.nameIng_TXT))) {
+                    TextView nomTXT = (TextView) view.findViewById(R.id.nameIng_TXT);
+                    if (couleurChoisie.equals("blanc")) {
+                        nomTXT.setTextColor(getResources().getColor(R.color.darkgrey));
+                    } else if (couleurChoisie.equals("noir")) {
+                        nomTXT.setTextColor(getResources().getColor(R.color.white));
+                    } else if (couleurChoisie.equals("jaune")) {
+                        nomTXT.setTextColor(getResources().getColor(R.color.black));
+                    }
+                }
+                if (view.equals((TextView) view.findViewById(R.id.descIng_TXT))) {
+                    TextView descTXT = (TextView) view.findViewById(R.id.descIng_TXT);
+                    if (couleurChoisie.equals("blanc")) {
+                        descTXT.setTextColor(getResources().getColor(R.color.darkgrey));
+                    } else if (couleurChoisie.equals("noir")) {
+                        descTXT.setTextColor(getResources().getColor(R.color.white));
+                    } else if (couleurChoisie.equals("jaune")) {
+                        descTXT.setTextColor(getResources().getColor(R.color.black));
+                    }
+                }
+                return false;
+            }
+        };
+
+        simpleAdapter.setViewBinder(binder);
+        listeShootersLVIEW.setAdapter(simpleAdapter);//sets the adapter for listView
+        listeShootersLVIEW.setVisibility(View.VISIBLE);
+    }
+
+    void rafraichirItemCourant()
+    {
+        SimpleAdapter simpleAdapter=new SimpleAdapter(this,arrayListItemCourant,R.layout.custom_list_itemcourant,from,toCourant);
+        SimpleAdapter.ViewBinder binder = new SimpleAdapter.ViewBinder() {
+            @Override
+            public boolean setViewValue(View view, Object object, String value) {
+
+                if (view.equals((TextView) view.findViewById(R.id.nameCourant_TXT))) {
+                    TextView nomTXT = (TextView) view.findViewById(R.id.nameCourant_TXT);
+                    if (couleurChoisie.equals("blanc")) {
+                        nomTXT.setTextColor(getResources().getColor(R.color.darkgrey));
+                    } else if (couleurChoisie.equals("noir")) {
+                        nomTXT.setTextColor(getResources().getColor(R.color.white));
+                    } else if (couleurChoisie.equals("jaune")) {
+                        nomTXT.setTextColor(getResources().getColor(R.color.black));
+                    }
+                }
+                if (view.equals((TextView) view.findViewById(R.id.descCourant_TXT))) {
+                    TextView descTXT = (TextView) view.findViewById(R.id.descCourant_TXT);
+                    if (couleurChoisie.equals("blanc")) {
+                        descTXT.setTextColor(getResources().getColor(R.color.darkgrey));
+                    } else if (couleurChoisie.equals("noir")) {
+                        descTXT.setTextColor(getResources().getColor(R.color.white));
+                    } else if (couleurChoisie.equals("jaune")) {
+                        descTXT.setTextColor(getResources().getColor(R.color.black));
+                    }
+                }
+                if(view.equals((TextView) view.findViewById(R.id.noteCourant_TXT))) {
+                    TextView noteTXT = (TextView) view.findViewById(R.id.noteCourant_TXT);
+                    if (couleurChoisie.equals("blanc")) {
+                        noteTXT.setTextColor(getResources().getColor(R.color.darkgrey));
+                    } else if (couleurChoisie.equals("noir")) {
+                        noteTXT.setTextColor(getResources().getColor(R.color.white));
+                    } else if (couleurChoisie.equals("jaune")) {
+                        noteTXT.setTextColor(getResources().getColor(R.color.black));
+                    }
+                }
+                return false;
+            }
+        };
+        simpleAdapter.setViewBinder(binder);
+
         drinkItemLVIEW.setAdapter(simpleAdapter);//sets the adapter for listView
+        drinkItemLVIEW.setVisibility(View.VISIBLE);
     }
 
     /**
      * Permet d'initialiser et rafraîchir la liste du panier
      */
-    void fillCartList()
+    void remplirListePanier()
     {
         final ImageButton commandBTN=findViewById(R.id.command_IMGBTN);
-        if(arrayListCart.size()!=0)
+        if(arrayListPanier.size()!=0)
             commandBTN.setVisibility(View.VISIBLE);
         else
             commandBTN.setVisibility(View.INVISIBLE);
 
-        SimpleAdapter simpleAdapter=new SimpleAdapter(this,arrayListCart,R.layout.custom_list_ing,from,to);
-        cartLVIEW.setAdapter(simpleAdapter);//sets the adapter for listView
+        SimpleAdapter simpleAdapter=new SimpleAdapter(this, arrayListPanier,R.layout.custom_list_ing,from,toIng);
+
+        SimpleAdapter.ViewBinder binder = new SimpleAdapter.ViewBinder() {
+            @Override
+            public boolean setViewValue(View view, Object object, String value) {
+
+                if (view.equals((TextView) view.findViewById(R.id.nameIng_TXT))) {
+                    TextView nomTXT = (TextView) view.findViewById(R.id.nameIng_TXT);
+                    if (couleurChoisie.equals("blanc")) {
+                        nomTXT.setTextColor(getResources().getColor(R.color.darkgrey));
+                    } else if (couleurChoisie.equals("noir")) {
+                        nomTXT.setTextColor(getResources().getColor(R.color.white));
+                    } else if (couleurChoisie.equals("jaune")) {
+                        nomTXT.setTextColor(getResources().getColor(R.color.black));
+                    }
+                }
+                if (view.equals((TextView) view.findViewById(R.id.descIng_TXT))) {
+                    TextView descTXT = (TextView) view.findViewById(R.id.descIng_TXT);
+                    if (couleurChoisie.equals("blanc")) {
+                        descTXT.setTextColor(getResources().getColor(R.color.darkgrey));
+                    } else if (couleurChoisie.equals("noir")) {
+                        descTXT.setTextColor(getResources().getColor(R.color.white));
+                    } else if (couleurChoisie.equals("jaune")) {
+                        descTXT.setTextColor(getResources().getColor(R.color.black));
+                    }
+                }
+                return false;
+            }
+        };
+        simpleAdapter.setViewBinder(binder);
+
+        panierLVIEW.setAdapter(simpleAdapter);//sets the adapter for listView
+        panierLVIEW.setVisibility(View.VISIBLE);
     }
 
     @Deprecated
     void selectFirstCartItem()
     {
-        if(arrayListCart.size()>0)
+        if(arrayListPanier.size()>0)
         {
             int defaultPosition = 0;
             int justIgnoreId = 0;
-            cartLVIEW.setItemChecked(defaultPosition, true);
-            cartLVIEW.performItemClick(cartLVIEW.getSelectedView(),defaultPosition, justIgnoreId);
+            panierLVIEW.setItemChecked(defaultPosition, true);
+            panierLVIEW.performItemClick(panierLVIEW.getSelectedView(),defaultPosition, justIgnoreId);
         }
     }
 
-    void Commander()
-    {
-        HashMap<String, Integer> drink= new HashMap<>();
-        for (int i = 0; i < arrayListCart.size(); i++)
-        {
-            drink=défaireDescription(arrayListCart.get(i).get("desc"));
-            //REQUETES BD ICI
+    //endregion
 
-        }
+    //region Notes
 
-        DemanderNote(arrayListCart.get(0).get("nom"));
-        faireToast("Merci de votre commande. Veuillez noter s'il vous plait.");
-        selectedCartPositions.clear();
-        fillCartList();
-        fillDrinksList();
-    }
-
-    void DemanderNote(String nomMix)
+    void demanderNote(String nomMix)
     {
         final TextView nomMixTXT=findViewById(R.id.nomMix_TXT);
 
         nomMixTXT.setText(nomMix);
         notesLYT.setVisibility(View.VISIBLE);
-        fillCartList();
+        remplirListePanier();
     }
 
-    void AnnulerNote() {
+    void annulerNote() {
 
         final TextView nomMixTXT=findViewById(R.id.nomMix_TXT);
         nomMixTXT.setText("");
 
-        ReinitTableauNotes();
-        arrayListCart.remove(0);
-        if(arrayListCart.size()!=0) {
-            DemanderNote(arrayListCart.get(0).get("nom"));
+        reinitTableauNotes();
+        arrayListPanier.remove(0);
+        if(arrayListPanier.size()!=0) {
+            demanderNote(arrayListPanier.get(0).get("nom"));
         }
         else
-            fillCartList();
-        refreshCartItemCount();
+            remplirListePanier();
+        afficherNombreItemsPanier();
     }
 
-    void EnvoyerNote() {
+    void envoyerNote() {
 
         if(note==0)
             faireToast("Désolé de votre mauvaise expérience. Revenez nous voir.");
@@ -923,40 +1279,52 @@ public class MainActivity extends AppCompatActivity {
         else
             faireToast("Merci d'avoir noté: "+note+" étoiles");
 
-        //ENVOYER ICI A LA BD arrayListCart.get(0).get("nom") et note
-        {
-
-
+        //ENVOYER ICI A LA BD arrayListPanier.get(0).get("nom") et note
+        try {
+            String sql = "select Coderecette,nomrecette from recette where nomrecette = '" + arrayListPanier.get(0).get("nom") +"'";
+            Statement stm12 = conn_.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            ResultSet resultSet = stm12.executeQuery(sql);
+            resultSet.next();
+            Statement statement = conn_.createStatement();
+            int codeRecette=resultSet.getInt(1);
+            String nomRecette=resultSet.getString(2);
+            statement.executeUpdate("INSERT INTO Note VALUES ('" +codeRecette+"','"+ nomRecette+"',"+note+")");
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
 
-
-        ReinitTableauNotes();
-        arrayListCart.remove(0);
-        if(arrayListCart.size()!=0) {
-            DemanderNote(arrayListCart.get(0).get("nom"));
+        remplirListeDrinks();
+        rafraichirListeDrinks();
+        reinitTableauNotes();
+        arrayListPanier.remove(0);
+        if(arrayListPanier.size()!=0) {
+            demanderNote(arrayListPanier.get(0).get("nom"));
         }
         else
-            fillCartList();
-        refreshCartItemCount();
+            remplirListePanier();
+        afficherNombreItemsPanier();
     }
 
-    void ReinitTableauNotes()
-    {
-        final ImageButton etoile1= findViewById(R.id.star1_IMGBTN);
-        final ImageButton etoile2= findViewById(R.id.star2_IMGBTN);
-        final ImageButton etoile3= findViewById(R.id.star3_IMGBTN);
-        final ImageButton etoile4= findViewById(R.id.star4_IMGBTN);
-        final ImageButton etoile5= findViewById(R.id.star5_IMGBTN);
+    void reinitTableauNotes() {
+        final ImageButton etoile1 = findViewById(R.id.star1_IMGBTN);
+        final ImageButton etoile2 = findViewById(R.id.star2_IMGBTN);
+        final ImageButton etoile3 = findViewById(R.id.star3_IMGBTN);
+        final ImageButton etoile4 = findViewById(R.id.star4_IMGBTN);
+        final ImageButton etoile5 = findViewById(R.id.star5_IMGBTN);
         etoile1.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
         etoile2.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
         etoile3.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
         etoile4.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
         etoile5.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
         notesLYT.setVisibility(View.INVISIBLE);
-        note=0;
+        note = 0;
     }
 
-    void TrierEtoileHaut()
+    //endregion
+
+    //region Tri
+
+    void trierHaut()
     {
         final TextView triNoteBTN=findViewById(R.id.triNote_BTN);
         triNoteBTN.setText("▲");
@@ -965,21 +1333,41 @@ public class MainActivity extends AppCompatActivity {
             public int compare(HashMap<String,String> o1,
                                HashMap<String,String> o2)
             {
-                    float o1note = Float.valueOf(o1.get("note"));
-                    float o2note = Float.valueOf(o2.get("note"));
-                    if (o1note < o2note) {
+                    if(!o1.get("note").equals("NA")&&!o2.get("note").equals("NA")) {
+                        float o1note = Float.valueOf(o1.get("note"));
+                        float o2note = Float.valueOf(o2.get("note"));
+                        if (o1note < o2note) {
+                            return -1;
+                        } else if (o1note > o2note) {
+                            return 1;
+                        }
+                    }
+                    else if(!o1.get("note").equals("NA")&&o2.get("note").equals("NA"))
+                    {
                         return -1;
-                    } else if (o1note > o2note) {
+                    }
+                    else if(o1.get("note").equals("NA")&&!o2.get("note").equals("NA"))
+                    {
                         return 1;
                     }
                     return 0;
             }
         });
 
-        refreshDrinkList();
+        rafraichirListeDrinks();
+
+        Collections.sort(arrayListIng, new Comparator<HashMap<String,String>>()
+        {
+            public int compare(HashMap<String,String> o1,
+                               HashMap<String,String> o2)
+            {
+                return o1.get("nom").compareTo(o2.get("nom"));
+            }
+        });
+        rafraichirListeShooters();
     }
 
-    void TrierEtoileBas()
+    void trierBas()
     {
         final TextView triNoteBTN=findViewById(R.id.triNote_BTN);
         triNoteBTN.setText("▼");
@@ -988,20 +1376,40 @@ public class MainActivity extends AppCompatActivity {
             public int compare(HashMap<String,String> o1,
                                HashMap<String,String> o2)
             {
-                    float o1note = Float.valueOf(o1.get("note"));
-                    float o2note = Float.valueOf(o2.get("note"));
-                    if (o1note < o2note) {
-                        return 1;
-                    } else if (o1note > o2note) {
+                    if(!o1.get("note").equals("NA")&&!o2.get("note").equals("NA")) {
+                        float o1note = Float.valueOf(o1.get("note"));
+                        float o2note = Float.valueOf(o2.get("note"));
+                        if (o1note < o2note) {
+                            return 1;
+                        } else if (o1note > o2note) {
+                            return -1;
+                        }
+                    }
+                    else if(!o1.get("note").equals("NA")&&o2.get("note").equals("NA"))
+                    {
                         return -1;
+                    }
+                    else if(o1.get("note").equals("NA")&&!o2.get("note").equals("NA"))
+                    {
+                        return 1;
                     }
                     return 0;
                 }
         });
-        refreshDrinkList();
+        rafraichirListeDrinks();
+
+        Collections.sort(arrayListIng, new Comparator<HashMap<String,String>>()
+        {
+            public int compare(HashMap<String,String> o1,
+                               HashMap<String,String> o2)
+            {
+                return -o1.get("nom").compareTo(o2.get("nom"));
+            }
+        });
+        rafraichirListeShooters();
     }
 
-    void EnleverTri()
+    void enleverTri()
     {
         final TextView triNoteBTN=findViewById(R.id.triNote_BTN);
         triNoteBTN.setText("A-B");
@@ -1010,38 +1418,29 @@ public class MainActivity extends AppCompatActivity {
             public int compare(HashMap<String,String> o1,
                                HashMap<String,String> o2)
             {
-                return o1.get("nom").compareTo(o2.get("nom"));
+                if(!o1.containsValue(null)&&!o2.containsValue(null)) return o1.get("nom").compareTo(o2.get("nom"));
+                return 0;
             }
         });
-        refreshDrinkList();
+        rafraichirListeDrinks();
+
+        Collections.sort(arrayListIng, new Comparator<HashMap<String,String>>()
+        {
+            public int compare(HashMap<String,String> o1,
+                               HashMap<String,String> o2)
+            {
+                if(!o1.containsValue(null)&&!o2.containsValue(null)) return o1.get("nom").compareTo(o2.get("nom"));
+                return 0;
+            }
+        });
+        rafraichirListeShooters();
     }
 
-    void refreshCartItemCount()
-    {
-        final TextView itemCountTXT=findViewById(R.id.cartItemsCount_TXT);
-        itemCountTXT.setText(Integer.toString(arrayListCart.size()));
-        final TextView panierTXT=findViewById(R.id.cart_TXT);
-        if(arrayListCart.size()==0)
+    //endregion
 
-            panierTXT.setText(getResources().getString(R.string.cartempty_str));
-        else {
-            panierTXT.setText(getResources().getString(R.string.cart_str));
-            panierTXT.setPaintFlags(panierTXT.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);
-        }
-    }
+    //region Description
 
-    void faireToast(String message)
-    {
-        Toast toast = Toast.makeText(getApplicationContext(),
-                message, Toast.LENGTH_LONG);
-        toast.setGravity(Gravity.CENTER, 0, toast_height);
-        View view = toast.getView();
-
-        view.setBackgroundColor(getResources().getColor(R.color.yellow));
-        toast.show();
-    }
-
-    HashMap<String, Integer> défaireDescription(String description)
+    HashMap<String, Integer> defaireDescription(String description)
     {
         HashMap<String, Integer> ingredients = new HashMap<>();
         ArrayList<HashMap<String, Integer>> drink = new ArrayList<>();
@@ -1080,96 +1479,52 @@ public class MainActivity extends AppCompatActivity {
         return desc;
     }
 
+    //endregion
+
+    //region Utilitaires
+
+    void faireToast(String message)
+    {
+        Toast toast = Toast.makeText(getApplicationContext(),
+                message, Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.CENTER, 0, hauteur_toast);
+        View view = toast.getView();
+
+        view.setBackgroundColor(getResources().getColor(R.color.yellow));
+        toast.show();
+    }
+
+    String arrondir(float nombre)
+    {
+        DecimalFormat df = new DecimalFormat("#.##");
+        df.setRoundingMode(RoundingMode.DOWN);
+        return df.format(nombre);
+    }
+
+    int compterNombreRecettes()
+    {
+        Statement stm1s;
+        ResultSet setRecette;
+
+        String requeteNombreRecette = "select count(*) from recette";
+        try {
+            stm1s = conn_.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
+            setRecette = stm1s.executeQuery(requeteNombreRecette);
+            setRecette.next();
+            return setRecette.getInt(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    //endregion
+
+    //region Couleurs
+
     void changerBlanc()
     {
-        findViewById(R.id.background_LYT).setBackgroundColor(getResources().getColor(R.color.white));
-
-        TextView optionLBL=findViewById(R.id.options_TXT);
-        RadioButton blancRBTN = findViewById(R.id.changerBlanc_RBTN);
-        RadioButton noirRBTN = findViewById(R.id.changerNoir_RBTN);
-        RadioButton jellyRBTN = findViewById(R.id.changerJelly_RBTN);
-
-        optionLBL.setTextColor(getResources().getColor(R.color.black));
-
-        blancRBTN.setTextColor(getResources().getColor(R.color.black));
-        noirRBTN.setTextColor(getResources().getColor(R.color.black));
-        jellyRBTN.setTextColor(getResources().getColor(R.color.black));
-
-        ColorStateList colorStateList = new ColorStateList(
-                new int[][]{
-                        new int[]{-android.R.attr.state_checked},
-                        new int[]{android.R.attr.state_checked}
-                },
-                new int[]{
-
-                        getResources().getColor(R.color.darkgrey)
-                        , getResources().getColor(R.color.yellow)
-                }
-        );
-        blancRBTN.setButtonTintList(colorStateList);
-        noirRBTN.setButtonTintList(colorStateList);
-        jellyRBTN.setButtonTintList(colorStateList);
-
-        findViewById(R.id.backgroundFooter_TView).setBackgroundColor(getResources().getColor(R.color.black));
-        drinkBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
-        cartBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
-        optionsBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
-        infoBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
-    }
-
-    void changerNoir()
-    {
-        findViewById(R.id.background_LYT).setBackgroundColor(getResources().getColor(R.color.black));
-
-        TextView optionLBL=findViewById(R.id.options_TXT);
-        RadioButton noirRBTN = findViewById(R.id.changerNoir_RBTN);
-        RadioButton blancRBTN = findViewById(R.id.changerBlanc_RBTN);
-        RadioButton jellyRBTN = findViewById(R.id.changerJelly_RBTN);
-
-        optionLBL.setTextColor(getResources().getColor(R.color.white));
-
-        blancRBTN.setTextColor(getResources().getColor(R.color.white));
-        noirRBTN.setTextColor(getResources().getColor(R.color.white));
-        jellyRBTN.setTextColor(getResources().getColor(R.color.white));
-
-        ColorStateList colorStateList = new ColorStateList(
-                new int[][]{
-                        new int[]{-android.R.attr.state_checked},
-                        new int[]{android.R.attr.state_checked}
-                },
-                new int[]{
-
-                        getResources().getColor(R.color.white)
-                        , getResources().getColor(R.color.yellow)
-                }
-        );
-        blancRBTN.setButtonTintList(colorStateList);
-        noirRBTN.setButtonTintList(colorStateList);
-        jellyRBTN.setButtonTintList(colorStateList);
-
-        findViewById(R.id.backgroundFooter_TView).setBackgroundColor(getResources().getColor(R.color.white));
-        drinkBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.black)));
-        cartBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.black)));
-        optionsBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.black)));
-        infoBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.black)));
-    }
-
-    void changerJELLY()
-    {
-        findViewById(R.id.background_LYT).setBackgroundColor(getResources().getColor(R.color.yellow));
-
-        TextView optionLBL=findViewById(R.id.options_TXT);
-        RadioButton noirRBTN = findViewById(R.id.changerNoir_RBTN);
-        RadioButton blancRBTN = findViewById(R.id.changerBlanc_RBTN);
-        RadioButton jellyRBTN = findViewById(R.id.changerJelly_RBTN);
-
-        optionLBL.setTextColor(getResources().getColor(R.color.white));
-
-        blancRBTN.setTextColor(getResources().getColor(R.color.white));
-        noirRBTN.setTextColor(getResources().getColor(R.color.white));
-        jellyRBTN.setTextColor(getResources().getColor(R.color.white));
-
-        ColorStateList colorStateList = new ColorStateList(
+        ColorStateList colorRBTN = new ColorStateList(
                 new int[][]{
                         new int[]{-android.R.attr.state_checked},
                         new int[]{android.R.attr.state_checked}
@@ -1177,17 +1532,144 @@ public class MainActivity extends AppCompatActivity {
                 new int[]{
 
                         getResources().getColor(R.color.grey)
+                        , getResources().getColor(R.color.yellow)
+                }
+        );
+
+        int[] boutons = new int[]{
+                getResources().getColor(R.color.white)
+                , getResources().getColor(R.color.black)};
+
+        findViewById(R.id.background_LYT).setBackgroundColor(getResources().getColor(R.color.white));
+        findViewById(R.id.connexion_LYT).setBackgroundColor(getResources().getColor(R.color.white));
+        findViewById(R.id.backgroundFooter_TView).setBackgroundColor(getResources().getColor(R.color.black));
+
+        changerCouleurBoutonsMenu(couleurs.get("blanc"));
+        changeTextColor(couleurs.get("noir"));
+        changeRadioButtonColor(colorRBTN);
+        changerCouleurDrinkLayout(boutons);
+        changerCouleurPanierLayout(boutons);
+    }
+
+    void changerNoir()
+    {
+        ColorStateList colorRBTN = new ColorStateList(
+                new int[][]{
+                        new int[]{-android.R.attr.state_checked},
+                        new int[]{android.R.attr.state_checked}
+                },
+                new int[]{
+
+                        getResources().getColor(R.color.grey)
+                        , getResources().getColor(R.color.white)
+                }
+        );
+
+        int[] boutons = new int[]{
+                getResources().getColor(R.color.black)
+                , getResources().getColor(R.color.white)};
+
+        findViewById(R.id.background_LYT).setBackgroundColor(getResources().getColor(R.color.black));
+        findViewById(R.id.connexion_LYT).setBackgroundColor(getResources().getColor(R.color.black));
+        findViewById(R.id.backgroundFooter_TView).setBackgroundColor(getResources().getColor(R.color.white));
+
+        changerCouleurBoutonsMenu(couleurs.get("noir"));
+        changeTextColor(couleurs.get("blanc"));
+        changeRadioButtonColor(colorRBTN);
+        changerCouleurDrinkLayout(boutons);
+        changerCouleurPanierLayout(boutons);
+    }
+
+    void changerJELLY()
+    {
+        ColorStateList colorRBTN = new ColorStateList(
+                new int[][]{
+                        new int[]{-android.R.attr.state_checked},
+                        new int[]{android.R.attr.state_checked}
+                },
+                new int[]{
+
+                        getResources().getColor(R.color.darkgrey)
                         , getResources().getColor(R.color.black)
                 }
         );
-        blancRBTN.setButtonTintList(colorStateList);
-        noirRBTN.setButtonTintList(colorStateList);
-        jellyRBTN.setButtonTintList(colorStateList);
 
+        int[] boutons = new int[]{
+                        getResources().getColor(R.color.yellow)
+                        , getResources().getColor(R.color.black)};
+
+        findViewById(R.id.background_LYT).setBackgroundColor(getResources().getColor(R.color.yellow));
+        findViewById(R.id.connexion_LYT).setBackgroundColor(getResources().getColor(R.color.yellow));
         findViewById(R.id.backgroundFooter_TView).setBackgroundColor(getResources().getColor(R.color.black));
-        drinkBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.yellow)));
-        cartBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.yellow)));
-        optionsBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.yellow)));
-        infoBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.yellow)));
+
+        changerCouleurBoutonsMenu(couleurs.get("jaune"));
+        changeTextColor(couleurs.get("blanc"));
+        changeRadioButtonColor(colorRBTN);
+        changerCouleurDrinkLayout(boutons);
+        changerCouleurPanierLayout(boutons);
     }
+
+    void changerCouleurBoutonsMenu(ColorStateList color)
+    {
+        drinkBTN.setBackgroundTintList(color);
+        panierBTN.setBackgroundTintList(color);
+        optionsBTN.setBackgroundTintList(color);
+        infosBTN.setBackgroundTintList(color);
+    }
+
+    void changeTextColor(ColorStateList color)
+    {
+        RadioButton noirRBTN = findViewById(R.id.changerNoir_RBTN);
+        RadioButton blancRBTN = findViewById(R.id.changerBlanc_RBTN);
+        RadioButton jellyRBTN = findViewById(R.id.changerJelly_RBTN);
+
+        TextView optionsTXT=findViewById(R.id.options_TXT);
+        TextView infosTXT=findViewById(R.id.infos_TXT);
+        TextView texteInfosTXT=findViewById(R.id.informations_TXT);
+        TextView connexionTXT=findViewById(R.id.connexion_TXT);
+        TextView drinkTXT=findViewById(R.id.drink_TXT);
+        TextView shooterTXT=findViewById(R.id.shooter_TXT);
+        TextView panierTXT=findViewById(R.id.cart_TXT);
+
+        blancRBTN.setTextColor(color);
+        noirRBTN.setTextColor(color);
+        jellyRBTN.setTextColor(color);
+
+        optionsTXT.setTextColor(color);
+        infosTXT.setTextColor(color);
+        texteInfosTXT.setTextColor(color);
+        connexionTXT.setTextColor(color);
+        drinkTXT.setTextColor(color);
+        shooterTXT.setTextColor(color);
+        panierTXT.setTextColor(color);
+    }
+
+    void changeRadioButtonColor(ColorStateList color)
+    {
+        RadioButton noirRBTN = findViewById(R.id.changerNoir_RBTN);
+        RadioButton blancRBTN = findViewById(R.id.changerBlanc_RBTN);
+        RadioButton jellyRBTN = findViewById(R.id.changerJelly_RBTN);
+
+        blancRBTN.setButtonTintList(color);
+        noirRBTN.setButtonTintList(color);
+        jellyRBTN.setButtonTintList(color);
+    }
+
+    void changerCouleurDrinkLayout(int[] color)
+    {
+
+        Button triBTN=findViewById(R.id.triNote_BTN);
+        triBTN.setBackgroundColor(color[0]);
+        triBTN.setTextColor(color[1]);
+    }
+
+    void changerCouleurPanierLayout(int[] color)
+    {
+
+        Button supprimerToutBTN=findViewById(R.id.trashall_BTN);
+        supprimerToutBTN.setBackgroundColor(color[0]);
+        supprimerToutBTN.setTextColor(color[1]);
+    }
+
+    //endregion
 }

@@ -8,9 +8,15 @@ namespace ServeurBarman
     {
         CRS_A255 robot = CRS_A255.Instance;
         private bool isRunning = false;
+        int angle = 5;
+        
         public DLG_Settings()
         {
             InitializeComponent();
+
+            robot.Calibration = true;
+
+            robot.SetSpeed(75);
 
             Btn_Base_Left.MouseDown += (sender, args) =>
             {
@@ -23,7 +29,7 @@ namespace ServeurBarman
                         {
                             robot.task = Task.Run(() =>
                             {
-                                robot.DeplacerBase(5);
+                                robot.DeplacerBase(-angle);
                                 System.Threading.Thread.Sleep(1000); //TODO
                             });
                         }
@@ -42,7 +48,7 @@ namespace ServeurBarman
                         {
                             robot.task = Task.Run(() =>
                             {
-                                robot.DeplacerBase(5);
+                                robot.DeplacerBase(angle);
                                 System.Threading.Thread.Sleep(1000); //TODO
                             });
                         }
@@ -61,7 +67,7 @@ namespace ServeurBarman
                         {
                             robot.task = Task.Run(() =>
                             {
-                                robot.DeplacerEpaule(-5);
+                                robot.DeplacerEpaule(-angle);
                                 System.Threading.Thread.Sleep(1000); //TODO
                             });
                         }
@@ -80,7 +86,7 @@ namespace ServeurBarman
                         {
                             robot.task = Task.Run(() =>
                             {
-                                robot.DeplacerEpaule(5);
+                                robot.DeplacerEpaule(angle);
                                 System.Threading.Thread.Sleep(1000); //TODO
                             });
                         }
@@ -99,7 +105,7 @@ namespace ServeurBarman
                         {
                             robot.task = Task.Run(() =>
                             {
-                                robot.DeplacerCoude(5);
+                                robot.DeplacerCoude(angle);
                                 System.Threading.Thread.Sleep(1000); //TODO
                             });
                         }
@@ -119,7 +125,7 @@ namespace ServeurBarman
                         {
                             robot.task = Task.Run(() =>
                             {
-                                robot.DeplacerCoude(-5);
+                                robot.DeplacerCoude(-angle);
                                 System.Threading.Thread.Sleep(1000); //TODO
                             });
                         }
@@ -138,7 +144,7 @@ namespace ServeurBarman
                         {
                             robot.task = Task.Run(() =>
                             {
-                                robot.DeplacerCoude(-5);
+                                robot.DeplacerMain(-angle);
                                 System.Threading.Thread.Sleep(1000); //TODO
                             });
                         }
@@ -158,7 +164,7 @@ namespace ServeurBarman
                         {
                             robot.task = Task.Run(() =>
                             {
-                                robot.DeplacerMain(5);
+                                robot.DeplacerMain(angle);
                                 System.Threading.Thread.Sleep(1000); //TODO
                             });
                         }
@@ -177,7 +183,7 @@ namespace ServeurBarman
                         {
                             robot.task = Task.Run(() =>
                             {
-                                robot.DeplacerPoignet(5);
+                                robot.DeplacerPoignet(angle);
                                 System.Threading.Thread.Sleep(1000); //TODO
                             });
                         }
@@ -196,7 +202,7 @@ namespace ServeurBarman
                         {
                             robot.task = Task.Run(() =>
                             {
-                                robot.DeplacerPoignet(-5);
+                                robot.DeplacerPoignet(-angle);
                                 System.Threading.Thread.Sleep(1000); //TODO
                             });
                         }
@@ -287,7 +293,26 @@ namespace ServeurBarman
 
         private void Calibrer_Robot_Click(object sender, EventArgs e)
         {
-            robot.CALIBRE();
+        }
+
+        private void btnSpeed_Click(object sender, EventArgs e)
+        {
+            angle = 1;
+        }
+
+        private void btnSpeed2x_Click(object sender, EventArgs e)
+        {
+            angle = 5;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            robot.TEST();
+        }
+
+        private void Btn_Main_Right_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
