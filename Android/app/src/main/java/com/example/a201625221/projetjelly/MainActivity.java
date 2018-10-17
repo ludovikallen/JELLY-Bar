@@ -125,15 +125,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        StrictMode.setThreadPolicy(new
-                StrictMode.ThreadPolicy.Builder()
+        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
                 .detectDiskReads()
                 .detectDiskWrites()
-                .detectNetwork()
+                .detectNetwork()   // or .detectAll() for all detectable problems
                 .penaltyLog()
                 .build());
         StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
                 .detectLeakedSqlLiteObjects()
+                .detectLeakedClosableObjects()
                 .penaltyLog()
                 .penaltyDeath()
                 .build());
@@ -151,8 +151,17 @@ public class MainActivity extends AppCompatActivity {
                 }
                 catch (ClassNotFoundException e)
                 {
-                    Toast.makeText(MainActivity.this, "Driver manquant." +
-                            e.getMessage().toString(), Toast.LENGTH_LONG).show();
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(MainActivity.this, "Driver Pour Oracle non disponible", Toast.LENGTH_LONG).show();
+                            try {
+                                Thread.sleep(6000);
+                                finish();
+                            } catch (InterruptedException e1) {
+                                e1.printStackTrace();
+                            }
+                        }
+                    });
                 }
                 String jdbcURL = "jdbc:oracle:thin:@mercure.clg.qc.ca:1521:ORCL";
                 String user = "barman";
@@ -161,18 +170,28 @@ public class MainActivity extends AppCompatActivity {
                 {
                     conn_ = DriverManager.getConnection(jdbcURL,user,passwd);
 
-                    Thread thread = new Thread(){
-                        public void run(){
-                            Initialiser();
-                        }
-                    };
 
-                    runOnUiThread(thread);
                 }
                 catch (java.sql.SQLException se)
                 {
-                    faireToast("Connexion au serveur  impossible." + se.getMessage());
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(MainActivity.this, "Connection a la base de donner impossible", Toast.LENGTH_LONG).show();
+                            try {
+                                Thread.sleep(6000);
+                                finish();
+                            } catch (InterruptedException e1) {
+                                e1.printStackTrace();
+                            }
+                        }
+                    });
                 }
+                Thread thread = new Thread(){
+                    public void run(){
+                        Initialiser();
+                    }
+                };
+                runOnUiThread(thread);
             }
         };
         t.start();
@@ -407,12 +426,17 @@ public class MainActivity extends AppCompatActivity {
 
         drinkBTN.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if(couleurChoisie.equals("blanc"))
-                    changerCouleurBoutonsMenu(couleurs.get("blanc"));
-                else if(couleurChoisie.equals("noir"))
-                    changerCouleurBoutonsMenu(couleurs.get("noir"));
-                else if(couleurChoisie.equals("jaune"))
-                    changerCouleurBoutonsMenu(couleurs.get("jaune"));
+                switch (couleurChoisie) {
+                    case "blanc":
+                        changerCouleurBoutonsMenu(couleurs.get("blanc"));
+                        break;
+                    case "noir":
+                        changerCouleurBoutonsMenu(couleurs.get("noir"));
+                        break;
+                    case "jaune":
+                        changerCouleurBoutonsMenu(couleurs.get("jaune"));
+                        break;
+                }
                 drinkBTN.setBackgroundResource(R.drawable.icondrink);
 
                 listeDrinkShotLYT.setVisibility(View.VISIBLE);
@@ -434,12 +458,17 @@ public class MainActivity extends AppCompatActivity {
 
         panierBTN.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if(couleurChoisie.equals("blanc"))
-                    changerCouleurBoutonsMenu(couleurs.get("blanc"));
-                else if(couleurChoisie.equals("noir"))
-                    changerCouleurBoutonsMenu(couleurs.get("noir"));
-                else if(couleurChoisie.equals("jaune"))
-                    changerCouleurBoutonsMenu(couleurs.get("jaune"));
+                switch (couleurChoisie) {
+                    case "blanc":
+                        changerCouleurBoutonsMenu(couleurs.get("blanc"));
+                        break;
+                    case "noir":
+                        changerCouleurBoutonsMenu(couleurs.get("noir"));
+                        break;
+                    case "jaune":
+                        changerCouleurBoutonsMenu(couleurs.get("jaune"));
+                        break;
+                }
                 panierBTN.setBackgroundResource(R.drawable.iconcart);
 
                 listeDrinkShotLYT.setVisibility(View.INVISIBLE);
@@ -452,12 +481,17 @@ public class MainActivity extends AppCompatActivity {
 
         optionsBTN.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if(couleurChoisie.equals("blanc"))
-                    changerCouleurBoutonsMenu(couleurs.get("blanc"));
-                else if(couleurChoisie.equals("noir"))
-                    changerCouleurBoutonsMenu(couleurs.get("noir"));
-                else if(couleurChoisie.equals("jaune"))
-                    changerCouleurBoutonsMenu(couleurs.get("jaune"));
+                switch (couleurChoisie) {
+                    case "blanc":
+                        changerCouleurBoutonsMenu(couleurs.get("blanc"));
+                        break;
+                    case "noir":
+                        changerCouleurBoutonsMenu(couleurs.get("noir"));
+                        break;
+                    case "jaune":
+                        changerCouleurBoutonsMenu(couleurs.get("jaune"));
+                        break;
+                }
                 optionsBTN.setBackgroundResource(R.drawable.iconoptions);
 
                 listeDrinkShotLYT.setVisibility(View.INVISIBLE);
@@ -470,12 +504,17 @@ public class MainActivity extends AppCompatActivity {
 
         infosBTN.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if(couleurChoisie.equals("blanc"))
-                    changerCouleurBoutonsMenu(couleurs.get("blanc"));
-                else if(couleurChoisie.equals("noir"))
-                    changerCouleurBoutonsMenu(couleurs.get("noir"));
-                else if(couleurChoisie.equals("jaune"))
-                    changerCouleurBoutonsMenu(couleurs.get("jaune"));
+                switch (couleurChoisie) {
+                    case "blanc":
+                        changerCouleurBoutonsMenu(couleurs.get("blanc"));
+                        break;
+                    case "noir":
+                        changerCouleurBoutonsMenu(couleurs.get("noir"));
+                        break;
+                    case "jaune":
+                        changerCouleurBoutonsMenu(couleurs.get("jaune"));
+                        break;
+                }
                 infosBTN.setBackgroundResource(R.drawable.iconinfo);
 
                 listeDrinkShotLYT.setVisibility(View.INVISIBLE);
@@ -638,7 +677,7 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int position,
                                     long id) {
 
-                HashMap<String, String> item = ( HashMap<String, String>)adapterView.getItemAtPosition(position);
+                HashMap<String, String> item = (HashMap<String, String>)adapterView.getItemAtPosition(position);
                 faireToast("x1 " + item.values().toArray()[1] + " ajouté au panier");
 
                 ajouterPanier(item);
@@ -819,7 +858,7 @@ public class MainActivity extends AppCompatActivity {
                 faireToast("Notes annulées");
                 final TextView panierTXT=findViewById(R.id.cart_TXT);
                 panierTXT.setText(getResources().getString(R.string.cart_str));
-                panierTXT.setPaintFlags(panierTXT.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);
+                panierTXT.setPaintFlags(panierTXT.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
             }
         }
         return super.dispatchTouchEvent(ev);
@@ -829,41 +868,65 @@ public class MainActivity extends AppCompatActivity {
 
     //region Panier
 
-    void commander()
+
+
+    public void commander()
     {
         HashMap<String, Integer> drink;
         String sql2 = "Select max(numcommande) from commande";
         int Numcommande=0;
         ResultSet resultSetMax = null;
+        Statement stm12 = null;
         try {
-            Statement stm12 = conn_.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            stm12 = conn_.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             resultSetMax = stm12.executeQuery(sql2);
             resultSetMax.next();
             Numcommande = resultSetMax.getInt(1) + 1;
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        try {
+            if (resultSetMax != null ) {
+                resultSetMax.close();
+                stm12.close();
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        Statement stm1 = null;
+        ResultSet resultSet = null;
         for (int i = 0; i < arrayListPanier.size(); i++)
         {
-            Statement stm1;
-            ResultSet resultSet;
             drink= defaireDescription(arrayListPanier.get(i).get("desc"));
             for ( String key : drink.keySet() ) {
                 Object value = drink.get(key);
-
                 String sql = "select codebouteille from INGREDIENT where nombouteille = '" + key +"'";
                 try {
+                    String Nomrecette = arrayListPanier.get(i).get("nom");
                     stm1 = conn_.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                     resultSet = stm1.executeQuery(sql);
                     resultSet.next();
                     Statement statement = conn_.createStatement();
-                    statement.executeUpdate("INSERT INTO COMMANDE VALUES ( "+( Numcommande + i) + ","+ resultSet.getInt(1) +","+ value +")");
+                    int coderecette = resultSet.getInt(1);
+                    String SQL = "INSERT INTO COMMANDE VALUES ( "+  (Numcommande + i) + ","+ coderecette +","+ value +",'"+ Nomrecette+ "')";
+                    statement.executeUpdate(SQL);
                 } catch (SQLException e) {
                     e.printStackTrace();
+
                 }
             }
         }
-
+        try {
+            if (stm1 != null && resultSet != null)
+            {
+                stm1.close();
+                resultSet.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         demanderNote(arrayListPanier.get(0).get("nom"));
         faireToast("Merci de votre commande. Veuillez noter s'il vous plait.");
         selectionPositionsPanier.clear();
@@ -937,10 +1000,10 @@ public class MainActivity extends AppCompatActivity {
      */
     void remplirListeDrinks() {
         arrayListDrink.clear();
-        Statement stm1;
-        PreparedStatement stmlNote;
-        ResultSet resultSet;
-        ResultSet resultSetNote;
+        Statement stm1 =null;
+        PreparedStatement stmlNote=null;
+        ResultSet resultSet=null;
+        ResultSet resultSetNote=null;
         int nombreRecette = compterNombreRecettes();
 
         for (int i = 1; i <= nombreRecette; i++)
@@ -991,6 +1054,18 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+        try {
+            if (stm1 != null && stmlNote != null && resultSet != null &&resultSetNote != null) {
+                stm1.close();
+                stmlNote.close();
+                resultSet.close();
+                resultSetNote.close();
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         enleverTri();
     }
 
@@ -1045,8 +1120,8 @@ public class MainActivity extends AppCompatActivity {
     void remplirListeIngredients()
     {
         arrayListIng.clear();
-        Statement stm1;
-        ResultSet resultSet;
+        Statement stm1 = null;
+        ResultSet resultSet = null;
         String sql="select NOMBOUTEILLE,DESCRIPTIONS from INGREDIENT";
         try {
             stm1 = conn_.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
@@ -1063,6 +1138,13 @@ public class MainActivity extends AppCompatActivity {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        }finally {
+            try {
+                if (stm1 != null && resultSet != null) {
+                    resultSet.close();
+                    stm1.close();
+                }
+            }catch (SQLException e){  e.printStackTrace();};
         }
     }
 
@@ -1280,19 +1362,29 @@ public class MainActivity extends AppCompatActivity {
             faireToast("Merci d'avoir noté: "+note+" étoiles");
 
         //ENVOYER ICI A LA BD arrayListPanier.get(0).get("nom") et note
+        Statement stm12 = null;
+        ResultSet resultSet = null;
+        Statement statement = null;
         try {
             String sql = "select Coderecette,nomrecette from recette where nomrecette = '" + arrayListPanier.get(0).get("nom") +"'";
-            Statement stm12 = conn_.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            ResultSet resultSet = stm12.executeQuery(sql);
+            stm12 = conn_.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            resultSet = stm12.executeQuery(sql);
             resultSet.next();
-            Statement statement = conn_.createStatement();
+            statement = conn_.createStatement();
             int codeRecette=resultSet.getInt(1);
             String nomRecette=resultSet.getString(2);
             statement.executeUpdate("INSERT INTO Note VALUES ('" +codeRecette+"','"+ nomRecette+"',"+note+")");
         } catch (SQLException e) {
             e.printStackTrace();
-        }
-
+            } finally {
+              try {
+                 if (stm12 != null && resultSet != null && statement != null) {
+                     resultSet.close();
+                     stm12.close();
+                     statement.close();
+                }
+           }catch (SQLException e){  e.printStackTrace();};
+      }
         remplirListeDrinks();
         rafraichirListeDrinks();
         reinitTableauNotes();
@@ -1503,18 +1595,26 @@ public class MainActivity extends AppCompatActivity {
 
     int compterNombreRecettes()
     {
-        Statement stm1s;
-        ResultSet setRecette;
+        Statement stm1s = null;
+        ResultSet setRecette = null;
 
         String requeteNombreRecette = "select count(*) from recette";
         try {
             stm1s = conn_.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
             setRecette = stm1s.executeQuery(requeteNombreRecette);
             setRecette.next();
-            return setRecette.getInt(1);
+            int Nbrecette = setRecette.getInt(1);
+            return Nbrecette;
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        try {
+            if (stm1s != null && setRecette != null ) {
+                setRecette.close();
+                stm1s.close();
+
+            }
+        }catch (SQLException e){  e.printStackTrace();}
         return -1;
     }
 
