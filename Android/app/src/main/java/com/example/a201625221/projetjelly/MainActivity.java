@@ -6,6 +6,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
+import android.media.Image;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -390,6 +392,18 @@ public class MainActivity extends AppCompatActivity {
         final ImageButton etoile3= findViewById(R.id.star3_IMGBTN);
         final ImageButton etoile4= findViewById(R.id.star4_IMGBTN);
         final ImageButton etoile5= findViewById(R.id.star5_IMGBTN);
+
+        final ImageView logoIMG=findViewById(R.id.logo1_IMG);
+
+        logoIMG.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                listeDrinkShotLYT.setVisibility(View.INVISIBLE);
+                modifierLYT.setVisibility(View.INVISIBLE);
+                optionsLYT.setVisibility(View.INVISIBLE);
+                panierLYT.setVisibility(View.INVISIBLE);
+                infosLYT.setVisibility(View.VISIBLE);
+            }
+        });
 
         drinkBTN.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
