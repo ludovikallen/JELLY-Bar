@@ -5,14 +5,80 @@
     android:id="@+id/background_LYT"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/blanc"
     tools:context=".MainActivity">
+
     <include layout="@layout/custom_list_drink" />
     <include layout="@layout/custom_list_ing" />
     <include layout="@layout/custom_list_itemcourant" />
 
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/listDrink_LYT"
+        android:id="@+id/listeDrink_LYT"
+        android:layout_width="584dip"
+        android:layout_height="677dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/backgroundFooter_TView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/backgroundTitle_TView"
+        app:layout_constraintVertical_bias="0.86">
+
+        <Button
+            android:id="@+id/triNote_BTN"
+            android:layout_width="59dp"
+            android:layout_height="55dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:background="@color/blanc"
+            android:textSize="30sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:layout_editor_absoluteY="0dp" />
+
+        <ListView
+            android:id="@+id/drink_LVIEW"
+            android:layout_width="592dp"
+            android:layout_height="595dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:divider="@color/listDivider"
+            android:dividerHeight="2dp"
+            android:listSelector="@color/listSelector"
+            android:paddingLeft="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0">
+
+        </ListView>
+
+        <TextView
+            android:id="@+id/drink_TXT"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="612dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:text="@string/drinks_str"
+            android:textColor="@color/noir"
+            android:textSize="36sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/listeShooter_LYT"
         android:layout_width="584dip"
         android:layout_height="677dp"
         android:layout_marginBottom="8dp"
@@ -30,7 +96,7 @@
         <ListView
             android:id="@+id/shooter_LVIEW"
             android:layout_width="592dp"
-            android:layout_height="261dp"
+            android:layout_height="595dp"
             android:layout_alignParentTop="true"
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
@@ -42,65 +108,33 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintVertical_bias="1.0">
+
+        </ListView>
 
         <Button
-            android:id="@+id/triNote_BTN"
+            android:id="@+id/triNom_BTN"
             android:layout_width="59dp"
             android:layout_height="55dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:background="@color/white"
+            android:background="@color/blanc"
             android:textSize="30sp"
+            android:text="▼"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             tools:layout_editor_absoluteY="0dp" />
 
-        <ListView
-            android:id="@+id/drink_LVIEW"
-            android:layout_width="592dp"
-            android:layout_height="261dp"
-            android:layout_alignParentTop="true"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
-            android:divider="@color/listDivider"
-            android:dividerHeight="2dp"
-            android:listSelector="@color/listSelector"
-            android:paddingLeft="5dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.175">
-
-        </ListView>
-
         <TextView
-            android:id="@+id/drink_TXT"
+            android:id="@+id/shooter_TXT"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="612dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:text="@string/drinks_str"
-            android:textColor="@color/black"
-            android:textSize="36sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <TextView
-            android:id="@+id/shooter_TXT"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="280dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
             android:text="@string/shooters_str"
-            android:textColor="@color/black"
+            android:textColor="@color/noir"
             android:textSize="36sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -109,7 +143,7 @@
     </android.support.constraint.ConstraintLayout>
 
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/listIng_LYT"
+        android:id="@+id/listeModifier_LYT"
         android:layout_width="584dip"
         android:layout_height="677dp"
         android:layout_marginBottom="8dp"
@@ -125,7 +159,7 @@
         app:layout_constraintVertical_bias="0.86">
 
         <Button
-            android:id="@+id/acceptChange_BTN"
+            android:id="@+id/accepterModification_BTN"
             android:layout_width="109dp"
             android:layout_height="55dp"
             android:layout_marginEnd="8dp"
@@ -146,7 +180,7 @@
             tools:layout_editor_absoluteY="11dp" />
 
         <Button
-            android:id="@+id/cancelChange_BTN"
+            android:id="@+id/annulerModification_BTN"
             android:layout_width="109dp"
             android:layout_height="55dp"
             android:layout_marginEnd="8dp"
@@ -173,8 +207,8 @@
             android:layout_marginBottom="612dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:text="@string/chosen_str"
-            android:textColor="@color/black"
+            android:text="@string/choisi_str"
+            android:textColor="@color/noir"
             android:textSize="36sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -182,7 +216,7 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <ListView
-            android:id="@+id/ing_LVIEW"
+            android:id="@+id/ingredients_LVIEW"
             android:layout_width="592dp"
             android:layout_height="397dp"
             android:layout_alignParentTop="true"
@@ -225,7 +259,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:text="@string/ingredients_str"
-            android:textColor="@color/black"
+            android:textColor="@color/noir"
             android:textSize="36sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -234,24 +268,7 @@
     </android.support.constraint.ConstraintLayout>
 
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/options_LYT"
-        android:layout_width="match_parent"
-        android:layout_height="677dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/backgroundFooter_TView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/backgroundTitle_TView"
-        app:layout_constraintVertical_bias="1.0">
-    </android.support.constraint.ConstraintLayout>
-
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/cart_LYT"
+        android:id="@+id/panier_LYT"
         android:layout_width="584dip"
         android:layout_height="677dp"
         android:layout_marginBottom="8dp"
@@ -267,12 +284,12 @@
         app:layout_constraintVertical_bias="0.86">
 
         <Button
-            android:id="@+id/trashall_BTN"
+            android:id="@+id/supprimerTout_BTN"
             android:layout_width="109dp"
             android:layout_height="55dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:background="@color/white"
+            android:background="@color/blanc"
             android:text="Supprimer tout"
             android:textSize="15sp"
             android:visibility="visible"
@@ -282,7 +299,7 @@
             tools:layout_editor_absoluteY="8dp" />
 
         <ListView
-            android:id="@+id/cart_LVIEW"
+            android:id="@+id/panier_LVIEW"
             android:layout_width="592dp"
             android:layout_height="589dp"
             android:layout_alignParentTop="true"
@@ -299,14 +316,14 @@
             app:layout_constraintVertical_bias="0.882" />
 
         <TextView
-            android:id="@+id/cart_TXT"
+            android:id="@+id/panier_TXT"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="612dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:text="@string/cartempty_str"
-            android:textColor="@color/black"
+            android:text="@string/panierVide_str"
+            android:textColor="@color/noir"
             android:textSize="36sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -314,7 +331,7 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <ImageButton
-            android:id="@+id/trash_IMGBTN"
+            android:id="@+id/supprimer_IMGBTN"
             android:layout_width="59dp"
             android:layout_height="55dp"
             android:layout_marginBottom="8dp"
@@ -324,16 +341,16 @@
             android:background="#0000"
             android:scaleType="fitXY"
             android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="@+id/cart_LYT"
+            app:layout_constraintBottom_toBottomOf="@+id/panier_LYT"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.762"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/cart_LYT"
+            app:layout_constraintTop_toTopOf="@+id/panier_LYT"
             app:layout_constraintVertical_bias="0.0"
             app:srcCompat="@drawable/trashcan" />
 
         <ImageButton
-            android:id="@+id/command_IMGBTN"
+            android:id="@+id/commander_IMGBTN"
             android:layout_width="59dp"
             android:layout_height="55dp"
             android:layout_marginBottom="8dp"
@@ -343,11 +360,11 @@
             android:background="#0000"
             android:scaleType="fitXY"
             android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="@+id/cart_LYT"
+            app:layout_constraintBottom_toBottomOf="@+id/panier_LYT"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.22"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/cart_LYT"
+            app:layout_constraintTop_toTopOf="@+id/panier_LYT"
             app:layout_constraintVertical_bias="0.013"
             app:srcCompat="@drawable/play" />
 
@@ -377,7 +394,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:text="@string/infos_str"
-            android:textColor="@color/black"
+            android:textColor="@color/noir"
             android:textSize="36sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -411,7 +428,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:background="@color/grey"
+        android:background="@color/gris"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/backgroundFooter_TView"
         app:layout_constraintEnd_toEndOf="parent"
@@ -429,7 +446,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:fontFamily="@font/aldrich"
-            android:textColor="@color/black"
+            android:textColor="@color/noir"
             android:textSize="30sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -457,7 +474,7 @@
             app:layout_constraintVertical_bias="0.034" />
 
         <TextView
-            android:id="@+id/exitNoteBTN"
+            android:id="@+id/quitterNotes_BTN"
             android:layout_width="35dp"
             android:layout_height="54dp"
             android:layout_marginBottom="8dp"
@@ -477,14 +494,14 @@
             app:layout_constraintVertical_bias="0.0" />
 
         <Button
-            android:id="@+id/sendNote_BTN"
+            android:id="@+id/envoyerNote_BTN"
             android:layout_width="108dp"
             android:layout_height="45dp"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:background="@color/darkgrey"
+            android:background="@color/grisFonce"
             android:text="Noter"
             android:textColor="@color/colorAccent"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -495,14 +512,14 @@
             app:layout_constraintVertical_bias="1.0" />
 
         <ImageButton
-            android:id="@+id/star1_IMGBTN"
+            android:id="@+id/etoile1_IMGBTN"
             android:layout_width="112dp"
             android:layout_height="98dp"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:backgroundTint="@color/grey"
+            android:backgroundTint="@color/gris"
             android:scaleType="fitXY"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -513,14 +530,14 @@
             app:srcCompat="@drawable/star_inactive" />
 
         <ImageButton
-            android:id="@+id/star2_IMGBTN"
+            android:id="@+id/etoile2_IMGBTN"
             android:layout_width="112dp"
             android:layout_height="98dp"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:backgroundTint="@color/grey"
+            android:backgroundTint="@color/gris"
             android:scaleType="fitXY"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -531,14 +548,14 @@
             app:srcCompat="@drawable/star_inactive" />
 
         <ImageButton
-            android:id="@+id/star3_IMGBTN"
+            android:id="@+id/etoile3_IMGBTN"
             android:layout_width="112dp"
             android:layout_height="98dp"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:backgroundTint="@color/grey"
+            android:backgroundTint="@color/gris"
             android:scaleType="fitXY"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -548,14 +565,14 @@
             app:srcCompat="@drawable/star_inactive" />
 
         <ImageButton
-            android:id="@+id/star4_IMGBTN"
+            android:id="@+id/etoile4_IMGBTN"
             android:layout_width="112dp"
             android:layout_height="98dp"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:backgroundTint="@color/grey"
+            android:backgroundTint="@color/gris"
             android:scaleType="fitXY"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -566,14 +583,14 @@
             app:srcCompat="@drawable/star_inactive" />
 
         <ImageButton
-            android:id="@+id/star5_IMGBTN"
+            android:id="@+id/etoile5_IMGBTN"
             android:layout_width="112dp"
             android:layout_height="98dp"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:backgroundTint="@color/grey"
+            android:backgroundTint="@color/gris"
             android:scaleType="fitXY"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -585,23 +602,6 @@
 
     </android.support.constraint.ConstraintLayout>
 
-    <FrameLayout
-        android:id="@+id/imageviewlayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:paddingBottom="2dp"
-        android:paddingLeft="2dp"
-        android:paddingRight="0dp"
-        android:paddingTop="2dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.682"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="776dp">
-
-    </FrameLayout>
-
     <TextView
         android:id="@+id/backgroundTitle_TView"
         android:layout_width="607dp"
@@ -609,7 +609,7 @@
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:background="@color/black"
+        android:background="@color/noir"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.478"
@@ -623,7 +623,7 @@
         android:layout_height="156dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:background="@color/black"
+        android:background="@color/noir"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.478"
@@ -631,34 +631,34 @@
         app:layout_constraintVertical_bias="1.0" />
 
     <Button
-        android:id="@+id/options_BTN"
+        android:id="@+id/shooter_BTN"
         android:layout_width="120dip"
         android:layout_height="120dip"
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:background="@drawable/iconoptions"
-        android:backgroundTint="@color/white"
+        android:background="@drawable/iconshooter"
+        android:backgroundTint="@color/blanc"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/backgroundFooter_TView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.655"
+        app:layout_constraintHorizontal_bias="0.325"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/cart_BTN"
+        android:id="@+id/panier_BTN"
         android:layout_width="120dp"
-        android:layout_height="120dp"
+        android:layout_height="114dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:background="@drawable/iconcart"
-        android:backgroundTint="@color/white"
+        android:backgroundTint="@color/blanc"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.323"
+        app:layout_constraintHorizontal_bias="0.629"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.989" />
@@ -674,7 +674,7 @@
         tools:layout_editor_absoluteX="0dp" />
 
     <TextView
-        android:id="@+id/title_TXT"
+        android:id="@+id/titre_TXT"
         android:layout_width="224dp"
         android:layout_height="48dp"
         android:layout_marginStart="112dp"
@@ -683,21 +683,21 @@
         android:gravity="right"
         android:text="JELLY-Bar"
         android:textAlignment="gravity"
-        android:textColor="@color/white"
+        android:textColor="@color/blanc"
         android:textSize="40sp"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="@+id/logo1_IMG"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/drinklist_BTN"
+        android:id="@+id/drinks_BTN"
         android:layout_width="120dip"
-        android:layout_height="120dip"
-        android:layout_marginBottom="16dp"
+        android:layout_height="115dp"
+        android:layout_marginBottom="20dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:background="@drawable/icondrink"
-        android:backgroundTint="@color/white"
+        android:backgroundTint="@color/blanc"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/backgroundFooter_TView"
         app:layout_constraintEnd_toEndOf="parent"
@@ -712,7 +712,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:background="@drawable/iconinfo"
-        android:backgroundTint="@color/white"
+        android:backgroundTint="@color/blanc"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/backgroundFooter_TView"
         app:layout_constraintEnd_toEndOf="parent"
@@ -734,7 +734,7 @@
         app:srcCompat="@drawable/logoname" />
 
     <TextView
-        android:id="@+id/cartItemsCount_TXT"
+        android:id="@+id/nombreArticlesPanier_TXT"
         android:layout_width="wrap_content"
         android:layout_height="27dp"
         android:layout_alignParentTop="true"
@@ -743,12 +743,12 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="0"
-        android:textColor="@color/red"
+        android:textColor="@color/rouge"
         android:textStyle="bold"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/backgroundFooter_TView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.372"
+        app:layout_constraintHorizontal_bias="0.619"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/backgroundFooter_TView"
         app:layout_constraintVertical_bias="0.929" />
@@ -761,7 +761,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:background="@color/white"
+        android:background="@color/blanc"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -779,7 +779,7 @@
             android:layout_marginTop="8dp"
             android:fontFamily="@font/aldrich"
             android:text="@string/connexion_str"
-            android:textColor="@color/black"
+            android:textColor="@color/noir"
             android:textSize="50sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -791,11 +791,15 @@
 
         <Button
             android:id="@+id/connexion_BTN"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:layout_marginBottom="872dp"
-            android:layout_marginStart="324dp"
-            android:text="Button"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="330dp"
+            android:layout_height="697dp"
+            android:layout_marginBottom="380dp"
+            android:layout_marginStart="268dp"
+            android:background="@color/blanc"
+            android:text="Boire un coup."
+            android:textAlignment="viewStart"
+            android:textSize="36sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -806,8 +810,8 @@
             android:layout_marginBottom="1024dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:text="@string/options_str"
-            android:textColor="@color/black"
+            android:text="@string/themes_str"
+            android:textColor="@color/noir"
             android:textSize="36sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -817,17 +821,17 @@
         <RadioGroup
             android:id="@+id/changerCouleur_RBTNGRP"
             android:layout_width="189dp"
-            android:layout_height="224dp"
+            android:layout_height="628dp"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="20dp"
             android:layout_marginTop="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.059"
+            app:layout_constraintHorizontal_bias="0.062"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.132">
+            app:layout_constraintVertical_bias="0.262">
 
             <RadioButton
                 android:id="@+id/changerBlanc_RBTN"
@@ -849,6 +853,20 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="        JELLY" />
+
+            <RadioButton
+                android:id="@+id/changerGris_RBTN"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="        Gris" />
+
+            <RadioButton
+                android:id="@+id/changerBleu_RBTN"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="        Bleu" />
 
         </RadioGroup>
 
