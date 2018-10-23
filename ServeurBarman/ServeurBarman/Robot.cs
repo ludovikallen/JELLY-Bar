@@ -317,33 +317,31 @@ namespace Bras_Robot
             Thread.Sleep(sleep);
 
         }
-        private Task DrinkOperation(List<(Position pos, int nbShots)> positions)
+        private void DrinkOperation(List<(Position pos, int nbShots)> positions)
         {
-            return Task.Run(() =>
+            GoToStart(); // Se met un position de debart
+            Position cuptemp = new Position(RedCupStackStation.X, RedCupStackStation.Y, RedCupStackStation.Z + (nbCup * 4));
+            PickUpCup(ref cuptemp); // Prend le cup dans la pile
+            SetSpeed(75);
+            DeplacerMainPriv(-180);
+            --nbCup;
+            DropCup(ref RedCupDrinkStation); // Depose le cup dans la station de travail
+            var listePosition = positions.ToList();
+            foreach (var position in listePosition) // Verse les bouteille une par une
             {
-                GoToStart(); // Se met un position de debart
-                Position cuptemp = new Position(RedCupStackStation.X, RedCupStackStation.Y, RedCupStackStation.Z + (nbCup * 4));
-                PickUpCup(ref cuptemp); // Prend le cup dans la pile
-                SetSpeed(75);
-                DeplacerMainPriv(-180);
-                --nbCup;
-                DropCup(ref RedCupDrinkStation); // Depose le cup dans la station de travail
-                foreach (var position in positions) // Verse les bouteille une par une
-                {
-                    var p = position;
-                    VerserBouteille(ref p);
-                }
-                GoToStart();
-                JOG(0, 0, 0);
-                ServirCup(); // prend le cup et le depose devant le client
-            });
+                var p = position;
+                VerserBouteille(ref p);
+            }
+            GoToStart();
+            JOG(0, 0, 0);
+            ServirCup(); // prend le cup et le depose
         }
         #endregion
         public bool MakeDrink(List<(Position pos, int nbShots)> positions)
         {
             if (task.IsCompleted && positions.Capacity != 0 && !Calibration)
             {
-                task = DrinkOperation(positions);
+                DrinkOperation(positions);
                 return true;
             }
             return false;
