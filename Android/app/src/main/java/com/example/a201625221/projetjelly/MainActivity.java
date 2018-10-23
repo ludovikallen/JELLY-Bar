@@ -1694,20 +1694,28 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<HashMap<String, Integer>> drink = new ArrayList<>();
         ArrayList<String> tableauIngredients=new ArrayList<>();
         String line=description;
+        if(description.contains("oz")) {
+            while (line.contains(",")) {
+                tableauIngredients.add(line.substring(0, line.indexOf(",")));
+                line = line.substring(line.indexOf(",") + 1);
+            }
+            tableauIngredients.add(line);
 
-        while(line.contains(","))
-        {
-            tableauIngredients.add(line.substring(0, line.indexOf(",")));
-            line=line.substring(line.indexOf(",") + 1);
+            for (int i = 0; i < tableauIngredients.size(); i++) {
+                String ElementCommande[] = tableauIngredients.get(i).split("oz");
+                ingredients.put(ElementCommande[1].trim(), Integer.valueOf(ElementCommande[0].trim()));
+            }
         }
-        tableauIngredients.add(line);
-
-        for(int i=0;i<tableauIngredients.size();i++)
-        {
-            String ElementCommande[] = tableauIngredients.get(i).split("oz");
-            ingredients.put(ElementCommande[1].trim(), Integer.valueOf(ElementCommande[0].trim()));
+        else {
+            for (int i = 0; i < arrayListIng.size(); i++) {
+                if (arrayListIng.get(i).containsValue(description)) {
+                    ingredients.put(arrayListIng.get(i).get("nom"), 1);
+                    break;
+                }
+            }
         }
         return ingredients;
+
     }
 
     String faireDescription(HashMap<String, Integer> ingredients)
