@@ -956,9 +956,9 @@ public class MainActivity extends AppCompatActivity {
 
                 final ImageButton commandBTN=findViewById(R.id.commander_IMGBTN);
                 commandBTN.setVisibility(View.INVISIBLE);
-                faireToast("Notes annulées");
+                faireToast("Notes annulées.");
                 final TextView panierTXT=findViewById(R.id.panier_TXT);
-                panierTXT.setText(getResources().getString(R.string.panier_str));
+                panierTXT.setText(getResources().getString(R.string.panierVide_str));
                 panierTXT.setPaintFlags(panierTXT.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
             }
         }
