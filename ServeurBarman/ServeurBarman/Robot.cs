@@ -47,7 +47,7 @@ namespace Bras_Robot
         private int PosZ { get; set; }
         public bool Connected { get; private set; }
         private int nbCup { get; set; } = 0;
-        Position[] Bouteilles = new Position[6]
+        Position[] bouteilles = new Position[6]
         {
             new Position(130, -200, -365),
             new Position(70, -290, -365),
@@ -57,11 +57,15 @@ namespace Bras_Robot
             new Position(-305,-400,-365)
         };
 
-        private Position RedCupStackStation = new Position(-180, 360, -340);
-        private Position RedCupDrinkStation = new Position(25, 0, -400);
-        private Position DONNEMOILECUP = new Position(200, 0, -100);
-        private Position RedCupFin = new Position(100, 200, -425);
-
+        private Position redCupStackStation = new Position(-180, 360, -340);
+        private Position redCupDrinkStation = new Position(25, 0, -400);
+        private Position donneMoiLeCup = new Position(200, 0, -100);
+        private Position[] redCupFin = new Position[2]
+        {
+            new Position(100, 175, -425),
+            new Position(100,275,-425)
+        };
+        private int indexFin = 0;
         private Position LazyPrendreBouteille = new Position(100, 200, -365);
         private Position CreateStation = new Position(10, 100, -220);
         private SerialPort serialPort;
@@ -293,8 +297,11 @@ namespace Bras_Robot
         }
         private void ServirCup()
         {
-            PickUpCup(ref RedCupDrinkStation);
-            DropCup(ref RedCupFin);
+            PickUpCup(ref redCupDrinkStation);
+            DropCup(ref redCupFin[indexFin]);
+            indexFin++;
+            if (indexFin == redCupFin.Length)
+                indexFin = 0;
         }
         #endregion
         #region Tasks
@@ -322,12 +329,12 @@ namespace Bras_Robot
             return Task.Run(() =>
             {
                 GoToStart(); // Se met un position de debart
-                Position cuptemp = new Position(RedCupStackStation.X, RedCupStackStation.Y, RedCupStackStation.Z + (nbCup * 4));
+                Position cuptemp = new Position(redCupStackStation.X, redCupStackStation.Y, redCupStackStation.Z + (nbCup * 4));
                 PickUpCup(ref cuptemp); // Prend le cup dans la pile
                 SetSpeed(75);
                 DeplacerMainPriv(-180);
                 --nbCup;
-                DropCup(ref RedCupDrinkStation); // Depose le cup dans la station de travail
+                DropCup(ref redCupDrinkStation); // Depose le cup dans la station de travail
                 foreach (var position in positions) // Verse les bouteille une par une
                 {
                     var p = position;
@@ -364,8 +371,9 @@ namespace Bras_Robot
             //GoToStart();
             //AjouterCup(4);
             //CALIBRE();
-            VersPosition(ref RedCupStackStation);
+            //VersPosition(ref redCupStackStation);
             //FuncNSleep(() => serialPort.Write("MOTOR 2, -4000\r"), 200);
+            //DeplacerMain(-180);
         }
     }
 }

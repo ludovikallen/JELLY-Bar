@@ -72,6 +72,7 @@ namespace Bras_Robot
         private Position RedCupDrinkStation = new Position(25, 0, -400);
         private Position DONNEMOILECUP = new Position(200, 0, -100);
         private Position RedCupFin = new Position(100, 200, -425);
+        private int indexFin = 0;
 
         private Position LazyPrendreBouteille = new Position(100, 200, -365);
         private Position CreateStation = new Position(10, 100, -220);
