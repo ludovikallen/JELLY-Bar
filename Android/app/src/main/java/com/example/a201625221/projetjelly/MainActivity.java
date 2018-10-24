@@ -6,9 +6,10 @@ import android.content.res.ColorStateList;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
+import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -22,24 +23,25 @@ import android.widget.RadioGroup;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.os.StrictMode;
 
 import java.math.RoundingMode;
-import java.sql.PreparedStatement;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
-import static android.media.CamcorderProfile.get;
 //endregion
 
 public class MainActivity extends AppCompatActivity {
@@ -135,7 +137,8 @@ public class MainActivity extends AppCompatActivity {
      * Easter egg
      */
     String Alcoolique="";
-
+    boolean PasInitialiser = false;
+    int NBrecette;
     /**
      * Fonction lancée à la création de l'activité
      */
@@ -698,7 +701,7 @@ public class MainActivity extends AppCompatActivity {
                 label.setPaintFlags(label.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
                 Alcoolique+="...";
-                connecterBTN.setText("Continuer à boire un coup"+Alcoolique);
+                connecterBTN.setText(String.format("Continuer à boire un coup%s", Alcoolique));
                 OracleConnexion();
             }
         });
@@ -796,7 +799,7 @@ public class MainActivity extends AppCompatActivity {
 
                 HashMap<String, String> itemActuel=arrayListItemCourant.get(0);
                 arrayListItemCourant.clear();
-                HashMap<String, String> nouvelItemActuel=new HashMap<String, String>();
+                HashMap<String, String> nouvelItemActuel= new HashMap<>();
 
                 HashMap<String, Integer> ingredients= defaireDescription(itemActuel.get("desc"));
                 if(ingredients.containsKey(nouveauIngredient.get("nom")))
@@ -835,7 +838,7 @@ public class MainActivity extends AppCompatActivity {
                     if (arrayListPanier.size() < position)
                         selectionPositionsPanier.add(0);
                     if (selectionPositionsPanier.contains(position))
-                        selectionPositionsPanier.remove(selectionPositionsPanier.indexOf(position));
+                        selectionPositionsPanier.remove(position);
                     else if (!selectionPositionsPanier.contains(position))
                         selectionPositionsPanier.add(position);
 
@@ -845,16 +848,23 @@ public class MainActivity extends AppCompatActivity {
                         if (selectionPositionsPanier.contains(position))
                             panierLVIEW.getChildAt(position).setBackgroundColor(getResources().getColor(R.color.listSelector));
                         else {
-                            if(couleurChoisie.equals("blanc"))
-                                panierLVIEW.getChildAt(position).setBackgroundColor(couleurs.get("blanc").getDefaultColor());
-                            else if(couleurChoisie.equals("noir"))
-                                panierLVIEW.getChildAt(position).setBackgroundColor(couleurs.get("noir").getDefaultColor());
-                            else if(couleurChoisie.equals("jaune"))
-                                panierLVIEW.getChildAt(position).setBackgroundColor(couleurs.get("jaune").getDefaultColor());
-                            else if(couleurChoisie.equals("jaune"))
-                                panierLVIEW.getChildAt(position).setBackgroundColor(couleurs.get("gris").getDefaultColor());
-                            else if(couleurChoisie.equals("bleu"))
-                                panierLVIEW.getChildAt(position).setBackgroundColor(couleurs.get("bleu").getDefaultColor());
+                            switch (couleurChoisie) {
+                                case "blanc":
+                                    panierLVIEW.getChildAt(position).setBackgroundColor(couleurs.get("blanc").getDefaultColor());
+                                    break;
+                                case "noir":
+                                    panierLVIEW.getChildAt(position).setBackgroundColor(couleurs.get("noir").getDefaultColor());
+                                    break;
+                                case "jaune":
+                                    panierLVIEW.getChildAt(position).setBackgroundColor(couleurs.get("jaune").getDefaultColor());
+                                    break;
+                                case "gris":
+                                    panierLVIEW.getChildAt(position).setBackgroundColor(couleurs.get("gris").getDefaultColor());
+                                    break;
+                                case "bleu":
+                                    panierLVIEW.getChildAt(position).setBackgroundColor(couleurs.get("bleu").getDefaultColor());
+                                    break;
+                            }
 
                         }
                     }
@@ -907,7 +917,7 @@ public class MainActivity extends AppCompatActivity {
                 if(ingredients.containsKey(nouveauIngredient.get("nom")))
                 {
                     arrayListItemCourant.clear();
-                    HashMap<String, String> nouvelItemActuel = new HashMap<String, String>();
+                    HashMap<String, String> nouvelItemActuel = new HashMap<>();
 
 
                     int nbOz=ingredients.get(nouveauIngredient.get("nom"));
@@ -1019,55 +1029,42 @@ public class MainActivity extends AppCompatActivity {
             resultSetMax = stm12.executeQuery(sql2);
             resultSetMax.next();
             Numcommande = resultSetMax.getInt(1) + 1;
+            resultSetMax.close();
+            stm12.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        try {
-            if (resultSetMax != null ) {
-                resultSetMax.close();
-                stm12.close();
-            }
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
         Statement stm1 = null;
         ResultSet resultSet = null;
         for (int i = 0; i < arrayListPanier.size(); i++)
         {
             drink= defaireDescription(arrayListPanier.get(i).get("desc"));
             for ( String key : drink.keySet() ) {
-                Object quantité = drink.get(key);
+                Object quantite = drink.get(key);
                 String sql = "select codebouteille from INGREDIENT where nombouteille = '" + key +"'";
                 try {
-                    stm1 = conn_.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+                    stm1 = conn_.createStatement();
                     resultSet = stm1.executeQuery(sql);
                     resultSet.next();
                     Statement statement = conn_.createStatement();
                     int codeBouteille = resultSet.getInt(1);
                     String SQL;
                     if(listeNomsDrinks.contains(arrayListPanier.get(i).get("nom"))) {
-                        SQL = "INSERT INTO COMMANDE VALUES ( " + (Numcommande + i) + "," + codeBouteille + "," + quantité + "," + 0 +")";
+                        SQL = "INSERT INTO COMMANDE VALUES ( " + (Numcommande + i) + "," + codeBouteille + "," + quantite + "," + 0 +")";
                     }
                     else
                     {
-                        SQL = "INSERT INTO COMMANDE VALUES ( " + (Numcommande + i) + "," + codeBouteille + "," + quantité + "," + 1 +")";
+                        SQL = "INSERT INTO COMMANDE VALUES ( " + (Numcommande + i) + "," + codeBouteille + "," + quantite + "," + 1 +")";
                     }
                     statement.executeUpdate(SQL);
+                    stm1.close();
+                    resultSet.close();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
             }
-        }
-        try {
-            if (stm1 != null && resultSet != null)
-            {
-                stm1.close();
-                resultSet.close();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
         demanderNote(arrayListPanier.get(0).get("nom"));
         faireToast("Merci de votre commande. Veuillez noter s'il vous plait.");
@@ -1146,38 +1143,43 @@ public class MainActivity extends AppCompatActivity {
     void remplirListeDrinks() {
         listeNomsDrinks.clear();
         arrayListDrink.clear();
-        Statement stm1 =null;
-        PreparedStatement stmlNote=null;
-        ResultSet resultSet=null;
-        ResultSet resultSetNote=null;
+        Statement stm1;
+
+        ResultSet resultSet;
+
         int nombreRecette = compterNombreRecettes();
 
         for (int i = 1; i <= nombreRecette; i++)
         {
             try {
                 String requeteDescription = "select recette.NOMRECETTE, NOMBOUTEILLE, INGREDIENTRECETTE.QTYSHOT,INGREDIENT.BOUTEILLEPRESENTE,INGREDIENT.QTYRESTANTE from INGREDIENT INNER JOIN INGREDIENTRECETTE ON INGREDIENT.CODEBOUTEILLE = INGREDIENTRECETTE.CODEBOUTEILLE INNER JOIN RECETTE ON INGREDIENTRECETTE.CODERECETTE = RECETTE.CODERECETTE WHERE RECETTE.CODERECETTE = " + i;
-                stm1 = conn_.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
-
+                stm1 = conn_.createStatement();;
                 resultSet = stm1.executeQuery(requeteDescription);
                 String nom = null;
-                String description = "";
+                String description;
                 String Notetrouver = "";
                 boolean drinkPossible = true;
+                StringBuilder descriptionBuilder = new StringBuilder();
                 while(resultSet.next())
                 {
+                    ResultSet resultSetNote;
+                    PreparedStatement stmlNote;
                     String Note = "select AVG(SATISFACTION) from NOTE where Nomrecette =?";
                     nom = resultSet.getString(1);
-                    stmlNote = conn_.prepareStatement(Note,ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
+                    stmlNote = conn_.prepareStatement(Note);
                     stmlNote.setString(1,nom);
                     resultSetNote = stmlNote.executeQuery();
                     resultSetNote.next();
-                    description += resultSet.getString(3) +" oz " + resultSet.getString(2) +", ";
+                    descriptionBuilder.append(resultSet.getString(3)).append(" oz ").append(resultSet.getString(2)).append(", ");
                     Notetrouver =  resultSetNote.getString(1);
                     if (resultSet.getString(4).equals("0") || resultSet.getInt(5) == 0)
                     {
                         drinkPossible = false;
                     }
+                    resultSetNote.close();
+                    stmlNote.close();
                 }
+                description = descriptionBuilder.toString();
                 if (!description.trim().equals("")){
                     description = description.substring(0, description.length() - 2);
                 }
@@ -1197,20 +1199,15 @@ public class MainActivity extends AppCompatActivity {
                 {
                     arrayListDrink.add(hashMap);//add the hashmap into arrayList
                 }
+                try {
+                    stm1.close();
+                    resultSet.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-        }
-        try {
-            if (stm1 != null && stmlNote != null && resultSet != null &&resultSetNote != null) {
-                stm1.close();
-                stmlNote.close();
-                resultSet.close();
-                resultSetNote.close();
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
 
         enleverTri();
@@ -1227,46 +1224,64 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean setViewValue(View view, Object object, String value) {
 
-                if (view.equals((TextView) view.findViewById(R.id.nameDrink_TXT))) {
-                    TextView nomTXT = (TextView) view.findViewById(R.id.nameDrink_TXT);
-                    if(couleurChoisie.equals("blanc")) {
-                        nomTXT.setTextColor(getResources().getColor(R.color.grisFonce));
-                    } else if(couleurChoisie.equals("noir")) {
-                        nomTXT.setTextColor(getResources().getColor(R.color.blanc));
-                    } else if(couleurChoisie.equals("jaune")) {
-                        nomTXT.setTextColor(getResources().getColor(R.color.noir));
-                    } else if(couleurChoisie.equals("gris")) {
-                        nomTXT.setTextColor(getResources().getColor(R.color.noir));
-                    } else if(couleurChoisie.equals("bleu")) {
-                        nomTXT.setTextColor(getResources().getColor(R.color.blanc));
+                if (view.equals(view.findViewById(R.id.nameDrink_TXT))) {
+                    TextView nomTXT = view.findViewById(R.id.nameDrink_TXT);
+                    switch (couleurChoisie) {
+                        case "blanc":
+                            nomTXT.setTextColor(getResources().getColor(R.color.grisFonce));
+                            break;
+                        case "noir":
+                            nomTXT.setTextColor(getResources().getColor(R.color.blanc));
+                            break;
+                        case "jaune":
+                            nomTXT.setTextColor(getResources().getColor(R.color.noir));
+                            break;
+                        case "gris":
+                            nomTXT.setTextColor(getResources().getColor(R.color.noir));
+                            break;
+                        case "bleu":
+                            nomTXT.setTextColor(getResources().getColor(R.color.blanc));
+                            break;
                     }
                 }
-                if (view.equals((TextView) view.findViewById(R.id.descDrink_TXT))) {
-                    TextView descTXT = (TextView) view.findViewById(R.id.descDrink_TXT);
-                    if (couleurChoisie.equals("blanc")) {
-                        descTXT.setTextColor(getResources().getColor(R.color.grisFonce));
-                    } else if (couleurChoisie.equals("noir")) {
-                        descTXT.setTextColor(getResources().getColor(R.color.blanc));
-                    } else if (couleurChoisie.equals("jaune")) {
-                        descTXT.setTextColor(getResources().getColor(R.color.noir));
-                    } else if(couleurChoisie.equals("gris")) {
-                        descTXT.setTextColor(getResources().getColor(R.color.noir));
-                    } else if(couleurChoisie.equals("bleu")) {
-                        descTXT.setTextColor(getResources().getColor(R.color.blanc));
+                if (view.equals(view.findViewById(R.id.descDrink_TXT))) {
+                    TextView descTXT = view.findViewById(R.id.descDrink_TXT);
+                    switch (couleurChoisie) {
+                        case "blanc":
+                            descTXT.setTextColor(getResources().getColor(R.color.grisFonce));
+                            break;
+                        case "noir":
+                            descTXT.setTextColor(getResources().getColor(R.color.blanc));
+                            break;
+                        case "jaune":
+                            descTXT.setTextColor(getResources().getColor(R.color.noir));
+                            break;
+                        case "gris":
+                            descTXT.setTextColor(getResources().getColor(R.color.noir));
+                            break;
+                        case "bleu":
+                            descTXT.setTextColor(getResources().getColor(R.color.blanc));
+                            break;
                     }
                 }
-                if(view.equals((TextView) view.findViewById(R.id.noteDrink_TXT))) {
-                    TextView noteTXT = (TextView) view.findViewById(R.id.noteDrink_TXT);
-                    if (couleurChoisie.equals("blanc")) {
-                        noteTXT.setTextColor(getResources().getColor(R.color.grisFonce));
-                    } else if (couleurChoisie.equals("noir")) {
-                        noteTXT.setTextColor(getResources().getColor(R.color.blanc));
-                    } else if (couleurChoisie.equals("jaune")) {
-                        noteTXT.setTextColor(getResources().getColor(R.color.noir));
-                    } else if(couleurChoisie.equals("gris")) {
-                        noteTXT.setTextColor(getResources().getColor(R.color.noir));
-                    } else if(couleurChoisie.equals("bleu")) {
-                        noteTXT.setTextColor(getResources().getColor(R.color.blanc));
+                if(view.equals(view.findViewById(R.id.noteDrink_TXT))) {
+                    TextView noteTXT = view.findViewById(R.id.noteDrink_TXT);
+                    switch (couleurChoisie) {
+                        case "blanc":
+                            noteTXT.setTextColor(getResources().getColor(R.color.grisFonce));
+                            break;
+                        case "noir":
+                            noteTXT.setTextColor(getResources().getColor(R.color.blanc));
+                            break;
+                        case "jaune":
+                            noteTXT.setTextColor(getResources().getColor(R.color.noir));
+                            break;
+                        case "gris":
+                            noteTXT.setTextColor(getResources().getColor(R.color.noir));
+                            break;
+                        case "bleu":
+                            noteTXT.setTextColor(getResources().getColor(R.color.blanc));
+                            break;
                     }
                 }
                 return false;
@@ -1282,6 +1297,7 @@ public class MainActivity extends AppCompatActivity {
      */
     void remplirListeIngredients()
     {
+
         listeNomsIngredients.clear();
         arrayListIng.clear();
         Statement stm1 = null;
@@ -1309,7 +1325,7 @@ public class MainActivity extends AppCompatActivity {
                     resultSet.close();
                     stm1.close();
                 }
-            }catch (SQLException e){  e.printStackTrace();};
+            }catch (SQLException e){  e.printStackTrace();}
         }
         rafraichirListes();
     }
@@ -1324,32 +1340,44 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean setViewValue(View view, Object object, String value) {
 
-                if (view.equals((TextView) view.findViewById(R.id.nameIng_TXT))) {
-                    TextView nomTXT = (TextView) view.findViewById(R.id.nameIng_TXT);
-                    if (couleurChoisie.equals("blanc")) {
-                        nomTXT.setTextColor(getResources().getColor(R.color.grisFonce));
-                    } else if (couleurChoisie.equals("noir")) {
-                        nomTXT.setTextColor(getResources().getColor(R.color.blanc));
-                    } else if (couleurChoisie.equals("jaune")) {
-                        nomTXT.setTextColor(getResources().getColor(R.color.noir));
-                    } else if(couleurChoisie.equals("gris")) {
-                        nomTXT.setTextColor(getResources().getColor(R.color.noir));
-                    } else if(couleurChoisie.equals("bleu")) {
-                        nomTXT.setTextColor(getResources().getColor(R.color.blanc));
+                if (view.equals(view.findViewById(R.id.nameIng_TXT))) {
+                    TextView nomTXT = view.findViewById(R.id.nameIng_TXT);
+                    switch (couleurChoisie) {
+                        case "blanc":
+                            nomTXT.setTextColor(getResources().getColor(R.color.grisFonce));
+                            break;
+                        case "noir":
+                            nomTXT.setTextColor(getResources().getColor(R.color.blanc));
+                            break;
+                        case "jaune":
+                            nomTXT.setTextColor(getResources().getColor(R.color.noir));
+                            break;
+                        case "gris":
+                            nomTXT.setTextColor(getResources().getColor(R.color.noir));
+                            break;
+                        case "bleu":
+                            nomTXT.setTextColor(getResources().getColor(R.color.blanc));
+                            break;
                     }
                 }
-                if (view.equals((TextView) view.findViewById(R.id.descIng_TXT))) {
-                    TextView descTXT = (TextView) view.findViewById(R.id.descIng_TXT);
-                    if (couleurChoisie.equals("blanc")) {
-                        descTXT.setTextColor(getResources().getColor(R.color.grisFonce));
-                    } else if (couleurChoisie.equals("noir")) {
-                        descTXT.setTextColor(getResources().getColor(R.color.blanc));
-                    } else if (couleurChoisie.equals("jaune")) {
-                        descTXT.setTextColor(getResources().getColor(R.color.noir));
-                    } else if(couleurChoisie.equals("gris")) {
-                        descTXT.setTextColor(getResources().getColor(R.color.noir));
-                    } else if(couleurChoisie.equals("bleu")) {
-                        descTXT.setTextColor(getResources().getColor(R.color.blanc));
+                if (view.equals(view.findViewById(R.id.descIng_TXT))) {
+                    TextView descTXT = view.findViewById(R.id.descIng_TXT);
+                    switch (couleurChoisie) {
+                        case "blanc":
+                            descTXT.setTextColor(getResources().getColor(R.color.grisFonce));
+                            break;
+                        case "noir":
+                            descTXT.setTextColor(getResources().getColor(R.color.blanc));
+                            break;
+                        case "jaune":
+                            descTXT.setTextColor(getResources().getColor(R.color.noir));
+                            break;
+                        case "gris":
+                            descTXT.setTextColor(getResources().getColor(R.color.noir));
+                            break;
+                        case "bleu":
+                            descTXT.setTextColor(getResources().getColor(R.color.blanc));
+                            break;
                     }
                 }
                 return false;
@@ -1371,32 +1399,44 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean setViewValue(View view, Object object, String value) {
 
-                if (view.equals((TextView) view.findViewById(R.id.nameIng_TXT))) {
-                    TextView nomTXT = (TextView) view.findViewById(R.id.nameIng_TXT);
-                    if (couleurChoisie.equals("blanc")) {
-                        nomTXT.setTextColor(getResources().getColor(R.color.grisFonce));
-                    } else if (couleurChoisie.equals("noir")) {
-                        nomTXT.setTextColor(getResources().getColor(R.color.blanc));
-                    } else if (couleurChoisie.equals("jaune")) {
-                        nomTXT.setTextColor(getResources().getColor(R.color.noir));
-                    } else if(couleurChoisie.equals("gris")) {
-                        nomTXT.setTextColor(getResources().getColor(R.color.noir));
-                    } else if(couleurChoisie.equals("bleu")) {
-                        nomTXT.setTextColor(getResources().getColor(R.color.blanc));
+                if (view.equals(view.findViewById(R.id.nameIng_TXT))) {
+                    TextView nomTXT = view.findViewById(R.id.nameIng_TXT);
+                    switch (couleurChoisie) {
+                        case "blanc":
+                            nomTXT.setTextColor(getResources().getColor(R.color.grisFonce));
+                            break;
+                        case "noir":
+                            nomTXT.setTextColor(getResources().getColor(R.color.blanc));
+                            break;
+                        case "jaune":
+                            nomTXT.setTextColor(getResources().getColor(R.color.noir));
+                            break;
+                        case "gris":
+                            nomTXT.setTextColor(getResources().getColor(R.color.noir));
+                            break;
+                        case "bleu":
+                            nomTXT.setTextColor(getResources().getColor(R.color.blanc));
+                            break;
                     }
                 }
-                if (view.equals((TextView) view.findViewById(R.id.descIng_TXT))) {
-                    TextView descTXT = (TextView) view.findViewById(R.id.descIng_TXT);
-                    if (couleurChoisie.equals("blanc")) {
-                        descTXT.setTextColor(getResources().getColor(R.color.grisFonce));
-                    } else if (couleurChoisie.equals("noir")) {
-                        descTXT.setTextColor(getResources().getColor(R.color.blanc));
-                    } else if (couleurChoisie.equals("jaune")) {
-                        descTXT.setTextColor(getResources().getColor(R.color.noir));
-                    } else if(couleurChoisie.equals("gris")) {
-                        descTXT.setTextColor(getResources().getColor(R.color.noir));
-                    } else if(couleurChoisie.equals("bleu")) {
-                        descTXT.setTextColor(getResources().getColor(R.color.blanc));
+                if (view.equals(view.findViewById(R.id.descIng_TXT))) {
+                    TextView descTXT = view.findViewById(R.id.descIng_TXT);
+                    switch (couleurChoisie) {
+                        case "blanc":
+                            descTXT.setTextColor(getResources().getColor(R.color.grisFonce));
+                            break;
+                        case "noir":
+                            descTXT.setTextColor(getResources().getColor(R.color.blanc));
+                            break;
+                        case "jaune":
+                            descTXT.setTextColor(getResources().getColor(R.color.noir));
+                            break;
+                        case "gris":
+                            descTXT.setTextColor(getResources().getColor(R.color.noir));
+                            break;
+                        case "bleu":
+                            descTXT.setTextColor(getResources().getColor(R.color.blanc));
+                            break;
                     }
                 }
                 return false;
@@ -1418,46 +1458,64 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean setViewValue(View view, Object object, String value) {
 
-                if (view.equals((TextView) view.findViewById(R.id.nameCourant_TXT))) {
-                    TextView nomTXT = (TextView) view.findViewById(R.id.nameCourant_TXT);
-                    if (couleurChoisie.equals("blanc")) {
-                        nomTXT.setTextColor(getResources().getColor(R.color.grisFonce));
-                    } else if (couleurChoisie.equals("noir")) {
-                        nomTXT.setTextColor(getResources().getColor(R.color.blanc));
-                    } else if (couleurChoisie.equals("jaune")) {
-                        nomTXT.setTextColor(getResources().getColor(R.color.noir));
-                    } else if(couleurChoisie.equals("gris")) {
-                        nomTXT.setTextColor(getResources().getColor(R.color.noir));
-                    } else if(couleurChoisie.equals("bleu")) {
-                        nomTXT.setTextColor(getResources().getColor(R.color.blanc));
+                if (view.equals(view.findViewById(R.id.nameCourant_TXT))) {
+                    TextView nomTXT = view.findViewById(R.id.nameCourant_TXT);
+                    switch (couleurChoisie) {
+                        case "blanc":
+                            nomTXT.setTextColor(getResources().getColor(R.color.grisFonce));
+                            break;
+                        case "noir":
+                            nomTXT.setTextColor(getResources().getColor(R.color.blanc));
+                            break;
+                        case "jaune":
+                            nomTXT.setTextColor(getResources().getColor(R.color.noir));
+                            break;
+                        case "gris":
+                            nomTXT.setTextColor(getResources().getColor(R.color.noir));
+                            break;
+                        case "bleu":
+                            nomTXT.setTextColor(getResources().getColor(R.color.blanc));
+                            break;
                     }
                 }
-                if (view.equals((TextView) view.findViewById(R.id.descCourant_TXT))) {
-                    TextView descTXT = (TextView) view.findViewById(R.id.descCourant_TXT);
-                    if (couleurChoisie.equals("blanc")) {
-                        descTXT.setTextColor(getResources().getColor(R.color.grisFonce));
-                    } else if (couleurChoisie.equals("noir")) {
-                        descTXT.setTextColor(getResources().getColor(R.color.blanc));
-                    } else if (couleurChoisie.equals("jaune")) {
-                        descTXT.setTextColor(getResources().getColor(R.color.noir));
-                    } else if(couleurChoisie.equals("gris")) {
-                        descTXT.setTextColor(getResources().getColor(R.color.noir));
-                    } else if(couleurChoisie.equals("bleu")) {
-                        descTXT.setTextColor(getResources().getColor(R.color.blanc));
+                if (view.equals(view.findViewById(R.id.descCourant_TXT))) {
+                    TextView descTXT = view.findViewById(R.id.descCourant_TXT);
+                    switch (couleurChoisie) {
+                        case "blanc":
+                            descTXT.setTextColor(getResources().getColor(R.color.grisFonce));
+                            break;
+                        case "noir":
+                            descTXT.setTextColor(getResources().getColor(R.color.blanc));
+                            break;
+                        case "jaune":
+                            descTXT.setTextColor(getResources().getColor(R.color.noir));
+                            break;
+                        case "gris":
+                            descTXT.setTextColor(getResources().getColor(R.color.noir));
+                            break;
+                        case "bleu":
+                            descTXT.setTextColor(getResources().getColor(R.color.blanc));
+                            break;
                     }
                 }
-                if(view.equals((TextView) view.findViewById(R.id.noteCourant_TXT))) {
-                    TextView noteTXT = (TextView) view.findViewById(R.id.noteCourant_TXT);
-                    if (couleurChoisie.equals("blanc")) {
-                        noteTXT.setTextColor(getResources().getColor(R.color.grisFonce));
-                    } else if (couleurChoisie.equals("noir")) {
-                        noteTXT.setTextColor(getResources().getColor(R.color.blanc));
-                    } else if (couleurChoisie.equals("jaune")) {
-                        noteTXT.setTextColor(getResources().getColor(R.color.noir));
-                    } else if(couleurChoisie.equals("gris")) {
-                        noteTXT.setTextColor(getResources().getColor(R.color.noir));
-                    } else if(couleurChoisie.equals("bleu")) {
-                        noteTXT.setTextColor(getResources().getColor(R.color.blanc));
+                if(view.equals(view.findViewById(R.id.noteCourant_TXT))) {
+                    TextView noteTXT = view.findViewById(R.id.noteCourant_TXT);
+                    switch (couleurChoisie) {
+                        case "blanc":
+                            noteTXT.setTextColor(getResources().getColor(R.color.grisFonce));
+                            break;
+                        case "noir":
+                            noteTXT.setTextColor(getResources().getColor(R.color.blanc));
+                            break;
+                        case "jaune":
+                            noteTXT.setTextColor(getResources().getColor(R.color.noir));
+                            break;
+                        case "gris":
+                            noteTXT.setTextColor(getResources().getColor(R.color.noir));
+                            break;
+                        case "bleu":
+                            noteTXT.setTextColor(getResources().getColor(R.color.blanc));
+                            break;
                     }
                 }
                 return false;
@@ -1486,32 +1544,44 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean setViewValue(View view, Object object, String value) {
 
-                if (view.equals((TextView) view.findViewById(R.id.nameIng_TXT))) {
-                    TextView nomTXT = (TextView) view.findViewById(R.id.nameIng_TXT);
-                    if (couleurChoisie.equals("blanc")) {
-                        nomTXT.setTextColor(getResources().getColor(R.color.grisFonce));
-                    } else if (couleurChoisie.equals("noir")) {
-                        nomTXT.setTextColor(getResources().getColor(R.color.blanc));
-                    } else if (couleurChoisie.equals("jaune")) {
-                        nomTXT.setTextColor(getResources().getColor(R.color.noir));
-                    } else if(couleurChoisie.equals("gris")) {
-                        nomTXT.setTextColor(getResources().getColor(R.color.noir));
-                    } else if(couleurChoisie.equals("bleu")) {
-                        nomTXT.setTextColor(getResources().getColor(R.color.blanc));
+                if (view.equals(view.findViewById(R.id.nameIng_TXT))) {
+                    TextView nomTXT = view.findViewById(R.id.nameIng_TXT);
+                    switch (couleurChoisie) {
+                        case "blanc":
+                            nomTXT.setTextColor(getResources().getColor(R.color.grisFonce));
+                            break;
+                        case "noir":
+                            nomTXT.setTextColor(getResources().getColor(R.color.blanc));
+                            break;
+                        case "jaune":
+                            nomTXT.setTextColor(getResources().getColor(R.color.noir));
+                            break;
+                        case "gris":
+                            nomTXT.setTextColor(getResources().getColor(R.color.noir));
+                            break;
+                        case "bleu":
+                            nomTXT.setTextColor(getResources().getColor(R.color.blanc));
+                            break;
                     }
                 }
-                if (view.equals((TextView) view.findViewById(R.id.descIng_TXT))) {
-                    TextView descTXT = (TextView) view.findViewById(R.id.descIng_TXT);
-                    if (couleurChoisie.equals("blanc")) {
-                        descTXT.setTextColor(getResources().getColor(R.color.grisFonce));
-                    } else if (couleurChoisie.equals("noir")) {
-                        descTXT.setTextColor(getResources().getColor(R.color.blanc));
-                    } else if (couleurChoisie.equals("jaune")) {
-                        descTXT.setTextColor(getResources().getColor(R.color.noir));
-                    } else if(couleurChoisie.equals("gris")) {
-                        descTXT.setTextColor(getResources().getColor(R.color.noir));
-                    } else if(couleurChoisie.equals("bleu")) {
-                        descTXT.setTextColor(getResources().getColor(R.color.blanc));
+                if (view.equals(view.findViewById(R.id.descIng_TXT))) {
+                    TextView descTXT = view.findViewById(R.id.descIng_TXT);
+                    switch (couleurChoisie) {
+                        case "blanc":
+                            descTXT.setTextColor(getResources().getColor(R.color.grisFonce));
+                            break;
+                        case "noir":
+                            descTXT.setTextColor(getResources().getColor(R.color.blanc));
+                            break;
+                        case "jaune":
+                            descTXT.setTextColor(getResources().getColor(R.color.noir));
+                            break;
+                        case "gris":
+                            descTXT.setTextColor(getResources().getColor(R.color.noir));
+                            break;
+                        case "bleu":
+                            descTXT.setTextColor(getResources().getColor(R.color.blanc));
+                            break;
                     }
                 }
                 return false;
@@ -1624,7 +1694,6 @@ public class MainActivity extends AppCompatActivity {
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
-                ;
             }
             arrayListPanier.remove(0);
         }
@@ -1798,7 +1867,8 @@ public class MainActivity extends AppCompatActivity {
     HashMap<String, Integer> defaireDescription(String description)
     {
         HashMap<String, Integer> ingredients = new HashMap<>();
-        ArrayList<HashMap<String, Integer>> drink = new ArrayList<>();
+        //Jamais utiliser dans le code???
+     //   ArrayList<HashMap<String, Integer>> drink = new ArrayList<>();
         ArrayList<String> tableauIngredients=new ArrayList<>();
         String line=description;
         if(description.contains("oz")) {
@@ -1833,18 +1903,19 @@ public class MainActivity extends AppCompatActivity {
     String faireDescription(HashMap<String, Integer> ingredients)
     {
         Set keys = ingredients.keySet();
-        Collection<Integer> items=ingredients.values();
-        String desc="";
+        //Jamais utilisé dans le code
+       // Collection<Integer> items=ingredients.values();
+        StringBuilder desc= new StringBuilder();
         for (Iterator i = keys.iterator(); i.hasNext(); )
         {
             String key = (String) i.next();
             Integer value = ingredients.get(key);
             if(i.hasNext())
-                desc+=value+" oz "+key+", ";
+                desc.append(value).append(" oz ").append(key).append(", ");
             else
-                desc+=value+" oz "+key;
+                desc.append(value).append(" oz ").append(key);
         }
-        return desc;
+        return desc.toString();
     }
 
     //endregion
@@ -1882,25 +1953,41 @@ public class MainActivity extends AppCompatActivity {
      */
     int compterNombreRecettes()
     {
-        Statement stm1s = null;
-        ResultSet setRecette = null;
 
+        if(!PasInitialiser)
+        {
+            try {
+                CallableStatement cStmt = conn_.prepareCall("{call NOMBRE_RECETTE(?)}");
+                cStmt.registerOutParameter(1, Types.DECIMAL);
+                cStmt.execute();
+                NBrecette = cStmt.getInt(1);
+                cStmt.close();
+                PasInitialiser = true;
+                return NBrecette;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        else{
+            return  NBrecette;
+        }
+
+
+       /* Statement stm1s = null;
+        ResultSet setRecette = null;
         String requeteNombreRecette = "select count(*) from recette";
         try {
-            stm1s = conn_.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
+            stm1s = conn_.createStatement();
             setRecette = stm1s.executeQuery(requeteNombreRecette);
             setRecette.next();
-            return setRecette.getInt(1);
+            int NbRecette = setRecette.getInt(1);
+            stm1s.close();
+            setRecette.close();
+            return NbRecette;
+
         } catch (SQLException e) {
             e.printStackTrace();
-        }
-        try {
-            if (stm1s != null && setRecette != null ) {
-                setRecette.close();
-                stm1s.close();
-
-            }
-        }catch (SQLException e){  e.printStackTrace();}
+        }*/
         return -1;
     }
 
