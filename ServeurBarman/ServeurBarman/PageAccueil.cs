@@ -25,7 +25,9 @@ namespace ServeurBarman
         List<List<(Position, int)>> ListcommandeRobot = new List<List<(Position, int)>>();
         CRS_A255 robot = CRS_A255.Instance;
         List<(Position, int)> list = new List<(Position, int)>();
-        List<int> numcommande = new List<int>();
+        int nombreDeverre;
+        private readonly object accessLock = new object();
+        List<(int, int)> numcommande = new List<(int, int)>();
 
         public PageAccueil()
         {
@@ -65,8 +67,8 @@ namespace ServeurBarman
 
         private void BTN_Setting_Click(object sender, EventArgs e)
         {
-            //if (EstConnecté)
-            //{
+            if (EstConnecté)
+            {
                 DLG_UserIdentify dlg_User = new DLG_UserIdentify();
                 DialogResult dlg_User_result = dlg_User.ShowDialog();
 
@@ -82,11 +84,11 @@ namespace ServeurBarman
                         MessageBox.Show("Vérifier votre connexion ou mot de passe...");
                     }
                 }
-            //}
-            //else
-            //{
-            //    MessageBox.Show("Robot non connecté...");
-            //}
+            }
+            else
+            {
+                MessageBox.Show("Robot non connecté...");
+            }
         }
 
         private void BTN_Developers_Click(object sender, EventArgs e)
@@ -122,7 +124,7 @@ namespace ServeurBarman
                     Refresh_WaitingList();
                     foreach (var e in numcommande)
                     {
-                        this.Invoke((MethodInvoker)(() => LBX_WaitingList.Items.Add(e)));
+                        this.Invoke((MethodInvoker)(() => LBX_WaitingList.Items.Add(e.Item1)));
                     }
                 }
                 else
@@ -140,10 +142,10 @@ namespace ServeurBarman
                             Refresh_WaitingList();
                             foreach (var e in numcommande)
                             {
-                                this.Invoke((MethodInvoker)(() => LBX_WaitingList.Items.Add(e)));
+                                this.Invoke((MethodInvoker)(() => LBX_WaitingList.Items.Add(e.Item1)));
                             }
                         }
-                        else if (!LBX_WaitingList.Items[i].Equals(numcommande[i]))
+                        else if (!LBX_WaitingList.Items[i].Equals(numcommande[i].Item1))
                             check1 = false;
                     }
 
@@ -152,7 +154,7 @@ namespace ServeurBarman
                         this.Invoke((MethodInvoker)(() => LBX_WaitingList.Items.Clear()));
                         foreach (var e in numcommande)
                         {
-                            this.Invoke((MethodInvoker)(() => LBX_WaitingList.Items.Add(e)));
+                            this.Invoke((MethodInvoker)(() => LBX_WaitingList.Items.Add(e.Item1)));
                         }
                     }
                 }
@@ -169,7 +171,7 @@ namespace ServeurBarman
 
         private void NumeroCommande()
         {
-            string cmd = "select numcommande from commande";
+            string cmd = "select numcommande,shooter from commande";
             try
             {
                 OracleCommand listeDiv = new OracleCommand(cmd, connexion);
@@ -177,7 +179,7 @@ namespace ServeurBarman
                 OracleDataReader divisionReader = listeDiv.ExecuteReader();
                 while (divisionReader.Read())
                 {
-                    numcommande.Add(divisionReader.GetInt32(0));
+                    numcommande.Add((divisionReader.GetInt32(0), divisionReader.GetInt32(1)));
                 }
                 divisionReader.Close();
                 listeIngredients.Clear();
@@ -191,28 +193,31 @@ namespace ServeurBarman
             for (int i = 0; i < numcommande.Count; ++i)
             {
                 for (int j = 0; j < numcommande.Count; ++j)
-                    if (numcommande[i] == numcommande[j] && i != j)
+                    if (numcommande[i].Item1 == numcommande[j].Item1 && i != j)
                         numcommande.Remove(numcommande[j]);
             }
 
-            if (numcommande.Count > 0)
+            lock (accessLock)
             {
-                string cmd = "select e.POSITIONX,e.POSITIONY,e.POSITIONZ,c.QTY from ingredient e inner join commande c on e.codebouteille=c.ingredient where c.numcommande=" + numcommande[0].ToString();
-                OracleCommand listeDiv = new OracleCommand(cmd, connexion);
-                listeDiv.CommandType = CommandType.Text;
-                OracleDataReader divisionReader = listeDiv.ExecuteReader();
-                try
+                if (numcommande.Count > 0)
                 {
-                    while (divisionReader.Read())
+                    string cmd = "select e.POSITIONX,e.POSITIONY,e.POSITIONZ,c.QTY from ingredient e inner join commande c on e.codebouteille=c.ingredient where c.numcommande=" + numcommande[0].Item1.ToString();
+                    OracleCommand listeDiv = new OracleCommand(cmd, connexion);
+                    listeDiv.CommandType = CommandType.Text;
+                    OracleDataReader divisionReader = listeDiv.ExecuteReader();
+                    try
                     {
-                        listeIngredients.Add((new Position(divisionReader.GetInt32(0), divisionReader.GetInt32(1), divisionReader.GetInt32(2)), divisionReader.GetInt32(3)));
+                        while (divisionReader.Read())
+                        {
+                            listeIngredients.Add((new Position(divisionReader.GetInt32(0), divisionReader.GetInt32(1), divisionReader.GetInt32(2)), divisionReader.GetInt32(3)));
+                        }
+                        divisionReader.Close();
+                        welcomePage1.nombreClient = numcommande.Count.ToString();
+
+                        this.Invoke((MethodInvoker)(() => welcomePage1.Init_UserUI()));
                     }
-                    divisionReader.Close();
-                    welcomePage1.nombreClient = numcommande.Count.ToString();
-                    
-                    this.Invoke((MethodInvoker)(() => welcomePage1.Init_UserUI()));
+                    catch (Exception sel) { MessageBox.Show(sel.Message.ToString()); }
                 }
-                catch (Exception sel) { MessageBox.Show(sel.Message.ToString()); }
             }
         }
 
@@ -250,7 +255,6 @@ namespace ServeurBarman
                 }
                 divisionReader1.Close();
                 CRS_A255.Instance.AjouterCup(Int32.Parse(welcomePage1.nombreVerre));
-                addCups1.nombreverre = welcomePage1.nombreVerre;
             }
             catch (Exception sel) { MessageBox.Show(sel.Message.ToString()); }
 
@@ -282,12 +286,45 @@ namespace ServeurBarman
         {
             while (true)
             {
-                if (numcommande.Count > 0)
+                if (Int32.Parse(welcomePage1.nombreVerre) >= 1 && listeIngredients.Count >= 1)
                 {
-                    if (robot.EnMarche())
+                    if (numcommande[0].Item2 == 0)
                     {
-                        welcomePage1.activiteRobot = "Commande en cours de service...";
-                        robot.MakeDrink(listeIngredients);
+                        if (robot.EnMarche())
+                        {
+                            welcomePage1.activiteRobot = "Commande en cours de service...";
+
+                            robot.MakeDrink(listeIngredients);
+                            string cmd = "delete from commande where numcommande=" + LBX_WaitingList.Items[0].ToString();
+                            listeIngredients.Clear();
+
+                            try
+                            {
+                                OracleCommand delete = new OracleCommand(cmd, connexion);
+                                delete.CommandType = CommandType.Text;
+                                delete.ExecuteNonQuery();
+                            }
+                            catch (Exception sel) { MessageBox.Show(sel.Message.ToString()); }
+
+                            welcomePage1.nombreVerre = (Int32.Parse(welcomePage1.nombreVerre) - 1).ToString();
+
+                            robot.AjouterCup(Int32.Parse(welcomePage1.nombreVerre));
+                            string updateVerreRougeCommand = "update verrerouge set nbverre =" + welcomePage1.nombreVerre;
+                            try
+                            {
+                                OracleCommand updateVerreRouge = new OracleCommand(updateVerreRougeCommand, connexion);
+                                updateVerreRouge.CommandType = CommandType.Text;
+                                updateVerreRouge.ExecuteNonQuery();
+                            }
+                            catch (Exception sel) { MessageBox.Show(sel.Message.ToString()); }
+                        }
+                    }
+                    else
+                    {
+                        /*
+                         * IL S'AGIT D'UN SHOOTER
+                         */
+
                         string cmd = "delete from commande where numcommande=" + LBX_WaitingList.Items[0].ToString();
                         listeIngredients.Clear();
 
@@ -296,6 +333,17 @@ namespace ServeurBarman
                             OracleCommand delete = new OracleCommand(cmd, connexion);
                             delete.CommandType = CommandType.Text;
                             delete.ExecuteNonQuery();
+                        }
+                        catch (Exception sel) { MessageBox.Show(sel.Message.ToString()); }
+
+                        welcomePage1.nombreShooter = (Int32.Parse(welcomePage1.nombreShooter) - 1).ToString();
+
+                        string updateVerreRougeCommand = "update verreshooter set nbshooter =" + welcomePage1.nombreShooter;
+                        try
+                        {
+                            OracleCommand updateVerreRouge = new OracleCommand(updateVerreRougeCommand, connexion);
+                            updateVerreRouge.CommandType = CommandType.Text;
+                            updateVerreRouge.ExecuteNonQuery();
                         }
                         catch (Exception sel) { MessageBox.Show(sel.Message.ToString()); }
                     }
