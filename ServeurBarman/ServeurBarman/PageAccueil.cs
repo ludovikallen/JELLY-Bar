@@ -294,29 +294,31 @@ namespace ServeurBarman
                         {
                             welcomePage1.activiteRobot = "Commande en cours de service...";
 
-                            robot.MakeDrink(listeIngredients);
-                            string cmd = "delete from commande where numcommande=" + LBX_WaitingList.Items[0].ToString();
-                            listeIngredients.Clear();
-
-                            try
+                            if(robot.MakeDrink(listeIngredients))
                             {
-                                OracleCommand delete = new OracleCommand(cmd, connexion);
-                                delete.CommandType = CommandType.Text;
-                                delete.ExecuteNonQuery();
-                            }
-                            catch (Exception sel) { MessageBox.Show(sel.Message.ToString()); }
+                                string cmd = "delete from commande where numcommande=" + LBX_WaitingList.Items[0].ToString();
+                                listeIngredients.Clear();
 
-                            welcomePage1.nombreVerre = (Int32.Parse(welcomePage1.nombreVerre) - 1).ToString();
+                                try
+                                {
+                                    OracleCommand delete = new OracleCommand(cmd, connexion);
+                                    delete.CommandType = CommandType.Text;
+                                    delete.ExecuteNonQuery();
+                                }
+                                catch (Exception sel) { MessageBox.Show(sel.Message.ToString()); }
 
-                            robot.AjouterCup(Int32.Parse(welcomePage1.nombreVerre));
-                            string updateVerreRougeCommand = "update verrerouge set nbverre =" + welcomePage1.nombreVerre;
-                            try
-                            {
-                                OracleCommand updateVerreRouge = new OracleCommand(updateVerreRougeCommand, connexion);
-                                updateVerreRouge.CommandType = CommandType.Text;
-                                updateVerreRouge.ExecuteNonQuery();
+                                welcomePage1.nombreVerre = (Int32.Parse(welcomePage1.nombreVerre) - 1).ToString();
+
+                                robot.AjouterCup(Int32.Parse(welcomePage1.nombreVerre));
+                                string updateVerreRougeCommand = "update verrerouge set nbverre =" + welcomePage1.nombreVerre;
+                                try
+                                {
+                                    OracleCommand updateVerreRouge = new OracleCommand(updateVerreRougeCommand, connexion);
+                                    updateVerreRouge.CommandType = CommandType.Text;
+                                    updateVerreRouge.ExecuteNonQuery();
+                                }
+                                catch (Exception sel) { MessageBox.Show(sel.Message.ToString()); }
                             }
-                            catch (Exception sel) { MessageBox.Show(sel.Message.ToString()); }
                         }
                     }
                     else
