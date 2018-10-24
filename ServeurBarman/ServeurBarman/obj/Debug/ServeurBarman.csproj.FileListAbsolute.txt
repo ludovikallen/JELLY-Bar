@@ -601,4 +601,8 @@ C:\Users\201605878\Desktop\ServeurBarman\ServeurBarman\bin\Debug\System.Runtime.
 C:\Users\201605878\Desktop\ServeurBarman\ServeurBarman\bin\Debug\System.Threading.Tasks.Extensions.xml
 C:\Users\201605878\Desktop\ServeurBarman\ServeurBarman\bin\Debug\System.ValueTuple.xml
 C:\Users\201605878\Desktop\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.DLG_UserIdentify.resources
+<<<<<<< Updated upstream
 C:\Users\201605878\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.DLG_UserIdentify.resources
+=======
+C:\Users\201646963\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.DLG_UserIdentify.resources
+>>>>>>> Stashed changes
