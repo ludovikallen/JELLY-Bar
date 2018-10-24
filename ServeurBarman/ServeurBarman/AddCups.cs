@@ -15,7 +15,6 @@ namespace ServeurBarman
     public partial class AddCups : UserControl
     {
         public OracleConnection connexion;
-        public string nombreverre;
         public AddCups()
         {
             InitializeComponent();
