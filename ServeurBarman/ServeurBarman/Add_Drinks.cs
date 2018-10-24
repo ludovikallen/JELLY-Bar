@@ -21,6 +21,7 @@ namespace ServeurBarman
 
         private void AddDrink()
         {
+            
             try
             {
                 string cmd = "insert into ingredient values(" + Int32.Parse(Tbx_CodeBouteille.Text) + "," + Int32.Parse(Tbx_Posx.Text) + "," 

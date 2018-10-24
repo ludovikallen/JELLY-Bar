@@ -274,6 +274,7 @@
             this.Btn_Main_Left.TabIndex = 20;
             this.Btn_Main_Left.Text = "button3";
             this.Btn_Main_Left.UseVisualStyleBackColor = true;
+            this.Btn_Main_Left.Click += new System.EventHandler(this.Btn_Main_Left_Click);
             // 
             // Btn_Poignet_Down
             // 

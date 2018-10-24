@@ -1,14 +1,15 @@
 <resources>
     <string name="app_name">ProjetJELLY</string>
-    <string name="options_str"><u>Thème</u></string>
+    <string name="themes_str"><u>Thèmes</u></string>
     <string name="drinks_str"><u>Drinks</u></string>
     <string name="shooters_str"><u>Shooters</u></string>
-    <string name="chosen_str"><u>Drink choisi</u></string>
+    <string name="choisi_str"><u>Drink choisi</u></string>
     <string name="ingredients_str"><u>Ingrédients</u></string>
-    <string name="cart_str"><u>Panier</u></string>
-    <string name="cartempty_str"><u>Panier</u> (vide)</string>
+    <string name="panier_str"><u>Panier</u></string>
+    <string name="panierVide_str"><u>Panier</u> (vide)</string>
     <string name="infos_str"><u>À propos...</u></string>
     <string name="connexion_str"><u>Connexion</u></string>
+    <string name="pause_str"><u>Pause-pipi</u></string>
     <string name="informations">Nous sommes une équipe de 5 jeunes
         finissants de la technique de l\'informatique industrielle
         du Collège Lionel-Groulx. Étant la dernière cohorte complète,

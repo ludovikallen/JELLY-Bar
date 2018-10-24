@@ -17,6 +17,8 @@ namespace ServeurBarman
         public string nombreClient;
         public string nombreBouteille;
         public string nombreVerre;
+        public string nombreShooter;
+        public string activiteRobot;
         public WelcomePage()
         {
             InitializeComponent();
@@ -25,9 +27,11 @@ namespace ServeurBarman
 
         public void Init_UserUI()
         {
-            //mLB_CustomNumber.Text = nombreClient;
-            //TbxNombreBouteille.Text = nombreBouteille;
-            //TbxNombreVerres.Text = nombreVerre;
+            mLB_CustomNumber.Text = nombreClient;
+            mLB_NombreDeBouteille.Text = nombreBouteille;
+            mLB_NombreDeVerre.Text = nombreVerre;
+            mLB_NombreDeShooter.Text = nombreShooter;
+            LBX_Activities.Items.Add(activiteRobot);
         }
 
         private void WelcomePage_Load(object sender, EventArgs e)
