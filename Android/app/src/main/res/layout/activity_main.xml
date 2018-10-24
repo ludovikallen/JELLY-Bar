@@ -821,17 +821,17 @@
         <RadioGroup
             android:id="@+id/changerCouleur_RBTNGRP"
             android:layout_width="189dp"
-            android:layout_height="628dp"
+            android:layout_height="454dp"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="20dp"
             android:layout_marginTop="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.062"
+            app:layout_constraintHorizontal_bias="0.059"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.262">
+            app:layout_constraintVertical_bias="0.229">
 
             <RadioButton
                 android:id="@+id/changerBlanc_RBTN"

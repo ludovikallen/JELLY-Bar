@@ -886,10 +886,12 @@ public class MainActivity extends AppCompatActivity {
                     arrayListItemCourant.add(item);
                     rafraichirItemCourant();
 
-                    panierLYT.setVisibility(View.INVISIBLE);
-                    modifierLYT.setVisibility(View.VISIBLE);
-                    remplirListeIngredients();
-                    rafraichirListeIngredients();
+                    if(arrayListDrink.contains(item.get("nom"))) {
+                        panierLYT.setVisibility(View.INVISIBLE);
+                        modifierLYT.setVisibility(View.VISIBLE);
+                        remplirListeIngredients();
+                        rafraichirListeIngredients();
+                    }
                     indexItemModification=position;
                 return true;
             }
@@ -962,7 +964,7 @@ public class MainActivity extends AppCompatActivity {
                 {
                     changerGris();
                     couleurChoisie="gris";
-                    couleurToast=R.color.gris;
+                    couleurToast=R.color.noir;
                 }
                 else if(checkedId==R.id.changerBleu_RBTN)
                 {
@@ -1970,6 +1972,9 @@ public class MainActivity extends AppCompatActivity {
         Button supprimerToutBTN=findViewById(R.id.supprimerTout_BTN);
         supprimerToutBTN.setBackgroundColor(color[0]);
         supprimerToutBTN.setTextColor(color[1]);
+
+        ImageButton supprimerBTN=findViewById(R.id.supprimer_IMGBTN);
+        supprimerBTN.setBackgroundColor(getResources().getColor(R.color.rouge));
     }
 
     void changerBlanc() {
@@ -2032,6 +2037,7 @@ public class MainActivity extends AppCompatActivity {
         changerCouleurBoutonsMenu(couleurs.get("noir"));
         changeTextColor(couleurs.get("blanc"));
         changeRadioButtonColor(colorRBTN);
+        changerCouleurBoutons(boutons);
     }
 
     void changerJELLY() {
