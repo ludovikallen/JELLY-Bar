@@ -87,9 +87,14 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<HashMap<String,String>> arrayListDrink =new ArrayList<>(),arrayListIng=new ArrayList<>(), arrayListPanier =new ArrayList<>(), arrayListItemCourant=new ArrayList<>();
 
     /**
-     * Liste contenant les éléments sélectionnés du panier
+     * Liste contenant les positions des éléments sélectionnés du panier
      */
     ArrayList<Integer> selectionPositionsPanier = new ArrayList<>();
+
+    /**
+     * Listes contenant les noms des drinks et ingrédients/shooters disponibles, respectivement
+     */
+    ArrayList<String> listeNomsDrinks=new ArrayList<>(), listeNomsIngredients =new ArrayList<>();
 
     /**
      * Radiogroup de sélection de couleur
@@ -122,6 +127,11 @@ public class MainActivity extends AppCompatActivity {
     Integer note=0;
 
     /**
+     * Nombre maximum d'oz dans un drink
+     */
+    Integer maxOz=12;
+
+    /**
      * Easter egg
      */
     String Alcoolique="";
@@ -150,6 +160,9 @@ public class MainActivity extends AppCompatActivity {
                 OracleConnexion();
     }
 
+    /**
+     * Connexion à la BD
+     */
     private void OracleConnexion(){
         Thread t= new Thread() {
             @Override
@@ -162,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
                 {
                     runOnUiThread(new Runnable() {
                         public void run() {
-                            Toast.makeText(MainActivity.this, "Driver Pour Oracle non disponible", Toast.LENGTH_LONG).show();
+                            faireToast("Driver Pour Oracle non disponible.");
                             try {
                                 Thread.sleep(6000);
                                 finish();
@@ -178,18 +191,18 @@ public class MainActivity extends AppCompatActivity {
                 try
                 {
                     conn_ = DriverManager.getConnection(jdbcURL,user,passwd);
-
-
                 }
                 catch (java.sql.SQLException se)
                 {
                     runOnUiThread(new Runnable() {
                         public void run() {
-                            Toast.makeText(MainActivity.this, "Connection a la base de donner impossible", Toast.LENGTH_LONG).show();
+                            faireToast("Connection a la base de donner impossible.");
                             try {
                                 Thread.sleep(6000);
                                 finish();
-                            } catch (InterruptedException e1) {
+                            }
+                            catch (InterruptedException e1)
+                            {
                                 e1.printStackTrace();
                             }
                         }
@@ -216,9 +229,7 @@ public class MainActivity extends AppCompatActivity {
         InitialiserComposantes();
         InitialiserListes();
         InitialiserCouleurs();
-        setTouchListeners();
-        setClickListeners();
-        setCheckedListeners();
+        InitialiserListeners();
     }
 
     /**
@@ -249,7 +260,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Initialise les trois listes principales, puis les remplis à partir de la BD
+     * Initialise les listes principales, puis les remplis à partir de la BD
      */
     void InitialiserListes()
     {
@@ -263,6 +274,9 @@ public class MainActivity extends AppCompatActivity {
         rafraichirItemCourant();
     }
 
+    /**
+     * Initialise les couleurs principales de l'application
+     */
     void InitialiserCouleurs()
     {
         int[][] etats = new int[][] {
@@ -309,6 +323,16 @@ public class MainActivity extends AppCompatActivity {
 
         ColorStateList bleu = new ColorStateList(etats, couleurs);
         this.couleurs.put("bleu",bleu);
+    }
+
+    /**
+     * Initialise les Listeners
+     */
+    void InitialiserListeners()
+    {
+        setTouchListeners();
+        setClickListeners();
+        setCheckedListeners();
     }
 
     //endregion
@@ -469,13 +493,9 @@ public class MainActivity extends AppCompatActivity {
                 panierLYT.setVisibility(View.INVISIBLE);
                 infosLYT.setVisibility(View.INVISIBLE);
 
-                rafraichirListeDrinks();
-                rafraichirListeIngredients();
-                rafraichirListeShooters();
-                rafraichirItemCourant();
                 remplirListeDrinks();
                 remplirListeIngredients();
-                rafraichirListePanier();
+                rafraichirListes();
                 enleverTri();
 
                 selectionPositionsPanier.clear();
@@ -781,9 +801,17 @@ public class MainActivity extends AppCompatActivity {
                 HashMap<String, Integer> ingredients= defaireDescription(itemActuel.get("desc"));
                 if(ingredients.containsKey(nouveauIngredient.get("nom")))
                 {
-                    int nbOz=ingredients.get(nouveauIngredient.get("nom"));
-                    ingredients.remove(nouveauIngredient.get("nom"));
-                    ingredients.put(nouveauIngredient.get("nom"),  nbOz + 1);
+                    int nbOzTotal=0;
+                    for ( String key : ingredients.keySet() ) {
+                        nbOzTotal+=ingredients.get(key);
+                    }
+                    if(nbOzTotal<maxOz) {
+                        int nbOz = ingredients.get(nouveauIngredient.get("nom"));
+                        ingredients.remove(nouveauIngredient.get("nom"));
+                        ingredients.put(nouveauIngredient.get("nom"), nbOz + 1);
+                    }
+                    else
+                        faireToast("Drink trop rempli.");
                 }
                 else
                     ingredients.put(nouveauIngredient.get("nom"), 1);
@@ -903,7 +931,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void setCheckedListeners()
+    /**
+     * Initialise les check listeners, pour effectuer des actions au changement du RadioButton
+     */
+    void setCheckedListeners()
     {
         couleursRDGRP.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
         {
@@ -943,6 +974,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Initialise un dispatchTouchEvent qui compare la position des clics
+       avec celui du layout des notes pour les annuler si le clic est ailleurs
+     */
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         Rect viewRect = new Rect();
@@ -969,6 +1004,9 @@ public class MainActivity extends AppCompatActivity {
 
     //region Panier
 
+    /**
+     * Envoie une commande à la BD
+     */
     public void commander()
     {
         HashMap<String, Integer> drink;
@@ -1000,20 +1038,25 @@ public class MainActivity extends AppCompatActivity {
         {
             drink= defaireDescription(arrayListPanier.get(i).get("desc"));
             for ( String key : drink.keySet() ) {
-                Object value = drink.get(key);
+                Object quantité = drink.get(key);
                 String sql = "select codebouteille from INGREDIENT where nombouteille = '" + key +"'";
                 try {
-                    String Nomrecette = arrayListPanier.get(i).get("nom");
                     stm1 = conn_.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                     resultSet = stm1.executeQuery(sql);
                     resultSet.next();
                     Statement statement = conn_.createStatement();
-                    int coderecette = resultSet.getInt(1);
-                    String SQL = "INSERT INTO COMMANDE VALUES ( "+  (Numcommande + i) + ","+ coderecette +","+ value +",'"+ Nomrecette+ "')";
+                    int codeBouteille = resultSet.getInt(1);
+                    String SQL;
+                    if(listeNomsDrinks.contains(arrayListPanier.get(i).get("nom"))) {
+                        SQL = "INSERT INTO COMMANDE VALUES ( " + (Numcommande + i) + "," + codeBouteille + "," + quantité + "," + 0 +")";
+                    }
+                    else
+                    {
+                        SQL = "INSERT INTO COMMANDE VALUES ( " + (Numcommande + i) + "," + codeBouteille + "," + quantité + "," + 1 +")";
+                    }
                     statement.executeUpdate(SQL);
                 } catch (SQLException e) {
                     e.printStackTrace();
-
                 }
             }
         }
@@ -1076,6 +1119,9 @@ public class MainActivity extends AppCompatActivity {
         afficherNombreItemsPanier();
     }
 
+    /**
+     * Affiche le nombre d'éléments dans le panier sous l'icone de celui-ci
+     */
     void afficherNombreItemsPanier()
     {
         final TextView itemCountTXT=findViewById(R.id.nombreArticlesPanier_TXT);
@@ -1098,6 +1144,7 @@ public class MainActivity extends AppCompatActivity {
      * Vide puis rempli la liste des drinks disponibles à partir de la BD(Pour l'initialiser, puis la rafraîchir)
      */
     void remplirListeDrinks() {
+        listeNomsDrinks.clear();
         arrayListDrink.clear();
         Statement stm1 =null;
         PreparedStatement stmlNote=null;
@@ -1134,12 +1181,13 @@ public class MainActivity extends AppCompatActivity {
                 if (!description.trim().equals("")){
                     description = description.substring(0, description.length() - 2);
                 }
+                listeNomsDrinks.add(nom);
                 HashMap<String,String> hashMap=new HashMap<>();//create a hashmap to store the data in key value pair
                 hashMap.put("nom", nom);
                 hashMap.put("desc",description);
                 if(Notetrouver != null&&!Notetrouver.trim().equals(""))
                 {
-                    hashMap.put("note",arrondir(Float.valueOf(Notetrouver)));
+                    hashMap.put("note", arrondirFloatVersString(Float.valueOf(Notetrouver)));
                 }
                 else{
                     hashMap.put("note","NA");
@@ -1166,8 +1214,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
         enleverTri();
+        rafraichirListes();
     }
 
+    /**
+     * Affiche les éléments de la liste graphiquement
+     */
     void rafraichirListeDrinks()
     {
         SimpleAdapter simpleAdapter=new SimpleAdapter(this, arrayListDrink,R.layout.custom_list_drink,from,toDrink);
@@ -1230,6 +1282,7 @@ public class MainActivity extends AppCompatActivity {
      */
     void remplirListeIngredients()
     {
+        listeNomsIngredients.clear();
         arrayListIng.clear();
         Statement stm1 = null;
         ResultSet resultSet = null;
@@ -1240,6 +1293,7 @@ public class MainActivity extends AppCompatActivity {
             resultSet = stm1.executeQuery(sql);
             while(resultSet.next())
             {
+                listeNomsIngredients.add(resultSet.getString(1));
                 HashMap<String,String> hashMap=new HashMap<>();//create a hashmap to store the data in key value pair
 
                 hashMap.put("nom",resultSet.getString(1));
@@ -1257,8 +1311,12 @@ public class MainActivity extends AppCompatActivity {
                 }
             }catch (SQLException e){  e.printStackTrace();};
         }
+        rafraichirListes();
     }
 
+    /**
+     * Affiche les éléments de la liste graphiquement
+     */
     void rafraichirListeIngredients()
     {
         SimpleAdapter simpleAdapter=new SimpleAdapter(this,arrayListIng,R.layout.custom_list_ing,from,toIng);
@@ -1303,6 +1361,9 @@ public class MainActivity extends AppCompatActivity {
         listeIngredientsLVIEW.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * Affiche les éléments de la liste graphiquement
+     */
     void rafraichirListeShooters()
     {
         SimpleAdapter simpleAdapter=new SimpleAdapter(this,arrayListIng,R.layout.custom_list_ing,from,toIng);
@@ -1347,6 +1408,9 @@ public class MainActivity extends AppCompatActivity {
         listeShootersLVIEW.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * Affiche les éléments de la liste graphiquement
+     */
     void rafraichirItemCourant()
     {
         SimpleAdapter simpleAdapter=new SimpleAdapter(this,arrayListItemCourant,R.layout.custom_list_itemcourant,from,toCourant);
@@ -1459,6 +1523,18 @@ public class MainActivity extends AppCompatActivity {
         panierLVIEW.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * Affiche les éléments des listes graphiquement
+     */
+    void rafraichirListes()
+    {
+        rafraichirListeDrinks();
+        rafraichirListeIngredients();
+        rafraichirListeShooters();
+        rafraichirItemCourant();
+        rafraichirListePanier();
+    }
+
     @Deprecated
     void selectFirstCartItem()
     {
@@ -1475,15 +1551,28 @@ public class MainActivity extends AppCompatActivity {
 
     //region Notes
 
+    /**
+     * Demander à l'usager de noter le drink dont le nom est passé en paramètre
+     */
     void demanderNote(String nomMix)
     {
         final TextView nomMixTXT=findViewById(R.id.nomMix_TXT);
 
-        nomMixTXT.setText(nomMix);
-        notesLYT.setVisibility(View.VISIBLE);
+        if(listeNomsDrinks.contains(nomMix)) {
+            nomMixTXT.setText(nomMix);
+            notesLYT.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            arrayListPanier.remove(0);
+            demanderNote(arrayListPanier.get(0).get("nom"));
+        }
         rafraichirListePanier();
     }
 
+    /**
+     * Annule la note courante
+     */
     void annulerNote() {
 
         final TextView nomMixTXT=findViewById(R.id.nomMix_TXT);
@@ -1500,8 +1589,10 @@ public class MainActivity extends AppCompatActivity {
         afficherNombreItemsPanier();
     }
 
+    /**
+     * Envoie la note courante à la BD
+     */
     void envoyerNote() {
-
         if(note==0)
             faireToast("Désolé de votre mauvaise expérience. Revenez nous voir.");
         else if(note==1)
@@ -1509,7 +1600,6 @@ public class MainActivity extends AppCompatActivity {
         else
             faireToast("Merci d'avoir noté: "+note+" étoiles");
         if(arrayListPanier.size()!=0) {
-            //ENVOYER ICI A LA BD arrayListPanier.get(0).get("nom") et note
             Statement stm12 = null;
             ResultSet resultSet = null;
             Statement statement = null;
@@ -1549,6 +1639,9 @@ public class MainActivity extends AppCompatActivity {
         afficherNombreItemsPanier();
     }
 
+    /**
+     * Réinitialise les notes
+     */
     void reinitTableauNotes() {
         final ImageButton etoile1 = findViewById(R.id.etoile1_IMGBTN);
         final ImageButton etoile2 = findViewById(R.id.etoile2_IMGBTN);
@@ -1568,6 +1661,9 @@ public class MainActivity extends AppCompatActivity {
 
     //region Tri
 
+    /**
+     * Trie les drinks et les ingrédients vers le haut
+     */
     void trierHaut()
     {
         final TextView triNoteBTN=findViewById(R.id.triNote_BTN);
@@ -1613,6 +1709,9 @@ public class MainActivity extends AppCompatActivity {
         rafraichirListeShooters();
     }
 
+    /**
+     * Trie les drinks et les ingrédients vers le bas
+     */
     void trierBas()
     {
         final TextView triNoteBTN=findViewById(R.id.triNote_BTN);
@@ -1657,6 +1756,9 @@ public class MainActivity extends AppCompatActivity {
         rafraichirListeShooters();
     }
 
+    /**
+     * Trie les drinks par ordre alphabétique
+     */
     void enleverTri()
     {
         final TextView triNoteBTN=findViewById(R.id.triNote_BTN);
@@ -1688,6 +1790,11 @@ public class MainActivity extends AppCompatActivity {
 
     //region Description
 
+    /**
+     * Prend une string de description et la transforme en HashMap contenant les ingrédients et leur quantité
+     * @param description String contenant la description d'un drink
+     * @return HashMap contenant le format (ingrédient - quantité en oz)
+     */
     HashMap<String, Integer> defaireDescription(String description)
     {
         HashMap<String, Integer> ingredients = new HashMap<>();
@@ -1718,6 +1825,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Prend une les ingrédients et leur quantité et les transforme en une string du bon format pour la description
+     * @param ingredients HashMap contenant le format (ingrédient - quantité en oz)
+     * @return String contenant la description d'un drink
+     */
     String faireDescription(HashMap<String, Integer> ingredients)
     {
         Set keys = ingredients.keySet();
@@ -1739,24 +1851,35 @@ public class MainActivity extends AppCompatActivity {
 
     //region Utilitaires
 
+    /**
+     * Fait un toast personnalisé avec le message reçu en paramètre
+     * @param message String contenant le message à afficher
+     */
     void faireToast(String message)
     {
         Toast toast = Toast.makeText(getApplicationContext(),
                 message, Toast.LENGTH_LONG);
         toast.setGravity(Gravity.CENTER, 0, hauteur_toast);
         View view = toast.getView();
-
         view.setBackgroundColor(getResources().getColor(couleurToast));
         toast.show();
     }
 
-    String arrondir(float nombre)
+    /**
+     * Arrondit le nombre à deux chiffres après la virgule
+     * @param nombre Float à arrondir
+     * @return String du float arrondit
+     */
+    String arrondirFloatVersString(float nombre)
     {
         DecimalFormat df = new DecimalFormat("#.##");
         df.setRoundingMode(RoundingMode.DOWN);
         return df.format(nombre);
     }
 
+    /**
+     * Compte le nombre de drinks disponibles
+     */
     int compterNombreRecettes()
     {
         Statement stm1s = null;
