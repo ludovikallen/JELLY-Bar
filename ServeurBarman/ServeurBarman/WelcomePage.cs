@@ -19,19 +19,25 @@ namespace ServeurBarman
         public string nombreVerre;
         public string nombreShooter;
         public string activiteRobot;
+        DataBase baseDonnees;
         public WelcomePage()
         {
             InitializeComponent();
-            
+            baseDonnees = DataBase.instance_bd;
+            Task.Run(()=> Init_UserUI());
+
         }
 
         public void Init_UserUI()
         {
-            mLB_CustomNumber.Text = nombreClient;
-            mLB_NombreDeBouteille.Text = nombreBouteille;
-            mLB_NombreDeVerre.Text = nombreVerre;
-            mLB_NombreDeShooter.Text = nombreShooter;
-            LBX_Activities.Items.Add(activiteRobot);
+            while (true)
+            {
+                mLB_CustomNumber.Text = baseDonnees.ListeCommande().Count.ToString();
+                mLB_NombreDeBouteille.Text = baseDonnees.NombreIngredients();
+                mLB_NombreDeVerre.Text = baseDonnees.NombreDeVerreRouge();
+                mLB_NombreDeShooter.Text = baseDonnees.NombreDeShooter();
+            }
+            //LBX_Activities.Items.Add(activiteRobot);
         }
 
         private void WelcomePage_Load(object sender, EventArgs e)

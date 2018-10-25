@@ -324,13 +324,13 @@ namespace Bras_Robot
             Thread.Sleep(sleep);
 
         }
-        private void DrinkOperation(List<(Position pos, int nbShots)> positions)
+        private Task DrinkOperation(List<(Position pos, int nbShots)> positions)
         {
             // NB: LA TASK.RUN M'EMPECHAIT D'OBTENIR LE RESULTAT ESCOMPTE
             // DESOLE, JE FUS OBLIGE
 
-            //return Task.Run(() =>
-            //{
+            return Task.Run(() =>
+            {
                 GoToStart(); // Se met un position de debart
                 Position cuptemp = new Position(redCupStackStation.X, redCupStackStation.Y, redCupStackStation.Z + (nbCup * 4));
                 PickUpCup(ref cuptemp); // Prend le cup dans la pile
@@ -347,7 +347,7 @@ namespace Bras_Robot
                 GoToStart();
                 JOG(0, 0, 0);
                 ServirCup(); // prend le cup et le depose devant le client
-            //});
+            });
         }
         #endregion
         public bool MakeDrink(List<(Position pos, int nbShots)> positions)
