@@ -354,8 +354,8 @@ namespace Bras_Robot
         {
             if (task.IsCompleted && positions.Capacity != 0 && !Calibration)
             {
-                DrinkOperation(positions);
-                positions.Clear();
+                task=DrinkOperation(positions);
+               
                 return true;
             }
             return false;

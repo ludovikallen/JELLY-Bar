@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PageAccueil));
             this.panel1 = new System.Windows.Forms.Panel();
             this.BTN_Developers = new System.Windows.Forms.Button();
@@ -46,6 +47,8 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.PBX_EtatDeconnecté = new System.Windows.Forms.PictureBox();
             this.PBX_EtatConnecté = new System.Windows.Forms.PictureBox();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.lbFinishiCommande = new System.Windows.Forms.Label();
             this.add_Drinks1 = new ServeurBarman.Add_Drinks();
             this.addCups1 = new ServeurBarman.AddCups();
             this.welcomePage1 = new ServeurBarman.WelcomePage();
@@ -69,7 +72,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel1.Location = new System.Drawing.Point(20, 60);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(246, 527);
+            this.panel1.Size = new System.Drawing.Size(246, 611);
             this.panel1.TabIndex = 0;
             // 
             // BTN_Developers
@@ -80,7 +83,7 @@
             this.BTN_Developers.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BTN_Developers.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.BTN_Developers.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.BTN_Developers.Location = new System.Drawing.Point(13, 487);
+            this.BTN_Developers.Location = new System.Drawing.Point(13, 571);
             this.BTN_Developers.Name = "BTN_Developers";
             this.BTN_Developers.Size = new System.Drawing.Size(67, 37);
             this.BTN_Developers.TabIndex = 2;
@@ -98,7 +101,7 @@
             this.button6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button6.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.button6.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button6.Location = new System.Drawing.Point(99, 488);
+            this.button6.Location = new System.Drawing.Point(99, 572);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(126, 35);
             this.button6.TabIndex = 2;
@@ -219,9 +222,9 @@
             // 
             this.pnlBar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.pnlBar.BackColor = System.Drawing.Color.Black;
-            this.pnlBar.Location = new System.Drawing.Point(247, 290);
+            this.pnlBar.Location = new System.Drawing.Point(247, 332);
             this.pnlBar.Name = "pnlBar";
-            this.pnlBar.Size = new System.Drawing.Size(726, 10);
+            this.pnlBar.Size = new System.Drawing.Size(841, 10);
             this.pnlBar.TabIndex = 12;
             // 
             // panel2
@@ -231,14 +234,14 @@
             this.panel2.BackColor = System.Drawing.Color.Gold;
             this.panel2.Location = new System.Drawing.Point(266, 60);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(709, 10);
+            this.panel2.Size = new System.Drawing.Size(824, 10);
             this.panel2.TabIndex = 12;
             // 
             // mBtnConnexionRobot
             // 
             this.mBtnConnexionRobot.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.mBtnConnexionRobot.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.mBtnConnexionRobot.Location = new System.Drawing.Point(779, 140);
+            this.mBtnConnexionRobot.Location = new System.Drawing.Point(894, 140);
             this.mBtnConnexionRobot.Name = "mBtnConnexionRobot";
             this.mBtnConnexionRobot.Size = new System.Drawing.Size(194, 55);
             this.mBtnConnexionRobot.TabIndex = 13;
@@ -252,7 +255,7 @@
             this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBox1.BackgroundImage = global::ServeurBarman.Properties.Resources.stop1;
             this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.pictureBox1.Location = new System.Drawing.Point(779, 201);
+            this.pictureBox1.Location = new System.Drawing.Point(894, 201);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(94, 83);
             this.pictureBox1.TabIndex = 3;
@@ -263,7 +266,7 @@
             this.PBX_EtatDeconnecté.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.PBX_EtatDeconnecté.BackgroundImage = global::ServeurBarman.Properties.Resources.point_rouge;
             this.PBX_EtatDeconnecté.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.PBX_EtatDeconnecté.Location = new System.Drawing.Point(879, 201);
+            this.PBX_EtatDeconnecté.Location = new System.Drawing.Point(994, 201);
             this.PBX_EtatDeconnecté.Name = "PBX_EtatDeconnecté";
             this.PBX_EtatDeconnecté.Size = new System.Drawing.Size(94, 83);
             this.PBX_EtatDeconnecté.TabIndex = 3;
@@ -274,16 +277,27 @@
             this.PBX_EtatConnecté.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.PBX_EtatConnecté.BackgroundImage = global::ServeurBarman.Properties.Resources.point_vert;
             this.PBX_EtatConnecté.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.PBX_EtatConnecté.Location = new System.Drawing.Point(879, 201);
+            this.PBX_EtatConnecté.Location = new System.Drawing.Point(994, 201);
             this.PBX_EtatConnecté.Name = "PBX_EtatConnecté";
             this.PBX_EtatConnecté.Size = new System.Drawing.Size(94, 83);
             this.PBX_EtatConnecté.TabIndex = 3;
             this.PBX_EtatConnecté.TabStop = false;
             // 
+            // timer1
+            // 
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // lbFinishiCommande
+            // 
+            this.lbFinishiCommande.Location = new System.Drawing.Point(272, 614);
+            this.lbFinishiCommande.Name = "lbFinishiCommande";
+            this.lbFinishiCommande.Size = new System.Drawing.Size(793, 52);
+            this.lbFinishiCommande.TabIndex = 15;
+            // 
             // add_Drinks1
             // 
             this.add_Drinks1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.add_Drinks1.Location = new System.Drawing.Point(294, 313);
+            this.add_Drinks1.Location = new System.Drawing.Point(431, 343);
             this.add_Drinks1.MaximumSize = new System.Drawing.Size(659, 274);
             this.add_Drinks1.MinimumSize = new System.Drawing.Size(659, 274);
             this.add_Drinks1.Name = "add_Drinks1";
@@ -293,7 +307,7 @@
             // addCups1
             // 
             this.addCups1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.addCups1.Location = new System.Drawing.Point(294, 313);
+            this.addCups1.Location = new System.Drawing.Point(431, 343);
             this.addCups1.MaximumSize = new System.Drawing.Size(659, 274);
             this.addCups1.MinimumSize = new System.Drawing.Size(659, 274);
             this.addCups1.Name = "addCups1";
@@ -303,7 +317,7 @@
             // welcomePage1
             // 
             this.welcomePage1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.welcomePage1.Location = new System.Drawing.Point(294, 313);
+            this.welcomePage1.Location = new System.Drawing.Point(431, 343);
             this.welcomePage1.MaximumSize = new System.Drawing.Size(659, 274);
             this.welcomePage1.MinimumSize = new System.Drawing.Size(659, 274);
             this.welcomePage1.Name = "welcomePage1";
@@ -314,7 +328,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(973, 607);
+            this.ClientSize = new System.Drawing.Size(1088, 691);
+            this.Controls.Add(this.lbFinishiCommande);
             this.Controls.Add(this.mBtnConnexionRobot);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.pnlBar);
@@ -365,5 +380,7 @@
         private System.Windows.Forms.Panel pnlBar;
         private System.Windows.Forms.Panel panel2;
         private MetroFramework.Controls.MetroButton mBtnConnexionRobot;
+        private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Label lbFinishiCommande;
     }
 }

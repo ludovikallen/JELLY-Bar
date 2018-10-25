@@ -18,12 +18,13 @@ namespace ServeurBarman
 
         private DataBase()
         {
-            EtatBaseDonnées = new OracleConnection();
+            
         }
         static DataBase() { }
 
         public OracleConnection Connexion(string user, string pass)
         {
+            EtatBaseDonnées = new OracleConnection();
             try
             {
                 string dsource = "(DESCRIPTION = (ADDRESS = (PROTOCOL = TCP)(HOST = 205.237.244.251)(PORT = 1521)) (CONNECT_DATA =(SERVICE_NAME = orcl.clg.qc.ca)))";
@@ -156,12 +157,7 @@ namespace ServeurBarman
     // CLASS QUI GERE LES COMMANDES PASSEES PAR LE CLIENT ANDROID
     public abstract class Commande
     {
-        protected DataBase connexion;
-
-        public Commande()
-        {
-            connexion = DataBase.instance_bd;
-        }
+        protected DataBase Connexion { get; } = DataBase.instance_bd;
 
         // ENUMÈRE LA LISTE DES INGREDIENTS DE LA COMMANDE DU CLIENT ANDROID
         public abstract List<(Position, int)> ListerIngredients(int numcom);
@@ -186,7 +182,7 @@ namespace ServeurBarman
             string cmd = "e.POSITIONX,e.POSITIONY,e.POSITIONZ,c.QTY" +
             "from ingredient e inner join commande c on e.codebouteille=c.ingredient where c.numcommande=" + numcom.ToString();
 
-            OracleCommand listeDiv = new OracleCommand(cmd, connexion.EtatBaseDonnées);
+            OracleCommand listeDiv = new OracleCommand(cmd, Connexion.EtatBaseDonnées);
             listeDiv.CommandType = CommandType.Text;
             OracleDataReader divisionReader = listeDiv.ExecuteReader();
             try
@@ -224,17 +220,16 @@ namespace ServeurBarman
 
         public override List<(Position, int)> ListerIngredients(int numcom)
         {
-            string cmd = "select e.POSITIONX,e.POSITIONY,e.POSITIONZ,c.QTY" +
-            "from ingredient e inner join commande c on e.codebouteille=c.ingredient where and numcommande=" + numcom.ToString();
+            string cmd = "select e.POSITIONX,e.POSITIONY,e.POSITIONZ,c.QTY from ingredient e inner join commande c on e.codebouteille=c.ingredient where numcommande=" + numcom.ToString();
 
-            OracleCommand listeDiv = new OracleCommand(cmd, connexion.EtatBaseDonnées);
+            OracleCommand listeDiv = new OracleCommand(cmd, Connexion.EtatBaseDonnées);
             listeDiv.CommandType = CommandType.Text;
             OracleDataReader divisionReader = listeDiv.ExecuteReader();
             try
             {
                 while (divisionReader.Read())
                 {
-                    ingredients.Add((new Position(divisionReader.GetInt32(1), divisionReader.GetInt32(2), divisionReader.GetInt32(3)), divisionReader.GetInt32(4)));
+                    ingredients.Add((new Position(divisionReader.GetInt32(0), divisionReader.GetInt32(1), divisionReader.GetInt32(2)), divisionReader.GetInt32(3)));
                 }
                 divisionReader.Close();
             }
