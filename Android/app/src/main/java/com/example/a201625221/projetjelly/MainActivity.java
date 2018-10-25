@@ -25,6 +25,9 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.hsalf.smilerating.BaseRating;
+import com.hsalf.smilerating.SmileRating;
+
 import java.math.RoundingMode;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -266,6 +269,12 @@ public class MainActivity extends AppCompatActivity {
         drinkItemLVIEW=findViewById(R.id.drinkItem_LVIEW);
 
         couleursRDGRP =findViewById(R.id.changerCouleur_RBTNGRP);
+
+        SmileRating smileRating = (SmileRating) findViewById(R.id.smile_rating);
+        smileRating.setNameForSmile(BaseRating.TERRIBLE, "Mauvais");
+        smileRating.setNameForSmile(BaseRating.BAD, "Déçu");
+        smileRating.setNameForSmile(BaseRating.GOOD, "Bon");
+        smileRating.setNameForSmile(BaseRating.GREAT, "Très bon");
     }
 
     /**
@@ -342,7 +351,6 @@ public class MainActivity extends AppCompatActivity {
         setTouchListeners();
         setClickListeners();
         setCheckedListeners();
-        setRatingBarListener();
     }
 
     //endregion
@@ -631,7 +639,13 @@ public class MainActivity extends AppCompatActivity {
                         }
                         return false;
                     case MotionEvent.ACTION_UP:
-                        connecterBTN.setBackground(getResources().getDrawable(R.drawable.my_button_bg));
+                        if (rect.contains(v.getLeft() + (int) event.getX(), v.getTop() + (int) event.getY())) {
+                            connecterBTN.performClick();
+                        }
+                        else
+                        {
+                            connecterBTN.setBackground(getResources().getDrawable(R.drawable.my_button_bg));
+                        }
                         return false;
                     default:
                         return true;
@@ -1061,20 +1075,12 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-    }
 
-    public void setRatingBarListener() {
-
-        RatingBar ratingBar = (RatingBar) findViewById(R.id.ratingBar);
-
-        //if rating value is changed,
-        //display the current rating value in the result (textview) automatically
-        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-            public void onRatingChanged(RatingBar ratingBar, float rating,
-                                        boolean fromUser) {
-
-                //note=rating;
-
+        final SmileRating smileRating = (SmileRating) findViewById(R.id.smile_rating);
+        smileRating.setOnSmileySelectionListener(new SmileRating.OnSmileySelectionListener() {
+            @Override
+            public void onSmileySelected(@BaseRating.Smiley int smiley, boolean reselected) {
+                note=smileRating.getRating();
             }
         });
     }
@@ -1774,12 +1780,12 @@ public class MainActivity extends AppCompatActivity {
      * Envoie la note courante à la BD
      */
     void envoyerNote() {
-        if(note==0)
+        SmileRating smileRating = (SmileRating) findViewById(R.id.smile_rating);
+        if(smileRating.getRating()==0)
             faireToast("Désolé de votre mauvaise expérience. Revenez nous voir.");
-        else if(note==1)
-            faireToast("Merci d'avoir noté: "+note+" étoile");
         else
-            faireToast("Merci d'avoir noté: "+note+" étoiles");
+            faireToast("Merci d'avoir noté: "+smileRating.getSmileName(note-1));
+
         if(arrayListPanier.size()!=0) {
             Statement stm12 = null;
             ResultSet resultSet = null;
@@ -1809,6 +1815,7 @@ public class MainActivity extends AppCompatActivity {
             arrayListPanier.remove(0);
         }
         reinitTableauNotes();
+        notesLYT.setVisibility(View.INVISIBLE);
         if(arrayListPanier.size()!=0) {
             demanderNote(arrayListPanier.get(0).get("nom"));
         }
@@ -1821,20 +1828,8 @@ public class MainActivity extends AppCompatActivity {
      * Réinitialise les notes
      */
     void reinitTableauNotes() {
-        /*
-        final ImageButton etoile1 = findViewById(R.id.etoile1_IMGBTN);
-        final ImageButton etoile2 = findViewById(R.id.etoile2_IMGBTN);
-        final ImageButton etoile3 = findViewById(R.id.etoile3_IMGBTN);
-        final ImageButton etoile4 = findViewById(R.id.etoile4_IMGBTN);
-        final ImageButton etoile5 = findViewById(R.id.etoile5_IMGBTN);
-        etoile1.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
-        etoile2.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
-        etoile3.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
-        etoile4.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
-        etoile5.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
-        notesLYT.setVisibility(View.INVISIBLE);
-        */
-        note = 0;
+        final SmileRating smileRating = (SmileRating) findViewById(R.id.smile_rating);
+        smileRating.setSelectedSmile(BaseRating.NONE,true);
     }
 
     //endregion
