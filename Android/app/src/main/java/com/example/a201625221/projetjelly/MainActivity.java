@@ -20,7 +20,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.RatingBar;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -275,6 +274,9 @@ public class MainActivity extends AppCompatActivity {
         smileRating.setNameForSmile(BaseRating.BAD, "Déçu");
         smileRating.setNameForSmile(BaseRating.GOOD, "Bon");
         smileRating.setNameForSmile(BaseRating.GREAT, "Très bon");
+
+        findViewById(R.id.connexion_BTN).setVisibility(View.VISIBLE);
+
     }
 
     /**
@@ -363,8 +365,8 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("ClickableViewAccessibility")
     void setTouchListeners() {
         final TextView quitterNotesBTN = findViewById(R.id.quitterNotes_BTN);
-
         final Button connecterBTN = findViewById(R.id.connexion_BTN);
+        final Button commanderBTN = findViewById(R.id.commander_BTN);
 
         drinkBTN.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
@@ -626,16 +628,16 @@ public class MainActivity extends AppCompatActivity {
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        connecterBTN.setBackground(getResources().getDrawable(R.drawable.my_button_pressed_bg));
+                        connecterBTN.setBackground(getResources().getDrawable(R.drawable.connexion_bouton_pressing));
                         rect = new Rect(v.getLeft(), v.getTop(), v.getRight(), v.getBottom());
                         return false;
                     case MotionEvent.ACTION_MOVE:
                         if (!rect.contains(v.getLeft() + (int) event.getX(), v.getTop() + (int) event.getY())) {
-                            connecterBTN.setBackground(getResources().getDrawable(R.drawable.my_button_bg));
+                            connecterBTN.setBackground(getResources().getDrawable(R.drawable.connexion_bouton));
                         }
                         else
                         {
-                            connecterBTN.setBackground(getResources().getDrawable(R.drawable.my_button_pressed_bg));
+                            connecterBTN.setBackground(getResources().getDrawable(R.drawable.connexion_bouton_pressing));
                         }
                         return false;
                     case MotionEvent.ACTION_UP:
@@ -644,7 +646,38 @@ public class MainActivity extends AppCompatActivity {
                         }
                         else
                         {
-                            connecterBTN.setBackground(getResources().getDrawable(R.drawable.my_button_bg));
+                            connecterBTN.setBackground(getResources().getDrawable(R.drawable.connexion_bouton));
+                        }
+                        return false;
+                    default:
+                        return true;
+                }
+            }
+        });
+
+        commanderBTN.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        commanderBTN.setBackground(getResources().getDrawable(R.drawable.commander_bouton_pressing));
+                        rect = new Rect(v.getLeft(), v.getTop(), v.getRight(), v.getBottom());
+                        return false;
+                    case MotionEvent.ACTION_MOVE:
+                        if (!rect.contains(v.getLeft() + (int) event.getX(), v.getTop() + (int) event.getY())) {
+                            commanderBTN.setBackground(getResources().getDrawable(R.drawable.commander_bouton));
+                        }
+                        else
+                        {
+                            commanderBTN.setBackground(getResources().getDrawable(R.drawable.commander_bouton_pressing));
+                        }
+                        return false;
+                    case MotionEvent.ACTION_UP:
+                        if (rect.contains(v.getLeft() + (int) event.getX(), v.getTop() + (int) event.getY())) {
+                            commanderBTN.performClick();
+                        }
+                        else
+                        {
+                            commanderBTN.setBackground(getResources().getDrawable(R.drawable.commander_bouton));
                         }
                         return false;
                     default:
@@ -661,7 +694,7 @@ public class MainActivity extends AppCompatActivity {
     {
         final Button supprimerBTN=findViewById(R.id.supprimer_BTN);
         final TextView supprimerToutBTN=findViewById(R.id.supprimerTout_BTN);
-        final ImageButton commanderBTN=findViewById(R.id.commander_IMGBTN);
+        final Button commanderBTN=findViewById(R.id.commander_BTN);
         final TextView quitterNotesBTN=findViewById(R.id.quitterNotes_BTN);
         final TextView envoyerNoteBTN=findViewById(R.id.envoyerNote_BTN);
         final TextView triNotesBTN=findViewById(R.id.triNote_BTN);
@@ -841,7 +874,7 @@ public class MainActivity extends AppCompatActivity {
                 shooterBTN.setVisibility(View.VISIBLE);
                 infosBTN.setVisibility(View.VISIBLE);
 
-                connecterBTN.setBackground(getResources().getDrawable(R.drawable.my_button_bg));
+                connecterBTN.setBackground(getResources().getDrawable(R.drawable.connexion_bouton));
 
                 TextView label=findViewById(R.id.connexion_TXT);
                 label.setText(getResources().getString(R.string.pause_str));
@@ -873,7 +906,7 @@ public class MainActivity extends AppCompatActivity {
                                     long id) {
 
                 HashMap<String, String> item = (HashMap<String, String>)adapterView.getItemAtPosition(position);
-                faireToast("x1 shooter de " + item.values().toArray()[1] + " ajouté au panier");
+                faireToast("x1 shooter de " + item.values().toArray()[0] + " ajouté au panier");
 
                 ajouterPanier(item);
             }
@@ -1101,7 +1134,7 @@ public class MainActivity extends AppCompatActivity {
                 arrayListPanier.clear();
                 afficherNombreItemsPanier();
 
-                final ImageButton commandBTN=findViewById(R.id.commander_IMGBTN);
+                final Button commandBTN=findViewById(R.id.commander_BTN);
                 commandBTN.setVisibility(View.INVISIBLE);
                 faireToast("Notes annulées.");
                 final TextView panierTXT=findViewById(R.id.panier_TXT);
@@ -1121,59 +1154,59 @@ public class MainActivity extends AppCompatActivity {
      */
     public void commander()
     {
-        HashMap<String, Integer> drink;
-        String sql2 = "Select max(numcommande) from commande";
-        int Numcommande=0;
-        ResultSet resultSetMax = null;
-        Statement stm12 = null;
-        try {
-            stm12 = conn_.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            resultSetMax = stm12.executeQuery(sql2);
-            resultSetMax.next();
-            Numcommande = resultSetMax.getInt(1) + 1;
-            resultSetMax.close();
-            stm12.close();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        Statement stm1 = null;
-        ResultSet resultSet = null;
-        for (int i = 0; i < arrayListPanier.size(); i++)
+        if(arrayListPanier.size()!=0)
         {
-            drink= defaireDescription(arrayListPanier.get(i).get("desc"));
-            for ( String key : drink.keySet() ) {
-                Object quantite = drink.get(key);
-                String sql = "select codebouteille from INGREDIENT where nombouteille = '" + key +"'";
-                try {
-                    stm1 = conn_.createStatement();
-                    resultSet = stm1.executeQuery(sql);
-                    resultSet.next();
-                    Statement statement = conn_.createStatement();
-                    int codeBouteille = resultSet.getInt(1);
-                    String SQL;
-                    if(listeNomsDrinks.contains(arrayListPanier.get(i).get("nom"))) {
-                        SQL = "INSERT INTO COMMANDE VALUES ( " + (Numcommande + i) + "," + codeBouteille + "," + quantite + "," + 0 +")";
+            HashMap<String, Integer> drink;
+            String sql2 = "Select max(numcommande) from commande";
+            int Numcommande=0;
+            ResultSet resultSetMax = null;
+            Statement stm12 = null;
+            try {
+                stm12 = conn_.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+                resultSetMax = stm12.executeQuery(sql2);
+                resultSetMax.next();
+                Numcommande = resultSetMax.getInt(1) + 1;
+                resultSetMax.close();
+                stm12.close();
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            Statement stm1 = null;
+            ResultSet resultSet = null;
+            for (int i = 0; i < arrayListPanier.size(); i++) {
+                drink = defaireDescription(arrayListPanier.get(i).get("desc"));
+                for (String key : drink.keySet()) {
+                    Object quantite = drink.get(key);
+                    String sql = "select codebouteille from INGREDIENT where nombouteille = '" + key + "'";
+                    try {
+                        stm1 = conn_.createStatement();
+                        resultSet = stm1.executeQuery(sql);
+                        resultSet.next();
+                        Statement statement = conn_.createStatement();
+                        int codeBouteille = resultSet.getInt(1);
+                        String SQL;
+                        if (listeNomsDrinks.contains(arrayListPanier.get(i).get("nom"))) {
+                            SQL = "INSERT INTO COMMANDE VALUES ( " + (Numcommande + i) + "," + codeBouteille + "," + quantite + "," + 0 + ")";
+                        } else {
+                            SQL = "INSERT INTO COMMANDE VALUES ( " + (Numcommande + i) + "," + codeBouteille + "," + quantite + "," + 1 + ")";
+                        }
+                        statement.executeUpdate(SQL);
+                        stm1.close();
+                        resultSet.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
                     }
-                    else
-                    {
-                        SQL = "INSERT INTO COMMANDE VALUES ( " + (Numcommande + i) + "," + codeBouteille + "," + quantite + "," + 1 +")";
-                    }
-                    statement.executeUpdate(SQL);
-                    stm1.close();
-                    resultSet.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
                 }
             }
+            premiereNote = true;
+            faireToast("Merci de votre commande.");
+            demanderNote(arrayListPanier.get(0).get("nom"));
+            selectionPositionsPanier.clear();
+            rafraichirListePanier();
+            remplirListeDrinks();
         }
-        premiereNote =true;
-        faireToast("Merci de votre commande.");
-        demanderNote(arrayListPanier.get(0).get("nom"));
-        selectionPositionsPanier.clear();
-        rafraichirListePanier();
-        remplirListeDrinks();
     }
 
     /**
@@ -1635,7 +1668,7 @@ public class MainActivity extends AppCompatActivity {
      */
     void rafraichirListePanier()
     {
-        final ImageButton commanderBTN=findViewById(R.id.commander_IMGBTN);
+        final Button commanderBTN=findViewById(R.id.commander_BTN);
         if(arrayListPanier.size()!=0)
             commanderBTN.setVisibility(View.VISIBLE);
         else
@@ -1764,6 +1797,7 @@ public class MainActivity extends AppCompatActivity {
 
         final TextView nomMixTXT=findViewById(R.id.nomMix_TXT);
         nomMixTXT.setText("");
+        notesLYT.setVisibility(View.INVISIBLE);
 
         reinitTableauNotes();
         if(arrayListPanier.size()!=0)
@@ -2035,7 +2069,7 @@ public class MainActivity extends AppCompatActivity {
     void faireToast(String message)
     {
         Toast toast = Toast.makeText(getApplicationContext(),
-                message, Toast.LENGTH_LONG);
+                message, Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.CENTER, 0, hauteur_toast);
         View view = toast.getView();
         view.setBackgroundColor(getResources().getColor(couleurToast));

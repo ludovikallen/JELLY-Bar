@@ -29,7 +29,7 @@
             android:layout_marginStart="450dp"
             android:layout_marginTop="10dp"
             android:scaleType="fitXY"
-            android:src="@drawable/star_active" />
+            android:src="@drawable/star" />
 
         <TextView
             android:id="@+id/noteDrink_TXT"
