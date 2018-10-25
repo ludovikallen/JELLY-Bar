@@ -349,24 +349,23 @@
             app:layout_constraintTop_toTopOf="@+id/panier_LYT"
             app:layout_constraintVertical_bias="0.0" />
 
-        <ImageButton
-            android:id="@+id/commander_IMGBTN"
+        <Button
+            android:id="@+id/commander_BTN"
             android:layout_width="59dp"
             android:layout_height="55dp"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:background="#0000"
-            android:scaleType="fitXY"
+            android:background="@drawable/commander_bouton"
             android:visibility="visible"
+            android:text="▶"
             app:layout_constraintBottom_toBottomOf="@+id/panier_LYT"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.22"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/panier_LYT"
-            app:layout_constraintVertical_bias="0.013"
-            app:srcCompat="@drawable/commander" />
+            app:layout_constraintVertical_bias="0.013" />
 
     </android.support.constraint.ConstraintLayout>
 
@@ -724,10 +723,11 @@
             android:layout_height="232dp"
             android:layout_marginBottom="644dp"
             android:layout_marginStart="264dp"
-            android:background="@drawable/my_button_bg"
+            android:background="@drawable/connexion_bouton"
             android:text="Boire un coup."
             android:textAlignment="center"
             android:textSize="36sp"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 

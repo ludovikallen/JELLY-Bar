@@ -10,6 +10,7 @@
     <color name="grisFonce">#585757</color>
     <color name="bleu">#4169E1</color>
     <color name="rouge">#FF3030</color>
+    <color name="vert">#00FF00</color>
     <color name="listSelector">#8c8b8a</color>
     <color name="listDivider">#8c8b8a</color>
 </resources>
