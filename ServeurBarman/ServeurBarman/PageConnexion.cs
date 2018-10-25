@@ -13,49 +13,34 @@ namespace ServeurBarman
 {
     public partial class PageConnexion : MetroFramework.Forms.MetroForm
     {
-        
-        OracleConnection connexion;
+        DataBase b { get; set; }
    
         public PageConnexion()
         {
             InitializeComponent();
-        }
-
-
-        private void Initializer_DataBase()
-        {
-            connexion = new OracleConnection();
-            try
-            {
-                string dsource = "(DESCRIPTION = (ADDRESS = (PROTOCOL = TCP)(HOST = 205.237.244.251)(PORT = 1521)) (CONNECT_DATA =(SERVICE_NAME = orcl.clg.qc.ca)))";
-                string bd = "Data Source=" + dsource + ";User id=" + TBX_User.Text + ";Password=" + TBX_Pwd.Text;
-                connexion.ConnectionString = bd;
-                connexion.Open();
-                MessageBox.Show("Connecté avec succès!!!!");
-            }
-            catch (Exception) { MessageBox.Show("Erreur de connexion!!!"); }
+            b = DataBase.instance_bd;
         }
 
         private void BTN_Logon_Click(object sender, EventArgs e)
         {
-            Initializer_DataBase();
-            Connexion();
+            Connexion_BD();
             this.Show();
         }
 
-        public void Connexion()
+        public void Connexion_BD()
         {
-            PageAccueil dlg = new PageAccueil();
-            dlg.connexion = connexion;
-            BTN_Logon.Text = "Deconnexion";
+            b.Connexion(TBX_User.Text, TBX_Pwd.Text); // Ouvrir Connexion
+            PageAccueil dlgPageAccueil = new PageAccueil();
             this.Hide();
-            DialogResult dlg_result = dlg.ShowDialog();
+            DialogResult dlg_result = dlgPageAccueil.ShowDialog();
+            b.FermerConnexion(); // Fermer connexion
+            this.Close();
         }
 
         private void BTN_Logon_TextChanged(object sender, EventArgs e)
         {
-            if (!connexion.State.Equals("Open"))
-                BTN_Logon.Text = "Connexion";
+            //if (!connexion.State.Equals("Open"))
+            //    BTN_Logon.Text = "Connexion";
         }
     }
 }

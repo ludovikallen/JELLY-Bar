@@ -38,7 +38,6 @@ namespace Bras_Robot
         private CRS_A255()
         {
         }
-
         #region robot attributes
         private static readonly Lazy<CRS_A255> lazy = new Lazy<CRS_A255>(() => new CRS_A255());
         public static CRS_A255 Instance { get { return lazy.Value; } }
@@ -47,11 +46,7 @@ namespace Bras_Robot
         private int PosY { get; set; }
         private int PosZ { get; set; }
         public bool Connected { get; private set; }
-        public int NbCup
-        {
-            get;
-            set;
-        } = 0;
+        private int nbCup { get; set; } = 0;
         Position[] bouteilles = new Position[6]
         {
             new Position(130, -200, -365),
@@ -84,7 +79,6 @@ namespace Bras_Robot
         private string Command { get; set; } = "";
         private int Speed { get; set; } = 10;
         #endregion
-
         #region general robot fonctions
         public int ConnexionRobot()
         {
@@ -140,6 +134,7 @@ namespace Bras_Robot
             FuncNSleep(() => serialPort.Write(command), 200);
         }
         public bool EnMarche() => task.IsCompleted;
+        public int AjouterCup(int ajout) => nbCup = ajout; //DE MEME, JE FUS OBLIGE DE REVOIR CETTE METHODE
         public void DeplacerBase(int val)
         {
             if (!Calibration)
@@ -151,11 +146,6 @@ namespace Bras_Robot
         {
             if (!Calibration)
                 return;
-            Poignet += val;
-            FuncNSleep(() => serialPort.Write("JOINT 4, " + val.ToString() + "\r"), 200);
-        }
-        private void DeplacerPoignetPriv(int val)
-        {
             Poignet += val;
             FuncNSleep(() => serialPort.Write("JOINT 4, " + val.ToString() + "\r"), 200);
         }
@@ -234,7 +224,6 @@ namespace Bras_Robot
             FuncNSleep(() => serialPort.Write("@@CAL\r"), 1000);
         }
         #endregion
-
         #region Barman fonction
         private void VersPosition(ref Position pos) => JOG(pos.X - PosX, pos.Y - PosY, pos.Z - PosZ);
         private void VerserBouteille(ref (Position pos, int nbShots) pos)
@@ -315,7 +304,6 @@ namespace Bras_Robot
                 indexFin = 0;
         }
         #endregion
-
         #region Tasks
         private void FuncNSleep(Action<int> action, int sleep)
         {
@@ -338,14 +326,17 @@ namespace Bras_Robot
         }
         private Task DrinkOperation(List<(Position pos, int nbShots)> positions)
         {
+            // NB: LA TASK.RUN M'EMPECHAIT D'OBTENIR LE RESULTAT ESCOMPTE
+            // DESOLE, JE FUS OBLIGE
+
             return Task.Run(() =>
             {
                 GoToStart(); // Se met un position de debart
-                Position cuptemp = new Position(redCupStackStation.X, redCupStackStation.Y, redCupStackStation.Z + (NbCup * 4));
+                Position cuptemp = new Position(redCupStackStation.X, redCupStackStation.Y, redCupStackStation.Z + (nbCup * 4));
                 PickUpCup(ref cuptemp); // Prend le cup dans la pile
                 SetSpeed(75);
                 DeplacerMainPriv(-180);
-                --NbCup;
+                --nbCup;
                 DropCup(ref redCupDrinkStation); // Depose le cup dans la station de travail
                 var listeDrink = positions.ToList();
                 foreach (var position in listeDrink) // Verse les bouteille une par une
@@ -358,83 +349,17 @@ namespace Bras_Robot
                 ServirCup(); // prend le cup et le depose devant le client
             });
         }
+        #endregion
         public bool MakeDrink(List<(Position pos, int nbShots)> positions)
         {
-            if (task.IsCompleted && positions.Capacity != 0 && !Calibration && NbCup > 0)
+            if (task.IsCompleted && positions.Capacity != 0 && !Calibration)
             {
-                task = DrinkOperation(positions);
+                DrinkOperation(positions);
                 positions.Clear();
                 return true;
             }
             return false;
         }
-        #endregion
-
-        #region Shooter
-        private List<Position> shooterPosition = new List<Position>
-        {
-            new Position(220,100,-148),
-            new Position(140,100,-148),
-            new Position(140,0,-148),
-            new Position(140,-100,-148),
-            new Position(220,-100,-148),
-        };
-        private Position shooterStack = new Position(-50, 250, -190);
-        public int NbCupShooter { get; private set; } = 18;
-        private Task ShooterOperation(Position position, int nbShooter)
-        {
-            return Task.Run(() =>
-            {
-                //------Prépare le bras------//
-                FuncNSleep(() => GoToStart(), 2000);
-                SetSpeed(50);
-                FuncNSleep(() => serialPort.Write("OPEN 100\r"), 200);
-
-                //------Poignet vise le bas------//
-                DeplacerPoignetPriv(-90);
-                for (int i = 0; i < nbShooter; ++i)
-                {
-                    //------Prendre le cup dans la pile------//
-                    var temp = new Position(shooterStack.X, shooterStack.Y, 0);
-                    FuncNSleep(() => VersPosition(ref temp), 1000);
-                    temp = new Position(shooterStack.X, shooterStack.Y, shooterStack.Z + (int)(4.68 * NbCupShooter));
-                    FuncNSleep(() => VersPosition(ref temp), 2500);
-
-                    FuncNSleep(() => serialPort.Write("CLOSE 100\r"), 300);
-                    FuncNSleep(() => serialPort.Write("CLOSE 1\r"), 4000);
-                    NbCupShooter--;
-
-                    temp = new Position(shooterStack.X, shooterStack.Y, 0);
-                    FuncNSleep(() => VersPosition(ref temp), 1000);
-
-                    //------Déposer le cup sur la planche------//
-                    temp = new Position(0, 0, 0);
-                    FuncNSleep(() => VersPosition(ref temp), 1000);
-                    temp = new Position(shooterPosition[i].X, shooterPosition[i].Y, shooterPosition[i].Z);
-                    FuncNSleep(() => VersPosition(ref temp), 2000);
-                    FuncNSleep(() => serialPort.Write("OPEN 100\r"), 1000);
-
-                    temp = new Position(0, 0, 0);
-                    FuncNSleep(() => VersPosition(ref temp), 1000);
-                }
-                GoToStart();
-
-
-
-            });
-        }
-
-        public bool MakeShooter(Position position)
-        {
-            if (task.IsCompleted && position != null && !Calibration)
-            {
-                task = ShooterOperation(position, 5);
-                return true;
-            }
-            return false;
-        }
-        #endregion
-
         public List<(Position position, int nbShots)> Exemple = new List<(Position pos, int nbShots)>
         {
             (new Position(130,-200, -365), 1),

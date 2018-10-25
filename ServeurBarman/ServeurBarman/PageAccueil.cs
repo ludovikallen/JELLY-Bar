@@ -25,13 +25,17 @@ namespace ServeurBarman
         List<List<(Position, int)>> ListcommandeRobot = new List<List<(Position, int)>>();
         CRS_A255 robot = CRS_A255.Instance;
         List<(Position, int)> list = new List<(Position, int)>();
-        int nombreDeverre;
         private readonly object accessLock = new object();
         List<(int, int)> numcommande = new List<(int, int)>();
+        DataBase b;
+        Commande comm;
+        
 
         public PageAccueil()
         {
             InitializeComponent();
+            b = DataBase.instance_bd;
+            
 
             connexion = new OracleConnection();
             PBX_EtatDeconnecté.Visible = true;
@@ -55,13 +59,12 @@ namespace ServeurBarman
 
         private void BTN_AddDrink_Click(object sender, EventArgs e)
         {
-            add_Drinks1.connexion = connexion;
+
             add_Drinks1.BringToFront();
         }
 
         private void BTN_AddCup_Click(object sender, EventArgs e)
         {
-            addCups1.connexion = connexion;
             addCups1.BringToFront();
         }
 
@@ -69,21 +72,8 @@ namespace ServeurBarman
         {
             if (EstConnecté)
             {
-                DLG_UserIdentify dlg_User = new DLG_UserIdentify();
-                DialogResult dlg_User_result = dlg_User.ShowDialog();
-
-                if (dlg_User_result == DialogResult.OK)
-                {
-                    if (dlg_User.check && EstConnecté)
-                    {
-                        DLG_Settings dlg = new DLG_Settings();
-                        DialogResult dlg_result = dlg.ShowDialog();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Vérifier votre connexion ou mot de passe...");
-                    }
-                }
+                DLG_Settings dlg = new DLG_Settings();
+                DialogResult dlg_result = dlg.ShowDialog();
             }
             else
             {
@@ -164,118 +154,7 @@ namespace ServeurBarman
         // puis on détermine le nombre de clients.
         private void Refresh_WaitingList()
         {
-            NumeroCommande();
-            ListerIngredients();
-            NombreDeDrinks();
-        }
-
-        private void NumeroCommande()
-        {
-            string cmd = "select numcommande,shooter from commande";
-            try
-            {
-                OracleCommand listeDiv = new OracleCommand(cmd, connexion);
-                listeDiv.CommandType = CommandType.Text;
-                OracleDataReader divisionReader = listeDiv.ExecuteReader();
-                while (divisionReader.Read())
-                {
-                    numcommande.Add((divisionReader.GetInt32(0), divisionReader.GetInt32(1)));
-                }
-                divisionReader.Close();
-                listeIngredients.Clear();
-            }
-            catch (Exception sel) { MessageBox.Show(sel.Message.ToString()); }
-        }
-
-
-        private void ListerIngredients()
-        {
-            for (int i = 0; i < numcommande.Count; ++i)
-            {
-                for (int j = 0; j < numcommande.Count; ++j)
-                    if (numcommande[i].Item1 == numcommande[j].Item1 && i != j)
-                        numcommande.Remove(numcommande[j]);
-            }
-
-            lock (accessLock)
-            {
-                if (numcommande.Count > 0)
-                {
-                    string cmd = "select e.POSITIONX,e.POSITIONY,e.POSITIONZ,c.QTY from ingredient e inner join commande c on e.codebouteille=c.ingredient where c.numcommande=" + numcommande[0].Item1.ToString();
-                    OracleCommand listeDiv = new OracleCommand(cmd, connexion);
-                    listeDiv.CommandType = CommandType.Text;
-                    OracleDataReader divisionReader = listeDiv.ExecuteReader();
-                    try
-                    {
-                        while (divisionReader.Read())
-                        {
-                            listeIngredients.Add((new Position(divisionReader.GetInt32(0), divisionReader.GetInt32(1), divisionReader.GetInt32(2)), divisionReader.GetInt32(3)));
-                        }
-                        divisionReader.Close();
-                        welcomePage1.nombreClient = numcommande.Count.ToString();
-
-                        this.Invoke((MethodInvoker)(() => welcomePage1.Init_UserUI()));
-                    }
-                    catch (Exception sel) { MessageBox.Show(sel.Message.ToString()); }
-                }
-            }
-        }
-
-        private void NombreDeDrinks()
-        {
-            /*
-             * NOMBRE DE BOUTEILLE
-             */
-            string cmd = "select count(*) from ingredient";
-            OracleCommand listeDiv = new OracleCommand(cmd, connexion);
-            listeDiv.CommandType = CommandType.Text;
-            OracleDataReader divisionReader = listeDiv.ExecuteReader();
-            try
-            {
-                while (divisionReader.Read())
-                {
-                    welcomePage1.nombreBouteille = divisionReader.GetInt32(0).ToString();
-                }
-                divisionReader.Close();
-            }
-            catch (Exception sel) { MessageBox.Show(sel.Message.ToString()); }
-
-            /*
-             * NOMBRE DE VERRE ROUGE
-             */
-            string cmd1 = "select nbverre from verrerouge";
-            OracleCommand listeDiv1 = new OracleCommand(cmd1, connexion);
-            listeDiv1.CommandType = CommandType.Text;
-            OracleDataReader divisionReader1 = listeDiv1.ExecuteReader();
-            try
-            {
-                while (divisionReader1.Read())
-                {
-                    welcomePage1.nombreVerre = divisionReader1.GetInt32(0).ToString();
-                }
-                divisionReader1.Close();
-                robot.NbCup = Int32.Parse(welcomePage1.nombreVerre);
-            }
-            catch (Exception sel) { MessageBox.Show(sel.Message.ToString()); }
-
-            /*
-             * NOMBRE DE SHOOTER
-             */
-            string cmd2 = "select nbshooter from verreshooter";
-            OracleCommand listeDiv2 = new OracleCommand(cmd2, connexion);
-            listeDiv2.CommandType = CommandType.Text;
-            OracleDataReader divisionReader2 = listeDiv2.ExecuteReader();
-            try
-            {
-                while (divisionReader2.Read())
-                {
-                    welcomePage1.nombreShooter = divisionReader2.GetInt32(0).ToString();
-                }
-                divisionReader1.Close();
-            }
-            catch (Exception sel) { MessageBox.Show(sel.Message.ToString()); }
-
-            this.Invoke((MethodInvoker)(() => welcomePage1.Init_UserUI()));
+            numcommande = b.ListeCommande();
         }
 
         /// <summary>
@@ -284,36 +163,34 @@ namespace ServeurBarman
         /// </summary>
         private void ServirClient()
         {
+
             while (true)
             {
-                if (Int32.Parse(welcomePage1.nombreVerre) >= 1 && listeIngredients.Count >= 1)
+                if (Int32.Parse(welcomePage1.nombreVerre) >= 1)
                 {
                     if (numcommande[0].Item2 == 0)
                     {
+                        var p = comm.TypeReel();
                         if (robot.EnMarche())
                         {
-                            welcomePage1.activiteRobot = "Commande en cours de service...";
-
-                            if(robot.MakeDrink(listeIngredients))
+                            if (robot.MakeDrink(p.ListerIngredients(numcommande[0].Item1)))
                             {
                                 string cmd = "delete from commande where numcommande=" + LBX_WaitingList.Items[0].ToString();
                                 listeIngredients.Clear();
 
                                 try
                                 {
-                                    OracleCommand delete = new OracleCommand(cmd, connexion);
+                                    OracleCommand delete = new OracleCommand(cmd, b.EtatBaseDonnées);
                                     delete.CommandType = CommandType.Text;
                                     delete.ExecuteNonQuery();
                                 }
                                 catch (Exception sel) { MessageBox.Show(sel.Message.ToString()); }
 
-                                welcomePage1.nombreVerre = (Int32.Parse(welcomePage1.nombreVerre) - 1).ToString();
-
-                                robot.NbCup = Int32.Parse(welcomePage1.nombreVerre);
+                                robot.AjouterCup(Int32.Parse(welcomePage1.nombreVerre));
                                 string updateVerreRougeCommand = "update verrerouge set nbverre =" + welcomePage1.nombreVerre;
                                 try
                                 {
-                                    OracleCommand updateVerreRouge = new OracleCommand(updateVerreRougeCommand, connexion);
+                                    OracleCommand updateVerreRouge = new OracleCommand(updateVerreRougeCommand, b.EtatBaseDonnées);
                                     updateVerreRouge.CommandType = CommandType.Text;
                                     updateVerreRouge.ExecuteNonQuery();
                                 }
@@ -326,13 +203,15 @@ namespace ServeurBarman
                         /*
                          * IL S'AGIT D'UN SHOOTER
                          */
-
+                        var p = comm.TypeReel(); 
+                        
+                        
                         string cmd = "delete from commande where numcommande=" + LBX_WaitingList.Items[0].ToString();
                         listeIngredients.Clear();
 
                         try
                         {
-                            OracleCommand delete = new OracleCommand(cmd, connexion);
+                            OracleCommand delete = new OracleCommand(cmd, b.EtatBaseDonnées);
                             delete.CommandType = CommandType.Text;
                             delete.ExecuteNonQuery();
                         }
@@ -343,7 +222,7 @@ namespace ServeurBarman
                         string updateVerreRougeCommand = "update verreshooter set nbshooter =" + welcomePage1.nombreShooter;
                         try
                         {
-                            OracleCommand updateVerreRouge = new OracleCommand(updateVerreRougeCommand, connexion);
+                            OracleCommand updateVerreRouge = new OracleCommand(updateVerreRougeCommand, b.EtatBaseDonnées);
                             updateVerreRouge.CommandType = CommandType.Text;
                             updateVerreRouge.ExecuteNonQuery();
                         }
@@ -376,7 +255,7 @@ namespace ServeurBarman
 
         private void button6_Click(object sender, EventArgs e)
         {
-            connexion.Close();
+            b.FermerConnexion();
         }
 
         private void FlashLight()
@@ -396,7 +275,7 @@ namespace ServeurBarman
             string cmd = "delete from commande";
             try
             {
-                OracleCommand delete = new OracleCommand(cmd, connexion);
+                OracleCommand delete = new OracleCommand(cmd, b.EtatBaseDonnées);
                 delete.CommandType = CommandType.Text;
                 delete.ExecuteNonQuery();
             }
