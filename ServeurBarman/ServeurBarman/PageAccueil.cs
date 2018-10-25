@@ -254,7 +254,7 @@ namespace ServeurBarman
                     welcomePage1.nombreVerre = divisionReader1.GetInt32(0).ToString();
                 }
                 divisionReader1.Close();
-                CRS_A255.Instance.AjouterCup(Int32.Parse(welcomePage1.nombreVerre));
+                robot.NbCup = Int32.Parse(welcomePage1.nombreVerre);
             }
             catch (Exception sel) { MessageBox.Show(sel.Message.ToString()); }
 
@@ -309,7 +309,7 @@ namespace ServeurBarman
 
                                 welcomePage1.nombreVerre = (Int32.Parse(welcomePage1.nombreVerre) - 1).ToString();
 
-                                robot.AjouterCup(Int32.Parse(welcomePage1.nombreVerre));
+                                robot.NbCup = Int32.Parse(welcomePage1.nombreVerre);
                                 string updateVerreRougeCommand = "update verrerouge set nbverre =" + welcomePage1.nombreVerre;
                                 try
                                 {

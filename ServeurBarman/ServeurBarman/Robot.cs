@@ -47,7 +47,11 @@ namespace Bras_Robot
         private int PosY { get; set; }
         private int PosZ { get; set; }
         public bool Connected { get; private set; }
-        private int nbCup { get; set; } = 0;
+        public int NbCup
+        {
+            get;
+            set;
+        } = 0;
         Position[] bouteilles = new Position[6]
         {
             new Position(130, -200, -365),
@@ -136,7 +140,6 @@ namespace Bras_Robot
             FuncNSleep(() => serialPort.Write(command), 200);
         }
         public bool EnMarche() => task.IsCompleted;
-        public int AjouterCup(int ajout) => nbCup = ajout; //DE MEME, JE FUS OBLIGE DE REVOIR CETTE METHODE
         public void DeplacerBase(int val)
         {
             if (!Calibration)
@@ -335,17 +338,14 @@ namespace Bras_Robot
         }
         private Task DrinkOperation(List<(Position pos, int nbShots)> positions)
         {
-            // NB: LA TASK.RUN M'EMPECHAIT D'OBTENIR LE RESULTAT ESCOMPTE
-            // DESOLE, JE FUS OBLIGE
-
             return Task.Run(() =>
             {
                 GoToStart(); // Se met un position de debart
-                Position cuptemp = new Position(redCupStackStation.X, redCupStackStation.Y, redCupStackStation.Z + (nbCup * 4));
+                Position cuptemp = new Position(redCupStackStation.X, redCupStackStation.Y, redCupStackStation.Z + (NbCup * 4));
                 PickUpCup(ref cuptemp); // Prend le cup dans la pile
                 SetSpeed(75);
                 DeplacerMainPriv(-180);
-                --nbCup;
+                --NbCup;
                 DropCup(ref redCupDrinkStation); // Depose le cup dans la station de travail
                 var listeDrink = positions.ToList();
                 foreach (var position in listeDrink) // Verse les bouteille une par une
@@ -360,7 +360,7 @@ namespace Bras_Robot
         }
         public bool MakeDrink(List<(Position pos, int nbShots)> positions)
         {
-            if (task.IsCompleted && positions.Capacity != 0 && !Calibration)
+            if (task.IsCompleted && positions.Capacity != 0 && !Calibration && NbCup > 0)
             {
                 task = DrinkOperation(positions);
                 positions.Clear();
