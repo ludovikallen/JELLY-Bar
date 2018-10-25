@@ -4,8 +4,8 @@ package com.example.a201625221.projetjelly;
 import android.annotation.SuppressLint;
 import android.content.res.ColorStateList;
 import android.graphics.Paint;
-import android.graphics.PorterDuff;
 import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.constraint.ConstraintLayout;
@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RatingBar;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,7 +36,6 @@ import java.sql.Statement;
 import java.sql.Types;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -47,6 +47,11 @@ import java.util.Set;
 public class MainActivity extends AppCompatActivity {
     public static Connection conn_ = null;
     static int hauteur_toast =420;
+
+    /**
+     * Rectangle permettant de comparer les positions des clics
+     */
+    private Rect rect;
 
     /**
      * Variables pour contenir les layouts pour pouvoir changer d'onglet dans l'application
@@ -138,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
      */
     String Alcoolique="";
     boolean PasInitialiser = false;
+    boolean premiereNote;
     int NBrecette;
     /**
      * Fonction lancée à la création de l'activité
@@ -336,6 +342,7 @@ public class MainActivity extends AppCompatActivity {
         setTouchListeners();
         setClickListeners();
         setCheckedListeners();
+        setRatingBarListener();
     }
 
     //endregion
@@ -346,83 +353,289 @@ public class MainActivity extends AppCompatActivity {
      * Initialise les touch listeners, pour effectuer des actions avant le relâchement du toucher
      */
     @SuppressLint("ClickableViewAccessibility")
-    void setTouchListeners()
-    {
-        final TextView quitterNotesBTN=findViewById(R.id.quitterNotes_BTN);
+    void setTouchListeners() {
+        final TextView quitterNotesBTN = findViewById(R.id.quitterNotes_BTN);
 
-        final ImageButton etoile1= findViewById(R.id.etoile1_IMGBTN);
-        final ImageButton etoile2= findViewById(R.id.etoile2_IMGBTN);
-        final ImageButton etoile3= findViewById(R.id.etoile3_IMGBTN);
-        final ImageButton etoile4= findViewById(R.id.etoile4_IMGBTN);
-        final ImageButton etoile5= findViewById(R.id.etoile5_IMGBTN);
+        final Button connecterBTN = findViewById(R.id.connexion_BTN);
 
         drinkBTN.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
-                    drinkBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.gris)));
-                    drinkBTN.setBackgroundResource(R.drawable.icondrink);
-                return false;
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        drinkBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.gris)));
+                        rect = new Rect(v.getLeft(), v.getTop(), v.getRight(), v.getBottom());
+                        return false;
+                    case MotionEvent.ACTION_MOVE:
+                        if (!rect.contains(v.getLeft() + (int) event.getX(), v.getTop() + (int) event.getY())) {
+                            switch (couleurChoisie) {
+                                case "blanc":
+                                    changerCouleurBoutonsMenu(couleurs.get("blanc"));
+                                    break;
+                                case "noir":
+                                    changerCouleurBoutonsMenu(couleurs.get("noir"));
+                                    break;
+                                case "jaune":
+                                    changerCouleurBoutonsMenu(couleurs.get("jaune"));
+                                    break;
+                                case "gris":
+                                    changerCouleurBoutonsMenu(couleurs.get("grisFonce"));
+                                    break;
+                                case "bleu":
+                                    changerCouleurBoutonsMenu(couleurs.get("bleu"));
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            drinkBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.gris)));
+                        }
+                        return false;
+                    case MotionEvent.ACTION_UP:
+                        switch (couleurChoisie) {
+                            case "blanc":
+                                changerCouleurBoutonsMenu(couleurs.get("blanc"));
+                                break;
+                            case "noir":
+                                changerCouleurBoutonsMenu(couleurs.get("noir"));
+                                break;
+                            case "jaune":
+                                changerCouleurBoutonsMenu(couleurs.get("jaune"));
+                                break;
+                            case "gris":
+                                changerCouleurBoutonsMenu(couleurs.get("grisFonce"));
+                                break;
+                            case "bleu":
+                                changerCouleurBoutonsMenu(couleurs.get("bleu"));
+                                break;
+                        }
+                        return false;
+                    default:
+                        return true;
+                }
             }
         });
 
         infosBTN.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
-                infosBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.gris)));
-                infosBTN.setBackgroundResource(R.drawable.iconinfo);
-                return false;
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        infosBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.gris)));
+                        rect = new Rect(v.getLeft(), v.getTop(), v.getRight(), v.getBottom());
+                        return false;
+                    case MotionEvent.ACTION_MOVE:
+                        if (!rect.contains(v.getLeft() + (int) event.getX(), v.getTop() + (int) event.getY())) {
+                            switch (couleurChoisie) {
+                                case "blanc":
+                                    changerCouleurBoutonsMenu(couleurs.get("blanc"));
+                                    break;
+                                case "noir":
+                                    changerCouleurBoutonsMenu(couleurs.get("noir"));
+                                    break;
+                                case "jaune":
+                                    changerCouleurBoutonsMenu(couleurs.get("jaune"));
+                                    break;
+                                case "gris":
+                                    changerCouleurBoutonsMenu(couleurs.get("grisFonce"));
+                                    break;
+                                case "bleu":
+                                    changerCouleurBoutonsMenu(couleurs.get("bleu"));
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            infosBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.gris)));
+                        }
+                        return false;
+                    case MotionEvent.ACTION_UP:
+                        switch (couleurChoisie) {
+                            case "blanc":
+                                changerCouleurBoutonsMenu(couleurs.get("blanc"));
+                                break;
+                            case "noir":
+                                changerCouleurBoutonsMenu(couleurs.get("noir"));
+                                break;
+                            case "jaune":
+                                changerCouleurBoutonsMenu(couleurs.get("jaune"));
+                                break;
+                            case "gris":
+                                changerCouleurBoutonsMenu(couleurs.get("grisFonce"));
+                                break;
+                            case "bleu":
+                                changerCouleurBoutonsMenu(couleurs.get("bleu"));
+                                break;
+                        }
+                        return false;
+                    default:
+                        return true;
+                }
             }
         });
 
         panierBTN.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
-                panierBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.gris)));
-                panierBTN.setBackgroundResource(R.drawable.iconcart);
-                return false;
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        panierBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.gris)));
+                        rect = new Rect(v.getLeft(), v.getTop(), v.getRight(), v.getBottom());
+                        return false;
+                    case MotionEvent.ACTION_MOVE:
+                        if (!rect.contains(v.getLeft() + (int) event.getX(), v.getTop() + (int) event.getY())) {
+                            switch (couleurChoisie) {
+                                case "blanc":
+                                    changerCouleurBoutonsMenu(couleurs.get("blanc"));
+                                    break;
+                                case "noir":
+                                    changerCouleurBoutonsMenu(couleurs.get("noir"));
+                                    break;
+                                case "jaune":
+                                    changerCouleurBoutonsMenu(couleurs.get("jaune"));
+                                    break;
+                                case "gris":
+                                    changerCouleurBoutonsMenu(couleurs.get("grisFonce"));
+                                    break;
+                                case "bleu":
+                                    changerCouleurBoutonsMenu(couleurs.get("bleu"));
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            panierBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.gris)));
+                        }
+                        return false;
+                    case MotionEvent.ACTION_UP:
+                        switch (couleurChoisie) {
+                            case "blanc":
+                                changerCouleurBoutonsMenu(couleurs.get("blanc"));
+                                break;
+                            case "noir":
+                                changerCouleurBoutonsMenu(couleurs.get("noir"));
+                                break;
+                            case "jaune":
+                                changerCouleurBoutonsMenu(couleurs.get("jaune"));
+                                break;
+                            case "gris":
+                                changerCouleurBoutonsMenu(couleurs.get("grisFonce"));
+                                break;
+                            case "bleu":
+                                changerCouleurBoutonsMenu(couleurs.get("bleu"));
+                                break;
+                        }
+                        return false;
+                    default:
+                        return true;
+                }
             }
         });
 
         shooterBTN.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
-                shooterBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.gris)));
-                shooterBTN.setBackgroundResource(R.drawable.iconshooter);
-                return false;
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        shooterBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.gris)));
+                        rect = new Rect(v.getLeft(), v.getTop(), v.getRight(), v.getBottom());
+                        return false;
+                    case MotionEvent.ACTION_MOVE:
+                        if (!rect.contains(v.getLeft() + (int) event.getX(), v.getTop() + (int) event.getY())) {
+                            switch (couleurChoisie) {
+                                case "blanc":
+                                    changerCouleurBoutonsMenu(couleurs.get("blanc"));
+                                    break;
+                                case "noir":
+                                    changerCouleurBoutonsMenu(couleurs.get("noir"));
+                                    break;
+                                case "jaune":
+                                    changerCouleurBoutonsMenu(couleurs.get("jaune"));
+                                    break;
+                                case "gris":
+                                    changerCouleurBoutonsMenu(couleurs.get("grisFonce"));
+                                    break;
+                                case "bleu":
+                                    changerCouleurBoutonsMenu(couleurs.get("bleu"));
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            shooterBTN.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.gris)));
+                        }
+                        return false;
+                    case MotionEvent.ACTION_UP:
+                        switch (couleurChoisie) {
+                            case "blanc":
+                                changerCouleurBoutonsMenu(couleurs.get("blanc"));
+                                break;
+                            case "noir":
+                                changerCouleurBoutonsMenu(couleurs.get("noir"));
+                                break;
+                            case "jaune":
+                                changerCouleurBoutonsMenu(couleurs.get("jaune"));
+                                break;
+                            case "gris":
+                                changerCouleurBoutonsMenu(couleurs.get("grisFonce"));
+                                break;
+                            case "bleu":
+                                changerCouleurBoutonsMenu(couleurs.get("bleu"));
+                                break;
+                        }
+                        return false;
+                    default:
+                        return true;
+                }
             }
         });
 
         quitterNotesBTN.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
-                quitterNotesBTN.setBackgroundColor(getResources().getColor(R.color.grisFonce));
-                return false;
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        quitterNotesBTN.setBackgroundColor(getResources().getColor(R.color.grisFonce));
+                        rect = new Rect(v.getLeft(), v.getTop(), v.getRight(), v.getBottom());
+                        return false;
+                    case MotionEvent.ACTION_MOVE:
+                        if (!rect.contains(v.getLeft() + (int) event.getX(), v.getTop() + (int) event.getY())) {
+                            quitterNotesBTN.setBackgroundColor(getResources().getColor(R.color.gris));
+                        }
+                        else
+                        {
+                            quitterNotesBTN.setBackgroundColor(getResources().getColor(R.color.grisFonce));
+                        }
+                        return false;
+                    case MotionEvent.ACTION_UP:
+                        quitterNotesBTN.setBackgroundColor(getResources().getColor(R.color.gris));
+                        if (rect.contains(v.getLeft() + (int) event.getX(), v.getTop() + (int) event.getY())) {
+                            quitterNotesBTN.performClick();
+                        }
+                        return false;
+                    default:
+                        return true;
+                }
             }
         });
 
-        etoile1.setOnTouchListener(new View.OnTouchListener() {
+        connecterBTN.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
-                etoile1.setBackgroundTintMode(PorterDuff.Mode.CLEAR);
-                return false;
-            }
-        });
-        etoile2.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View v, MotionEvent event) {
-                etoile2.setBackgroundTintMode(PorterDuff.Mode.CLEAR);
-                return false;
-            }
-        });
-        etoile3.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View v, MotionEvent event) {
-                etoile3.setBackgroundTintMode(PorterDuff.Mode.CLEAR);
-                return false;
-            }
-        });
-        etoile4.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View v, MotionEvent event) {
-                etoile4.setBackgroundTintMode(PorterDuff.Mode.CLEAR);
-                return false;
-            }
-        });
-        etoile5.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View v, MotionEvent event) {
-                etoile5.setBackgroundTintMode(PorterDuff.Mode.CLEAR);
-                return false;
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        connecterBTN.setBackground(getResources().getDrawable(R.drawable.my_button_pressed_bg));
+                        rect = new Rect(v.getLeft(), v.getTop(), v.getRight(), v.getBottom());
+                        return false;
+                    case MotionEvent.ACTION_MOVE:
+                        if (!rect.contains(v.getLeft() + (int) event.getX(), v.getTop() + (int) event.getY())) {
+                            connecterBTN.setBackground(getResources().getDrawable(R.drawable.my_button_bg));
+                        }
+                        else
+                        {
+                            connecterBTN.setBackground(getResources().getDrawable(R.drawable.my_button_pressed_bg));
+                        }
+                        return false;
+                    case MotionEvent.ACTION_UP:
+                        connecterBTN.setBackground(getResources().getDrawable(R.drawable.my_button_bg));
+                        return false;
+                    default:
+                        return true;
+                }
             }
         });
     }
@@ -432,7 +645,7 @@ public class MainActivity extends AppCompatActivity {
      */
     void setClickListeners()
     {
-        final ImageButton supprimerBTN=findViewById(R.id.supprimer_IMGBTN);
+        final Button supprimerBTN=findViewById(R.id.supprimer_BTN);
         final TextView supprimerToutBTN=findViewById(R.id.supprimerTout_BTN);
         final ImageButton commanderBTN=findViewById(R.id.commander_IMGBTN);
         final TextView quitterNotesBTN=findViewById(R.id.quitterNotes_BTN);
@@ -442,12 +655,6 @@ public class MainActivity extends AppCompatActivity {
         final Button accepterChangementsBTN=findViewById(R.id.accepterModification_BTN);
         final Button annulerChangementsBTN=findViewById(R.id.annulerModification_BTN);
         final Button connecterBTN= findViewById(R.id.connexion_BTN);
-
-        final ImageButton etoile1= findViewById(R.id.etoile1_IMGBTN);
-        final ImageButton etoile2= findViewById(R.id.etoile2_IMGBTN);
-        final ImageButton etoile3= findViewById(R.id.etoile3_IMGBTN);
-        final ImageButton etoile4= findViewById(R.id.etoile4_IMGBTN);
-        final ImageButton etoile5= findViewById(R.id.etoile5_IMGBTN);
 
         final ImageView logoIMG=findViewById(R.id.logo1_IMG);
 
@@ -471,25 +678,6 @@ public class MainActivity extends AppCompatActivity {
 
         drinkBTN.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                switch (couleurChoisie) {
-                    case "blanc":
-                        changerCouleurBoutonsMenu(couleurs.get("blanc"));
-                        break;
-                    case "noir":
-                        changerCouleurBoutonsMenu(couleurs.get("noir"));
-                        break;
-                    case "jaune":
-                        changerCouleurBoutonsMenu(couleurs.get("jaune"));
-                        break;
-                    case "gris":
-                        changerCouleurBoutonsMenu(couleurs.get("grisFonce"));
-                        break;
-                    case "bleu":
-                        changerCouleurBoutonsMenu(couleurs.get("bleu"));
-                        break;
-                }
-                drinkBTN.setBackgroundResource(R.drawable.icondrink);
-
                 drinkLYT.setVisibility(View.VISIBLE);
                 shooterLYT.setVisibility(View.INVISIBLE);
                 modifierLYT.setVisibility(View.INVISIBLE);
@@ -507,25 +695,6 @@ public class MainActivity extends AppCompatActivity {
 
         panierBTN.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                switch (couleurChoisie) {
-                    case "blanc":
-                        changerCouleurBoutonsMenu(couleurs.get("blanc"));
-                        break;
-                    case "noir":
-                        changerCouleurBoutonsMenu(couleurs.get("noir"));
-                        break;
-                    case "jaune":
-                        changerCouleurBoutonsMenu(couleurs.get("jaune"));
-                        break;
-                    case "gris":
-                        changerCouleurBoutonsMenu(couleurs.get("grisFonce"));
-                        break;
-                    case "bleu":
-                        changerCouleurBoutonsMenu(couleurs.get("bleu"));
-                        break;
-                }
-                panierBTN.setBackgroundResource(R.drawable.iconcart);
-
                 drinkLYT.setVisibility(View.INVISIBLE);
                 shooterLYT.setVisibility(View.INVISIBLE);
                 modifierLYT.setVisibility(View.INVISIBLE);
@@ -536,25 +705,6 @@ public class MainActivity extends AppCompatActivity {
 
         shooterBTN.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                switch (couleurChoisie) {
-                    case "blanc":
-                        changerCouleurBoutonsMenu(couleurs.get("blanc"));
-                        break;
-                    case "noir":
-                        changerCouleurBoutonsMenu(couleurs.get("noir"));
-                        break;
-                    case "jaune":
-                        changerCouleurBoutonsMenu(couleurs.get("jaune"));
-                        break;
-                    case "gris":
-                        changerCouleurBoutonsMenu(couleurs.get("grisFonce"));
-                        break;
-                    case "bleu":
-                        changerCouleurBoutonsMenu(couleurs.get("bleu"));
-                        break;
-                }
-                shooterBTN.setBackgroundResource(R.drawable.iconshooter);
-
                 drinkLYT.setVisibility(View.INVISIBLE);
                 shooterLYT.setVisibility(View.VISIBLE);
                 modifierLYT.setVisibility(View.INVISIBLE);
@@ -567,26 +717,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         infosBTN.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                switch (couleurChoisie) {
-                    case "blanc":
-                        changerCouleurBoutonsMenu(couleurs.get("blanc"));
-                        break;
-                    case "noir":
-                        changerCouleurBoutonsMenu(couleurs.get("noir"));
-                        break;
-                    case "jaune":
-                        changerCouleurBoutonsMenu(couleurs.get("jaune"));
-                        break;
-                    case "gris":
-                        changerCouleurBoutonsMenu(couleurs.get("grisFonce"));
-                        break;
-                    case "bleu":
-                        changerCouleurBoutonsMenu(couleurs.get("bleu"));
-                        break;
-                }
-                infosBTN.setBackgroundResource(R.drawable.iconinfo);
-
+            public void onClick(View v) { ;
                 drinkLYT.setVisibility(View.INVISIBLE);
                 shooterLYT.setVisibility(View.INVISIBLE);
                 modifierLYT.setVisibility(View.INVISIBLE);
@@ -696,71 +827,17 @@ public class MainActivity extends AppCompatActivity {
                 shooterBTN.setVisibility(View.VISIBLE);
                 infosBTN.setVisibility(View.VISIBLE);
 
+                connecterBTN.setBackground(getResources().getDrawable(R.drawable.my_button_bg));
+
                 TextView label=findViewById(R.id.connexion_TXT);
                 label.setText(getResources().getString(R.string.pause_str));
                 label.setPaintFlags(label.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
                 Alcoolique+="...";
-                connecterBTN.setText(String.format("Continuer à boire un coup%s", Alcoolique));
+                connecterBTN.setText(String.format("Continuer à boire un coup\n%s", Alcoolique));
                 OracleConnexion();
             }
         });
-
-        etoile1.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                etoile1.setImageDrawable(getResources().getDrawable(R.drawable.star_active));
-                etoile2.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
-                etoile3.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
-                etoile4.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
-                etoile5.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
-                note=1;
-            }
-        });
-
-        etoile2.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                etoile1.setImageDrawable(getResources().getDrawable(R.drawable.star_active));
-                etoile2.setImageDrawable(getResources().getDrawable(R.drawable.star_active));
-                etoile3.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
-                etoile4.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
-                etoile5.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
-                note=2;
-            }
-        });
-
-        etoile3.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                etoile1.setImageDrawable(getResources().getDrawable(R.drawable.star_active));
-                etoile2.setImageDrawable(getResources().getDrawable(R.drawable.star_active));
-                etoile3.setImageDrawable(getResources().getDrawable(R.drawable.star_active));
-                etoile4.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
-                etoile5.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
-                note=3;
-            }
-        });
-
-        etoile4.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                etoile1.setImageDrawable(getResources().getDrawable(R.drawable.star_active));
-                etoile2.setImageDrawable(getResources().getDrawable(R.drawable.star_active));
-                etoile3.setImageDrawable(getResources().getDrawable(R.drawable.star_active));
-                etoile4.setImageDrawable(getResources().getDrawable(R.drawable.star_active));
-                etoile5.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
-                note=4;
-            }
-        });
-
-        etoile5.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                etoile1.setImageDrawable(getResources().getDrawable(R.drawable.star_active));
-                etoile2.setImageDrawable(getResources().getDrawable(R.drawable.star_active));
-                etoile3.setImageDrawable(getResources().getDrawable(R.drawable.star_active));
-                etoile4.setImageDrawable(getResources().getDrawable(R.drawable.star_active));
-                etoile5.setImageDrawable(getResources().getDrawable(R.drawable.star_active));
-                note=5;
-            }
-        });
-
 
         listeDrinksLVIEW.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -986,6 +1063,22 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public void setRatingBarListener() {
+
+        RatingBar ratingBar = (RatingBar) findViewById(R.id.ratingBar);
+
+        //if rating value is changed,
+        //display the current rating value in the result (textview) automatically
+        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            public void onRatingChanged(RatingBar ratingBar, float rating,
+                                        boolean fromUser) {
+
+                //note=rating;
+
+            }
+        });
+    }
+
     /**
      * Initialise un dispatchTouchEvent qui compare la position des clics
        avec celui du layout des notes pour les annuler si le clic est ailleurs
@@ -994,7 +1087,8 @@ public class MainActivity extends AppCompatActivity {
     public boolean dispatchTouchEvent(MotionEvent ev) {
         Rect viewRect = new Rect();
         notesLYT.getGlobalVisibleRect(viewRect);
-        if(notesLYT.getVisibility()==View.VISIBLE) {
+
+        if(notesLYT.getVisibility()==View.VISIBLE&&ev.getAction()==MotionEvent.ACTION_UP) {
             if (!viewRect.contains((int) ev.getRawX(), (int) ev.getRawY())) {
                 notesLYT.setVisibility(View.INVISIBLE);
                 rafraichirListePanier();
@@ -1068,8 +1162,9 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+        premiereNote =true;
+        faireToast("Merci de votre commande.");
         demanderNote(arrayListPanier.get(0).get("nom"));
-        faireToast("Merci de votre commande. Veuillez noter s'il vous plait.");
         selectionPositionsPanier.clear();
         rafraichirListePanier();
         remplirListeDrinks();
@@ -1534,11 +1629,11 @@ public class MainActivity extends AppCompatActivity {
      */
     void rafraichirListePanier()
     {
-        final ImageButton commandBTN=findViewById(R.id.commander_IMGBTN);
+        final ImageButton commanderBTN=findViewById(R.id.commander_IMGBTN);
         if(arrayListPanier.size()!=0)
-            commandBTN.setVisibility(View.VISIBLE);
+            commanderBTN.setVisibility(View.VISIBLE);
         else
-            commandBTN.setVisibility(View.INVISIBLE);
+            commanderBTN.setVisibility(View.INVISIBLE);
 
         SimpleAdapter simpleAdapter=new SimpleAdapter(this, arrayListPanier,R.layout.custom_list_ing,from,toIng);
 
@@ -1631,13 +1726,27 @@ public class MainActivity extends AppCompatActivity {
         final TextView nomMixTXT=findViewById(R.id.nomMix_TXT);
 
         if(listeNomsDrinks.contains(nomMix)) {
+            if(premiereNote)
+            {
+                faireToast("Veuillez noter s'il vous plait.");
+                premiereNote =false;
+            }
             nomMixTXT.setText(nomMix);
             notesLYT.setVisibility(View.VISIBLE);
         }
         else
         {
             arrayListPanier.remove(0);
-            demanderNote(arrayListPanier.get(0).get("nom"));
+            if(arrayListPanier.size()!=0)
+            {
+                demanderNote(arrayListPanier.get(0).get("nom"));
+            }
+            else
+            {
+                TextView panierTXT=findViewById(R.id.panier_TXT);
+                panierTXT.setText(getResources().getString(R.string.panierVide_str));
+                panierTXT.setPaintFlags(panierTXT.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+            }
         }
         rafraichirListePanier();
     }
@@ -1699,8 +1808,6 @@ public class MainActivity extends AppCompatActivity {
             }
             arrayListPanier.remove(0);
         }
-        remplirListeDrinks();
-        rafraichirListeDrinks();
         reinitTableauNotes();
         if(arrayListPanier.size()!=0) {
             demanderNote(arrayListPanier.get(0).get("nom"));
@@ -1714,6 +1821,7 @@ public class MainActivity extends AppCompatActivity {
      * Réinitialise les notes
      */
     void reinitTableauNotes() {
+        /*
         final ImageButton etoile1 = findViewById(R.id.etoile1_IMGBTN);
         final ImageButton etoile2 = findViewById(R.id.etoile2_IMGBTN);
         final ImageButton etoile3 = findViewById(R.id.etoile3_IMGBTN);
@@ -1725,6 +1833,7 @@ public class MainActivity extends AppCompatActivity {
         etoile4.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
         etoile5.setImageDrawable(getResources().getDrawable(R.drawable.star_inactive));
         notesLYT.setVisibility(View.INVISIBLE);
+        */
         note = 0;
     }
 
@@ -2060,8 +2169,28 @@ public class MainActivity extends AppCompatActivity {
         supprimerToutBTN.setBackgroundColor(color[0]);
         supprimerToutBTN.setTextColor(color[1]);
 
-        ImageButton supprimerBTN=findViewById(R.id.supprimer_IMGBTN);
-        supprimerBTN.setBackgroundColor(getResources().getColor(R.color.rouge));
+        Button supprimerBTN=findViewById(R.id.supprimer_BTN);
+        supprimerBTN.setBackgroundTintList(ColorStateList.valueOf(color[1]));
+    }
+
+    void changerCouleurListes(int[] color)
+    {
+        int epaisseurDiviseur=3;
+
+        listeDrinksLVIEW.setDivider(new ColorDrawable(color[1]));   //0xAARRGGBB
+        listeDrinksLVIEW.setDividerHeight(epaisseurDiviseur);
+
+        listeShootersLVIEW.setDivider(new ColorDrawable(color[1]));   //0xAARRGGBB
+        listeShootersLVIEW.setDividerHeight(epaisseurDiviseur);
+
+        listeIngredientsLVIEW.setDivider(new ColorDrawable(color[1]));   //0xAARRGGBB
+        listeIngredientsLVIEW.setDividerHeight(epaisseurDiviseur);
+
+        panierLVIEW.setDivider(new ColorDrawable(color[1]));   //0xAARRGGBB
+        panierLVIEW.setDividerHeight(epaisseurDiviseur);
+
+        drinkItemLVIEW.setDivider(new ColorDrawable(color[1]));   //0xAARRGGBB
+        drinkItemLVIEW.setDividerHeight(epaisseurDiviseur);
     }
 
     void changerBlanc() {
@@ -2072,27 +2201,24 @@ public class MainActivity extends AppCompatActivity {
                 },
                 new int[]{
 
-                        getResources().getColor(R.color.gris)
+                        getResources().getColor(R.color.noir)
                         , getResources().getColor(R.color.jaune)
                 }
         );
 
-        int[] boutons = new int[]{
+        int[] tableauCouleurs = new int[]{
                 getResources().getColor(R.color.blanc)
                 , getResources().getColor(R.color.noir)};
 
-        Button connexionBTN=findViewById(R.id.connexion_BTN);
-
         findViewById(R.id.background_LYT).setBackgroundColor(getResources().getColor(R.color.blanc));
         findViewById(R.id.connexion_LYT).setBackgroundColor(getResources().getColor(R.color.blanc));
-        connexionBTN.setBackgroundColor(getResources().getColor(R.color.blanc));
-        connexionBTN.setTextColor(getResources().getColor(R.color.noir));
         findViewById(R.id.backgroundFooter_TView).setBackgroundColor(getResources().getColor(R.color.noir));
 
         changerCouleurBoutonsMenu(couleurs.get("blanc"));
         changeTextColor(couleurs.get("noir"));
         changeRadioButtonColor(colorRBTN);
-        changerCouleurBoutons(boutons);
+        changerCouleurBoutons(tableauCouleurs);
+        changerCouleurListes(tableauCouleurs);
     }
 
     void changerNoir()
@@ -2113,18 +2239,15 @@ public class MainActivity extends AppCompatActivity {
                 getResources().getColor(R.color.noir)
                 , getResources().getColor(R.color.blanc)};
 
-        Button connexionBTN=findViewById(R.id.connexion_BTN);
-
         findViewById(R.id.background_LYT).setBackgroundColor(getResources().getColor(R.color.noir));
         findViewById(R.id.connexion_LYT).setBackgroundColor(getResources().getColor(R.color.noir));
-        connexionBTN.setBackgroundColor(getResources().getColor(R.color.noir));
-        connexionBTN.setTextColor(getResources().getColor(R.color.blanc));
         findViewById(R.id.backgroundFooter_TView).setBackgroundColor(getResources().getColor(R.color.blanc));
 
         changerCouleurBoutonsMenu(couleurs.get("noir"));
         changeTextColor(couleurs.get("blanc"));
         changeRadioButtonColor(colorRBTN);
         changerCouleurBoutons(boutons);
+        changerCouleurListes(boutons);
     }
 
     void changerJELLY() {
@@ -2144,18 +2267,15 @@ public class MainActivity extends AppCompatActivity {
                 getResources().getColor(R.color.jaune)
                 , getResources().getColor(R.color.noir)};
 
-        Button connexionBTN=findViewById(R.id.connexion_BTN);
-
         findViewById(R.id.background_LYT).setBackgroundColor(getResources().getColor(R.color.jaune));
         findViewById(R.id.connexion_LYT).setBackgroundColor(getResources().getColor(R.color.jaune));
-        connexionBTN.setBackgroundColor(getResources().getColor(R.color.jaune));
-        connexionBTN.setTextColor(getResources().getColor(R.color.noir));
         findViewById(R.id.backgroundFooter_TView).setBackgroundColor(getResources().getColor(R.color.noir));
 
         changerCouleurBoutonsMenu(couleurs.get("jaune"));
         changeTextColor(couleurs.get("blanc"));
         changeRadioButtonColor(colorRBTN);
         changerCouleurBoutons(boutons);
+        changerCouleurListes(boutons);
     }
 
     void changerGris()
@@ -2176,18 +2296,15 @@ public class MainActivity extends AppCompatActivity {
                 getResources().getColor(R.color.blanc)
                 , getResources().getColor(R.color.grisFonce)};
 
-        Button connexionBTN=findViewById(R.id.connexion_BTN);
-
         findViewById(R.id.background_LYT).setBackgroundColor(getResources().getColor(R.color.gris));
         findViewById(R.id.connexion_LYT).setBackgroundColor(getResources().getColor(R.color.gris));
-        connexionBTN.setBackgroundColor(getResources().getColor(R.color.gris));
-        connexionBTN.setTextColor(getResources().getColor(R.color.noir));
         findViewById(R.id.backgroundFooter_TView).setBackgroundColor(getResources().getColor(R.color.blanc));
 
         changerCouleurBoutonsMenu(couleurs.get("noir"));
         changeTextColor(couleurs.get("blanc"));
         changeRadioButtonColor(colorRBTN);
         changerCouleurBoutons(boutons);
+        changerCouleurListes(boutons);
     }
 
     void changerBleu()
@@ -2208,18 +2325,15 @@ public class MainActivity extends AppCompatActivity {
                 getResources().getColor(R.color.blanc)
                 , getResources().getColor(R.color.noir)};
 
-        Button connexionBTN=findViewById(R.id.connexion_BTN);
-
         findViewById(R.id.background_LYT).setBackgroundColor(getResources().getColor(R.color.bleu));
         findViewById(R.id.connexion_LYT).setBackgroundColor(getResources().getColor(R.color.bleu));
-        connexionBTN.setBackgroundColor(getResources().getColor(R.color.bleu));
-        connexionBTN.setTextColor(getResources().getColor(R.color.noir));
         findViewById(R.id.backgroundFooter_TView).setBackgroundColor(getResources().getColor(R.color.blanc));
 
         changerCouleurBoutonsMenu(couleurs.get("bleu"));
         changeTextColor(couleurs.get("blanc"));
         changeRadioButtonColor(colorRBTN);
         changerCouleurBoutons(boutons);
+        changerCouleurListes(boutons);
     }
     //endregion
 }
