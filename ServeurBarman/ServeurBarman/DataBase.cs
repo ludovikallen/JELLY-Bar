@@ -18,7 +18,7 @@ namespace ServeurBarman
 
         private DataBase()
         {
-            
+
         }
         static DataBase() { }
 
@@ -43,7 +43,7 @@ namespace ServeurBarman
             EtatBaseDonnées.Close();
         }
 
-        public List<(int,int)> ListeCommande()
+        public List<(int, int)> ListeCommande()
         {
             List<(int, int)> numcommande = new List<(int, int)>();
             string cmd = "select numcommande,shooter from commande";
@@ -72,7 +72,7 @@ namespace ServeurBarman
 
         public string NombreDeShooter()
         {
-            string nombreShooter="";
+            string nombreShooter = "";
             string cmd = "select nbshooter from verreshooter";
             OracleCommand listeDiv = new OracleCommand(cmd, EtatBaseDonnées);
             listeDiv.CommandType = CommandType.Text;
@@ -154,30 +154,57 @@ namespace ServeurBarman
     }
 
 
-    // CLASS QUI GERE LES COMMANDES PASSEES PAR LE CLIENT ANDROID
-    public abstract class Commande
+    // abstraction
+    public class Commande
+    {
+        private SpecificateurCommande commande;
+        private int numcommande;
+
+        public Commande(int num)
+        {
+            if (num == 0)
+                commande = new Commande_Normale();
+            else
+                commande = new Shooter();
+        }
+
+
+        public SpecificateurCommande TypeReel()
+        {
+            return commande.TypeReel();
+        }
+
+        public List<(Position, int)> ListerIngredients(int numcom)
+        {
+            return commande.Ingredients(numcom);
+        }
+    }
+
+
+    // CLASS QUI GERE LES COMMANDES PASSEES PAR LE CLIENT ANDROID(Interface)
+    public abstract class SpecificateurCommande
     {
         protected DataBase Connexion { get; } = DataBase.instance_bd;
 
         // ENUMÈRE LA LISTE DES INGREDIENTS DE LA COMMANDE DU CLIENT ANDROID
-        public abstract List<(Position, int)> ListerIngredients(int numcom);
+        public abstract List<(Position, int)> Ingredients(int numcom);
         // OBTIENT LE TYPE REEL DE LA COMMANDE,
         // SOIT (NORMALE OU SHOOTER)
-        public abstract Commande TypeReel();
-        
+        public abstract SpecificateurCommande TypeReel();
+
     }
 
 
 
     // CLASSE SHOOTER
-    class Shooter : Commande
+    class Shooter : SpecificateurCommande
     {
         List<(Position, int)> ingredients = new List<(Position, int)>();
         public Shooter() : base()
         {
 
         }
-        public override List<(Position, int)> ListerIngredients(int numcom)
+        public override List<(Position, int)> Ingredients(int numcom)
         {
             string cmd = "e.POSITIONX,e.POSITIONY,e.POSITIONZ,c.QTY" +
             "from ingredient e inner join commande c on e.codebouteille=c.ingredient where c.numcommande=" + numcom.ToString();
@@ -198,7 +225,7 @@ namespace ServeurBarman
             return ingredients;
         }
 
-        public override Commande TypeReel()
+        public override SpecificateurCommande TypeReel()
         {
             return new Shooter();
         }
@@ -206,19 +233,19 @@ namespace ServeurBarman
 
 
     // CLASSE COMMANDE NORMALE
-    public class Commande_Normale : Commande
+    public class Commande_Normale : SpecificateurCommande
     {
         List<(Position, int)> ingredients = new List<(Position, int)>();
         public Commande_Normale() : base()
         {
 
         }
-        public override Commande TypeReel()
+        public override SpecificateurCommande TypeReel()
         {
             return new Commande_Normale();
         }
 
-        public override List<(Position, int)> ListerIngredients(int numcom)
+        public override List<(Position, int)> Ingredients(int numcom)
         {
             string cmd = "select e.POSITIONX,e.POSITIONY,e.POSITIONZ,c.QTY from ingredient e inner join commande c on e.codebouteille=c.ingredient where numcommande=" + numcom.ToString();
 

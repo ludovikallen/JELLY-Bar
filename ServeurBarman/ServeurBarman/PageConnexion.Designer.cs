@@ -39,31 +39,31 @@
             // 
             // TBX_User
             // 
-            this.TBX_User.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TBX_User.Font = new System.Drawing.Font("Arial Narrow", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TBX_User.ForeColor = System.Drawing.Color.Silver;
-            this.TBX_User.Location = new System.Drawing.Point(94, 249);
+            this.TBX_User.Location = new System.Drawing.Point(112, 312);
             this.TBX_User.Name = "TBX_User";
-            this.TBX_User.Size = new System.Drawing.Size(152, 27);
+            this.TBX_User.Size = new System.Drawing.Size(210, 32);
             this.TBX_User.TabIndex = 1;
             this.TBX_User.Text = "barman";
             // 
             // TBX_Pwd
             // 
-            this.TBX_Pwd.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TBX_Pwd.Font = new System.Drawing.Font("Arial Narrow", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TBX_Pwd.ForeColor = System.Drawing.Color.Silver;
-            this.TBX_Pwd.Location = new System.Drawing.Point(94, 282);
+            this.TBX_Pwd.Location = new System.Drawing.Point(112, 360);
             this.TBX_Pwd.Name = "TBX_Pwd";
-            this.TBX_Pwd.Size = new System.Drawing.Size(152, 27);
+            this.TBX_Pwd.Size = new System.Drawing.Size(210, 32);
             this.TBX_Pwd.TabIndex = 1;
             this.TBX_Pwd.Text = "projet";
             this.TBX_Pwd.UseSystemPasswordChar = true;
             // 
             // BTN_Logon
             // 
-            this.BTN_Logon.Font = new System.Drawing.Font("Arial Rounded MT Bold", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BTN_Logon.Location = new System.Drawing.Point(94, 324);
+            this.BTN_Logon.Font = new System.Drawing.Font("Arial Rounded MT Bold", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BTN_Logon.Location = new System.Drawing.Point(146, 427);
             this.BTN_Logon.Name = "BTN_Logon";
-            this.BTN_Logon.Size = new System.Drawing.Size(132, 30);
+            this.BTN_Logon.Size = new System.Drawing.Size(142, 50);
             this.BTN_Logon.TabIndex = 2;
             this.BTN_Logon.Text = "Connexion";
             this.BTN_Logon.UseVisualStyleBackColor = true;
@@ -72,21 +72,21 @@
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(119, 90);
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 27.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(66, 21);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(90, 21);
+            this.label1.Size = new System.Drawing.Size(298, 100);
             this.label1.TabIndex = 3;
-            this.label1.Text = "Bienvenue ";
+            this.label1.Text = "Bienvenue \r\nJELLY-Bar";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // pictureBox1
             // 
             this.pictureBox1.BackgroundImage = global::ServeurBarman.Properties.Resources.JELLY_Bar_Logo;
             this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.pictureBox1.Location = new System.Drawing.Point(94, 145);
+            this.pictureBox1.Location = new System.Drawing.Point(90, 142);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(132, 75);
+            this.pictureBox1.Size = new System.Drawing.Size(252, 151);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
@@ -94,17 +94,16 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(344, 450);
+            this.ClientSize = new System.Drawing.Size(430, 500);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.BTN_Logon);
             this.Controls.Add(this.TBX_Pwd);
             this.Controls.Add(this.TBX_User);
             this.Controls.Add(this.pictureBox1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MaximumSize = new System.Drawing.Size(344, 450);
-            this.MinimumSize = new System.Drawing.Size(344, 450);
+            this.MaximumSize = new System.Drawing.Size(430, 500);
+            this.MinimumSize = new System.Drawing.Size(430, 500);
             this.Name = "PageConnexion";
-            this.Text = "Page de connexion";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

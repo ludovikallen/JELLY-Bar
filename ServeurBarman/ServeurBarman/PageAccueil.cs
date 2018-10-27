@@ -25,7 +25,7 @@ namespace ServeurBarman
         private readonly object accessLock = new object();
         List<(int, int)> numcommande = new List<(int, int)>();
         DataBase b;
-        Commande comm;
+        Commande service;
         string commandeEnCours;
         int item1, item2;
 
@@ -35,7 +35,7 @@ namespace ServeurBarman
             InitializeComponent();
             b = DataBase.instance_bd;
             lbFinishiCommande.Font = new Font("Arial", 30, FontStyle.Bold);
-            
+
             PBX_EtatDeconnecté.Visible = true;
             check = true;
             Task.Run(() =>
@@ -120,7 +120,7 @@ namespace ServeurBarman
                 else
                 {
                     // Ici, on vérifie si une nouvelle commande a été ajoutée à la liste d'attente
-                    
+
                     Refresh_WaitingList();
 
                     for (int i = 0; i < numcommande.Count; ++i)
@@ -169,55 +169,53 @@ namespace ServeurBarman
         /// </summary>
         private void ServirClient()
         {
-            
-
             while (true)
             {
-                //if (Int32.Parse(welcomePage1.nombreVerre) >= 1)
-                //{
-                    if (item2 == 0)
+                if (item2 == 0)
+                {
+                    service = new Commande(item2);
+                    var p = service.TypeReel();
+                    if (robot.EnMarche())
                     {
-                        comm = new Commande_Normale();
-                        var p = comm.TypeReel();
-                        if (robot.EnMarche())
-                        {
-                            List<(Position, int)> ing = p.ListerIngredients(item1);
+                        List<(Position, int)> ing = p.Ingredients(item1);
 
-                            if (robot.MakeDrink(ing.ToList()))
-                            {
+                        if (robot.MakeDrink(ing.ToList()))
+                        {
+                            lb_CommandeEnCours.Text= LBX_WaitingList.Items[0].ToString();
                             if (commandeEnCours != null)
                                 lbFinishiCommande.Text = "Commande numéro " + commandeEnCours + " terminée!";
-                                commandeEnCours=LBX_WaitingList.Items[0].ToString();
-                                string cmd = "delete from commande where numcommande=" + commandeEnCours;
+                            commandeEnCours = lb_CommandeEnCours.Text.ToString();
 
-                                try
-                                {
-                                    OracleCommand delete = new OracleCommand(cmd, b.EtatBaseDonnées);
-                                    delete.CommandType = CommandType.Text;
-                                    delete.ExecuteNonQuery();
-                                }
-                                catch (Exception sel) { MessageBox.Show(sel.Message.ToString()); }
+                            string cmd = "delete from commande where numcommande=" + commandeEnCours;
+
+                            try
+                            {
+                                OracleCommand delete = new OracleCommand(cmd, b.EtatBaseDonnées);
+                                delete.CommandType = CommandType.Text;
+                                delete.ExecuteNonQuery();
                             }
+                            catch (Exception sel) { MessageBox.Show(sel.Message.ToString()); }
                         }
                     }
-                    else
+                }
+                else
+                {
+                    /*
+                     * IL S'AGIT D'UN SHOOTER
+                     */
+                    service = new Commande(item2);
+                    var p = service.TypeReel();
+
+                    string cmd = "delete from commande where numcommande=" + LBX_WaitingList.Items[0].ToString();
+
+                    try
                     {
-                        /*
-                         * IL S'AGIT D'UN SHOOTER
-                         */
-                        comm = new Shooter();
-                        var p = comm.TypeReel();
-
-                        string cmd = "delete from commande where numcommande=" + LBX_WaitingList.Items[0].ToString();
-
-                        try
-                        {
-                            OracleCommand delete = new OracleCommand(cmd, b.EtatBaseDonnées);
-                            delete.CommandType = CommandType.Text;
-                            delete.ExecuteNonQuery();
-                        }
-                        catch (Exception sel) { MessageBox.Show(sel.Message.ToString()); }
+                        OracleCommand delete = new OracleCommand(cmd, b.EtatBaseDonnées);
+                        delete.CommandType = CommandType.Text;
+                        delete.ExecuteNonQuery();
                     }
+                    catch (Exception sel) { MessageBox.Show(sel.Message.ToString()); }
+                }
             }
         }
 
@@ -227,19 +225,19 @@ namespace ServeurBarman
 
             robot.ConnexionRobot();
             System.Threading.Thread.Sleep(2000);
-            if (robot.Connected)
-            {
+            //if (robot.Connected)
+            //{
                 EstConnecté = true;
                 MessageBox.Show("Connexion robot réussie");
                 //BTN_Setting.Enabled = true;
                 Task.Run(() => FlashLight());
                 Task.Run(() => ServirClient());
-            }
-            else
-            {
-                MessageBox.Show("Connexion robot impossible");
-                robot.Deconnexion();
-            }
+            //}
+            //else
+            //{
+            //    MessageBox.Show("Connexion robot impossible");
+            //    robot.Deconnexion();
+            //}
         }
 
         private void button6_Click(object sender, EventArgs e)
@@ -263,7 +261,7 @@ namespace ServeurBarman
         {
             Random rand = new Random();
 
-            int one = rand.Next(0,255);
+            int one = rand.Next(0, 255);
             int two = rand.Next(0, 255);
             int three = rand.Next(0, 255);
             int four = rand.Next(0, 255);

@@ -44,7 +44,7 @@
             // 
             this.Cbx_TypeVerre.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Cbx_TypeVerre.FormattingEnabled = true;
-            this.Cbx_TypeVerre.Location = new System.Drawing.Point(186, 16);
+            this.Cbx_TypeVerre.Location = new System.Drawing.Point(195, 47);
             this.Cbx_TypeVerre.Name = "Cbx_TypeVerre";
             this.Cbx_TypeVerre.Size = new System.Drawing.Size(142, 28);
             this.Cbx_TypeVerre.Sorted = true;
@@ -53,7 +53,7 @@
             // PnlShooter
             // 
             this.PnlShooter.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.PnlShooter.Location = new System.Drawing.Point(186, 110);
+            this.PnlShooter.Location = new System.Drawing.Point(367, 16);
             this.PnlShooter.Name = "PnlShooter";
             this.PnlShooter.Size = new System.Drawing.Size(143, 149);
             this.PnlShooter.TabIndex = 25;
@@ -63,7 +63,7 @@
             // 
             this.PnlVerreRouge.BackgroundImage = global::ServeurBarman.Properties.Resources.red_cup;
             this.PnlVerreRouge.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.PnlVerreRouge.Location = new System.Drawing.Point(186, 110);
+            this.PnlVerreRouge.Location = new System.Drawing.Point(367, 16);
             this.PnlVerreRouge.Name = "PnlVerreRouge";
             this.PnlVerreRouge.Size = new System.Drawing.Size(143, 149);
             this.PnlVerreRouge.TabIndex = 26;
@@ -72,9 +72,9 @@
             // button2
             // 
             this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button2.Location = new System.Drawing.Point(396, 222);
+            this.button2.Location = new System.Drawing.Point(210, 208);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(114, 37);
+            this.button2.Size = new System.Drawing.Size(143, 37);
             this.button2.TabIndex = 23;
             this.button2.Text = "Valider";
             this.button2.UseVisualStyleBackColor = true;
@@ -82,17 +82,18 @@
             // button1
             // 
             this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(516, 222);
+            this.button1.Location = new System.Drawing.Point(367, 208);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(114, 37);
+            this.button1.Size = new System.Drawing.Size(143, 37);
             this.button1.TabIndex = 24;
             this.button1.Text = "Annuler";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // TB_NbVerre
             // 
             this.TB_NbVerre.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TB_NbVerre.Location = new System.Drawing.Point(186, 54);
+            this.TB_NbVerre.Location = new System.Drawing.Point(195, 97);
             this.TB_NbVerre.Name = "TB_NbVerre";
             this.TB_NbVerre.Size = new System.Drawing.Size(143, 26);
             this.TB_NbVerre.TabIndex = 22;
@@ -101,7 +102,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(29, 58);
+            this.label2.Location = new System.Drawing.Point(38, 101);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(127, 18);
             this.label2.TabIndex = 20;
@@ -111,7 +112,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(50, 15);
+            this.label1.Location = new System.Drawing.Point(59, 46);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(105, 18);
             this.label1.TabIndex = 21;
@@ -129,10 +130,10 @@
             this.Controls.Add(this.TB_NbVerre);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.MaximumSize = new System.Drawing.Size(659, 274);
-            this.MinimumSize = new System.Drawing.Size(659, 274);
+            this.MaximumSize = new System.Drawing.Size(548, 274);
+            this.MinimumSize = new System.Drawing.Size(548, 274);
             this.Name = "AddCups";
-            this.Size = new System.Drawing.Size(659, 274);
+            this.Size = new System.Drawing.Size(548, 274);
             ((System.ComponentModel.ISupportInitialize)(this.PnlShooter)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.PnlVerreRouge)).EndInit();
             this.ResumeLayout(false);

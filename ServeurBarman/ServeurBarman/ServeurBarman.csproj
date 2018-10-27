@@ -221,5 +221,17 @@
   <ItemGroup>
     <None Include="Resources\stop1.jpg" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-wine-bottle-64.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Icons8-Ios7-Food-Beer-Bottle.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Papirus-Team-Papirus-Apps-Github-mirkobrombin-bottles.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Google-Noto-Emoji-Food-Drink-32443-cup-with-straw.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
