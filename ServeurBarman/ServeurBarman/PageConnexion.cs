@@ -13,34 +13,41 @@ namespace ServeurBarman
 {
     public partial class PageConnexion : MetroFramework.Forms.MetroForm
     {
-        DataBase b { get; set; }
+        DataBase base2Donnees { get; set; }
    
         public PageConnexion()
         {
             InitializeComponent();
-            b = DataBase.instance_bd;
+            
         }
 
         private void BTN_Logon_Click(object sender, EventArgs e)
         {
             Connexion_BD();
-            this.Show();
         }
 
         public void Connexion_BD()
         {
-            b.Connexion(TBX_User.Text, TBX_Pwd.Text); // Ouvrir Connexion
-            PageAccueil dlgPageAccueil = new PageAccueil();
-            this.Hide();
-            DialogResult dlg_result = dlgPageAccueil.ShowDialog();
-            b.FermerConnexion(); // Fermer connexion
-            this.Close();
+            base2Donnees.Connexion(TBX_User.Text, TBX_Pwd.Text); // Ouvrir Connexion
+            if (base2Donnees.EtatBaseDonnées.State.ToString().Equals("Open"))
+            {
+                PageAccueil dlgPageAccueil = new PageAccueil();
+                this.Hide();
+                DialogResult dlg_result = dlgPageAccueil.ShowDialog();
+                base2Donnees.FermerConnexion(); // Fermer connexion
+                this.Close();
+            }
         }
 
         private void BTN_Logon_TextChanged(object sender, EventArgs e)
         {
             //if (!connexion.State.Equals("Open"))
             //    BTN_Logon.Text = "Connexion";
+        }
+
+        private void PageConnexion_Load(object sender, EventArgs e)
+        {
+            base2Donnees = DataBase.instance_bd;
         }
     }
 }

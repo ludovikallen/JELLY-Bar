@@ -18,13 +18,13 @@ namespace ServeurBarman
 
         private DataBase()
         {
-
+            EtatBaseDonnées = new OracleConnection();
         }
         static DataBase() { }
 
         public OracleConnection Connexion(string user, string pass)
         {
-            EtatBaseDonnées = new OracleConnection();
+            
             try
             {
                 string dsource = "(DESCRIPTION = (ADDRESS = (PROTOCOL = TCP)(HOST = 205.237.244.251)(PORT = 1521)) (CONNECT_DATA =(SERVICE_NAME = orcl.clg.qc.ca)))";
@@ -141,7 +141,7 @@ namespace ServeurBarman
                 OracleCommand disc = new OracleCommand(cmd, EtatBaseDonnées);
                 disc.ExecuteNonQuery();
             }
-            catch (Exception sel) { MessageBox.Show(sel.Message); }
+            catch (Exception sel) { MessageBox.Show(sel.Message.ToString()); }
 
             try
             {
@@ -151,6 +151,32 @@ namespace ServeurBarman
             }
             catch (Exception) { MessageBox.Show(" Échec de l'enregistrement."); }
         }
+
+        public void SupprimerCommande()
+        {
+            try
+            {
+                string cmd = "delete  from commande";
+
+                OracleCommand disc = new OracleCommand(cmd, EtatBaseDonnées);
+                disc.ExecuteNonQuery();
+            }
+            catch (Exception sel) { MessageBox.Show(sel.Message); }
+        }
+
+        public void SupprimerCommande(string num)
+        {
+            try
+            {
+                string cmd = "delete  from commande where numcommande="+num;
+
+                OracleCommand disc = new OracleCommand(cmd, EtatBaseDonnées);
+                disc.ExecuteNonQuery();
+            }
+            catch (Exception sel) { MessageBox.Show(sel.Message.ToString()); }
+        }
+
+
     }
 
 

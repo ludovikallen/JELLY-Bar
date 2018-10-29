@@ -24,7 +24,7 @@ namespace ServeurBarman
         CRS_A255 robot = CRS_A255.Instance;
         private readonly object accessLock = new object();
         List<(int, int)> numcommande = new List<(int, int)>();
-        DataBase b;
+        DataBase base2Donnees;
         Commande service;
         string commandeEnCours;
         int item1, item2;
@@ -33,21 +33,6 @@ namespace ServeurBarman
         public PageAccueil()
         {
             InitializeComponent();
-            b = DataBase.instance_bd;
-            lbFinishiCommande.Font = new Font("Arial", 30, FontStyle.Bold);
-
-            PBX_EtatDeconnecté.Visible = true;
-            check = true;
-            Task.Run(() =>
-            {
-                while (check)
-                {
-                    Thread.Sleep(1000);
-                    Show_WaitingDrinksList();
-                    Thread.Sleep(1000);
-                }
-            });
-            welcomePage1.activiteRobot = "Connexion établie avec la base de donnée...";
         }
 
         private void BTN_Welcome_Click(object sender, EventArgs e)
@@ -92,15 +77,30 @@ namespace ServeurBarman
 
         private void PageAccueil_Load(object sender, EventArgs e)
         {
+            welcomePage1.activiteRobot = "Connexion établie avec la base de donnée...";
             welcomePage1.BringToFront();
             Init_PageAcceuil();
-            timer1.Start();
-            timer1.Enabled = true;
         }
 
         private void Init_PageAcceuil()
         {
             BTN_Setting.Enabled = true;
+            base2Donnees = DataBase.instance_bd;
+            lbFinishiCommande.Font = new Font("Arial", 30, FontStyle.Bold);
+
+            check = true;
+            Task.Run(() =>
+            {
+                while (check)
+                {
+                    Thread.Sleep(1000);
+                    Show_WaitingDrinksList();
+                    Thread.Sleep(1000);
+                }
+            });
+
+            timer1.Start();
+            timer1.Enabled = true;
         }
         private void Show_WaitingDrinksList()
         {
@@ -157,7 +157,7 @@ namespace ServeurBarman
             lock (accessLock)
             {
                 numcommande.Clear();
-                numcommande = b.ListeCommande();
+                numcommande = base2Donnees.ListeCommande();
                 item1 = numcommande[0].Item1;
                 item2 = numcommande[0].Item2;
             }
@@ -181,20 +181,13 @@ namespace ServeurBarman
 
                         if (robot.MakeDrink(ing.ToList()))
                         {
-                            lb_CommandeEnCours.Text= LBX_WaitingList.Items[0].ToString();
+                            
+                            this.Invoke((MethodInvoker)(() => base2Donnees.SupprimerCommande(LBX_WaitingList.Items[0].ToString())));
+                            this.Invoke((MethodInvoker)(() => lb_CommandeEnCours.Text = LBX_WaitingList.Items[0].ToString()));
                             if (commandeEnCours != null)
-                                lbFinishiCommande.Text = "Commande numéro " + commandeEnCours + " terminée!";
+                                this.Invoke((MethodInvoker)(() => lbFinishiCommande.Text = "Commande numéro " + commandeEnCours + " terminée!"));
+                            ;
                             commandeEnCours = lb_CommandeEnCours.Text.ToString();
-
-                            string cmd = "delete from commande where numcommande=" + commandeEnCours;
-
-                            try
-                            {
-                                OracleCommand delete = new OracleCommand(cmd, b.EtatBaseDonnées);
-                                delete.CommandType = CommandType.Text;
-                                delete.ExecuteNonQuery();
-                            }
-                            catch (Exception sel) { MessageBox.Show(sel.Message.ToString()); }
                         }
                     }
                 }
@@ -206,15 +199,12 @@ namespace ServeurBarman
                     service = new Commande(item2);
                     var p = service.TypeReel();
 
-                    string cmd = "delete from commande where numcommande=" + LBX_WaitingList.Items[0].ToString();
+                    this.Invoke((MethodInvoker)(() => base2Donnees.SupprimerCommande(LBX_WaitingList.Items[0].ToString())));
+                    if (commandeEnCours != null)
+                        this.Invoke((MethodInvoker)(() => lbFinishiCommande.Text = "Commande numéro " + commandeEnCours + " terminée!"));
+                    commandeEnCours = lb_CommandeEnCours.Text.ToString();
 
-                    try
-                    {
-                        OracleCommand delete = new OracleCommand(cmd, b.EtatBaseDonnées);
-                        delete.CommandType = CommandType.Text;
-                        delete.ExecuteNonQuery();
-                    }
-                    catch (Exception sel) { MessageBox.Show(sel.Message.ToString()); }
+                    
                 }
             }
         }
@@ -222,39 +212,30 @@ namespace ServeurBarman
         private void mBtnConnexionRobot_Click(object sender, EventArgs e)
         {
             // On établie la connexion avec le robot
-
             robot.ConnexionRobot();
             System.Threading.Thread.Sleep(2000);
-            //if (robot.Connected)
-            //{
+            if (robot.Connected)
+            {
                 EstConnecté = true;
                 MessageBox.Show("Connexion robot réussie");
-                //BTN_Setting.Enabled = true;
-                Task.Run(() => FlashLight());
+                System.Threading.Thread.Sleep(5000);
                 Task.Run(() => ServirClient());
-            //}
-            //else
-            //{
-            //    MessageBox.Show("Connexion robot impossible");
-            //    robot.Deconnexion();
-            //}
+            }
+            else
+            {
+                MessageBox.Show("Connexion robot impossible");
+                robot.Deconnexion();
+            }
         }
 
         private void button6_Click(object sender, EventArgs e)
         {
-            b.FermerConnexion();
+            base2Donnees.FermerConnexion();
         }
 
-        private void FlashLight()
+        private void Btn_ResetCommande_Click(object sender, EventArgs e)
         {
-            this.Invoke((MethodInvoker)(() => PBX_EtatDeconnecté.Visible = false));
-            while (true)
-            {
-                this.Invoke((MethodInvoker)(() => PBX_EtatConnecté.Visible = true));
-                Thread.Sleep(1000);
-                this.Invoke((MethodInvoker)(() => PBX_EtatConnecté.Visible = false));
-                Thread.Sleep(1000);
-            }
+            base2Donnees.SupprimerCommande();
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -269,16 +250,6 @@ namespace ServeurBarman
             lbFinishiCommande.ForeColor = Color.FromArgb(one, two, three, four);
         }
 
-        private void BtnResetCommande_Click(object sender, EventArgs e)
-        {
-            string cmd = "delete from commande";
-            try
-            {
-                OracleCommand delete = new OracleCommand(cmd, b.EtatBaseDonnées);
-                delete.CommandType = CommandType.Text;
-                delete.ExecuteNonQuery();
-            }
-            catch (Exception sel) { MessageBox.Show(sel.Message.ToString()); }
-        }
+      
     }
 }

@@ -32,10 +32,11 @@ namespace ServeurBarman
         {
             while (true)
             {
-                this.Invoke((MethodInvoker)(() => mLB_CustomNumber.Text = baseDonnees.ListeCommande().Count.ToString()));
+                //
                 this.Invoke((MethodInvoker)(() => mLB_NombreDeBouteille.Text = baseDonnees.NombreIngredients()));
                 this.Invoke((MethodInvoker)(() => mLB_NombreDeVerre.Text = baseDonnees.NombreDeVerreRouge()));
                 this.Invoke((MethodInvoker)(() => mLB_NombreDeShooter.Text = baseDonnees.NombreDeShooter()));
+                this.Invoke((MethodInvoker)(() => mLB_CustomNumber.Text = baseDonnees.ListeCommande().Count.ToString()));
             }
             //LBX_Activities.Items.Add(activiteRobot);
         }

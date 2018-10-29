@@ -104,6 +104,7 @@
             this.MaximumSize = new System.Drawing.Size(430, 500);
             this.MinimumSize = new System.Drawing.Size(430, 500);
             this.Name = "PageConnexion";
+            this.Load += new System.EventHandler(this.PageConnexion_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
