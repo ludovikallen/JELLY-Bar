@@ -72,7 +72,7 @@ namespace ServeurBarman
 
         private void PageAccueil_FormClosing(object sender, FormClosingEventArgs e)
         {
-            check = false;
+         
         }
 
         private void PageAccueil_Load(object sender, EventArgs e)
@@ -88,10 +88,9 @@ namespace ServeurBarman
             base2Donnees = DataBase.instance_bd;
             lbFinishiCommande.Font = new Font("Arial", 30, FontStyle.Bold);
 
-            check = true;
             Task.Run(() =>
             {
-                while (check)
+                while (true)
                 {
                     Thread.Sleep(1000);
                     Show_WaitingDrinksList();
@@ -99,55 +98,20 @@ namespace ServeurBarman
                 }
             });
 
+            Task.Run(() => base2Donnees.ListeCommande());
             timer1.Start();
             timer1.Enabled = true;
         }
+
         private void Show_WaitingDrinksList()
         {
-            Boolean check1 = true;
-            if (check)
-                // Premiere vérificcation de la liste de commande 
-                if (LBX_WaitingList.Items.Count == 0)
-                {
-                    numcommande.Clear();
-                    this.Invoke((MethodInvoker)(() => LBX_WaitingList.Items.Clear()));
-                    Refresh_WaitingList();
-                    foreach (var e in numcommande)
-                    {
-                        this.Invoke((MethodInvoker)(() => LBX_WaitingList.Items.Add(e.Item1)));
-                    }
-                }
-                else
-                {
-                    // Ici, on vérifie si une nouvelle commande a été ajoutée à la liste d'attente
+            if(numcommande.Count!=base2Donnees.ListeCommande().Count)
+            {
+                Refresh_WaitingList();
 
-                    Refresh_WaitingList();
-
-                    for (int i = 0; i < numcommande.Count; ++i)
-                    {
-                        if (LBX_WaitingList.Items.Count != numcommande.Count)
-                        {
-                            numcommande.Clear();
-                            this.Invoke((MethodInvoker)(() => LBX_WaitingList.Items.Clear()));
-                            Refresh_WaitingList();
-                            foreach (var e in numcommande)
-                            {
-                                this.Invoke((MethodInvoker)(() => LBX_WaitingList.Items.Add(e.Item1)));
-                            }
-                        }
-                        else if (!LBX_WaitingList.Items[i].Equals(numcommande[i].Item1))
-                            check1 = false;
-                    }
-
-                    if (!check1)
-                    {
-                        this.Invoke((MethodInvoker)(() => LBX_WaitingList.Items.Clear()));
-                        foreach (var e in numcommande)
-                        {
-                            this.Invoke((MethodInvoker)(() => LBX_WaitingList.Items.Add(e.Item1)));
-                        }
-                    }
-                }
+                foreach(var e in numcommande)
+                    this.Invoke((MethodInvoker)(() => LBX_WaitingList.Items.Add(e.Item1)));
+            }
         }
 
         // Ici, on charge toutes les commandes disponible dans la table commande de la bd,
@@ -157,6 +121,7 @@ namespace ServeurBarman
             lock (accessLock)
             {
                 numcommande.Clear();
+                LBX_WaitingList.Items.Clear();
                 numcommande = base2Donnees.ListeCommande();
                 item1 = numcommande[0].Item1;
                 item2 = numcommande[0].Item2;
@@ -203,8 +168,6 @@ namespace ServeurBarman
                     if (commandeEnCours != null)
                         this.Invoke((MethodInvoker)(() => lbFinishiCommande.Text = "Commande numéro " + commandeEnCours + " terminée!"));
                     commandeEnCours = lb_CommandeEnCours.Text.ToString();
-
-                    
                 }
             }
         }
@@ -246,10 +209,8 @@ namespace ServeurBarman
             int two = rand.Next(0, 255);
             int three = rand.Next(0, 255);
             int four = rand.Next(0, 255);
-
+            lB_DateTime.Text = DateTime.Now.ToString("hh:mm:ss");
             lbFinishiCommande.ForeColor = Color.FromArgb(one, two, three, four);
         }
-
-      
     }
 }

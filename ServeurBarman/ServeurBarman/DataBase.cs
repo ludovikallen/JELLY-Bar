@@ -45,29 +45,32 @@ namespace ServeurBarman
 
         public List<(int, int)> ListeCommande()
         {
-            List<(int, int)> numcommande = new List<(int, int)>();
-            string cmd = "select numcommande,shooter from commande";
-            try
+            while (true)
             {
-                OracleCommand listeDiv = new OracleCommand(cmd, EtatBaseDonnées);
-                listeDiv.CommandType = CommandType.Text;
-                OracleDataReader divisionReader = listeDiv.ExecuteReader();
-                while (divisionReader.Read())
+                List<(int, int)> numcommande = new List<(int, int)>();
+                string cmd = "select numcommande,shooter from commande";
+                try
                 {
-                    numcommande.Add((divisionReader.GetInt32(0), divisionReader.GetInt32(1)));
+                    OracleCommand listeDiv = new OracleCommand(cmd, EtatBaseDonnées);
+                    listeDiv.CommandType = CommandType.Text;
+                    OracleDataReader divisionReader = listeDiv.ExecuteReader();
+                    while (divisionReader.Read())
+                    {
+                        numcommande.Add((divisionReader.GetInt32(0), divisionReader.GetInt32(1)));
+                    }
+                    divisionReader.Close();
                 }
-                divisionReader.Close();
-            }
-            catch (Exception sel) { MessageBox.Show(sel.Message.ToString()); }
+                catch (Exception sel) { MessageBox.Show(sel.Message.ToString()); }
 
-            //ON ORDONNE LA LISTE DES COMMANDES
-            for (int i = 0; i < numcommande.Count; ++i)
-            {
-                for (int j = 0; j < numcommande.Count; ++j)
-                    if (numcommande[i].Item1 == numcommande[j].Item1 && i != j)
-                        numcommande.Remove(numcommande[j]);
+                //ON ORDONNE LA LISTE DES COMMANDES
+                for (int i = 0; i < numcommande.Count; ++i)
+                {
+                    for (int j = 0; j < numcommande.Count; ++j)
+                        if (numcommande[i].Item1 == numcommande[j].Item1 && i != j)
+                            numcommande.Remove(numcommande[j]);
+                }
+                return numcommande;
             }
-            return numcommande;
         }
 
         public string NombreDeShooter()

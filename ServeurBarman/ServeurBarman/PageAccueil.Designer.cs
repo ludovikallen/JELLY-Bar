@@ -51,10 +51,11 @@
             this.label3 = new System.Windows.Forms.Label();
             this.lb_CommandeEnCours = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.Btn_ResetCommande = new System.Windows.Forms.Button();
+            this.lB_DateTime = new System.Windows.Forms.Label();
             this.addCups1 = new ServeurBarman.AddCups();
             this.add_Drinks1 = new ServeurBarman.Add_Drinks();
             this.welcomePage1 = new ServeurBarman.WelcomePage();
-            this.Btn_ResetCommande = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PBX_Logo)).BeginInit();
             this.pnlBar.SuspendLayout();
@@ -244,7 +245,7 @@
             // 
             this.mBtnConnexionRobot.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.mBtnConnexionRobot.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.mBtnConnexionRobot.Location = new System.Drawing.Point(896, 182);
+            this.mBtnConnexionRobot.Location = new System.Drawing.Point(887, 180);
             this.mBtnConnexionRobot.Name = "mBtnConnexionRobot";
             this.mBtnConnexionRobot.Size = new System.Drawing.Size(194, 55);
             this.mBtnConnexionRobot.TabIndex = 13;
@@ -259,9 +260,9 @@
             // 
             // lbFinishiCommande
             // 
-            this.lbFinishiCommande.Location = new System.Drawing.Point(271, 619);
+            this.lbFinishiCommande.Location = new System.Drawing.Point(269, 619);
             this.lbFinishiCommande.Name = "lbFinishiCommande";
-            this.lbFinishiCommande.Size = new System.Drawing.Size(810, 52);
+            this.lbFinishiCommande.Size = new System.Drawing.Size(812, 52);
             this.lbFinishiCommande.TabIndex = 15;
             // 
             // panel5
@@ -304,11 +305,32 @@
             this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBox1.BackgroundImage = global::ServeurBarman.Properties.Resources.stop1;
             this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.pictureBox1.Location = new System.Drawing.Point(896, 243);
+            this.pictureBox1.Location = new System.Drawing.Point(987, 241);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(94, 83);
             this.pictureBox1.TabIndex = 3;
             this.pictureBox1.TabStop = false;
+            // 
+            // Btn_ResetCommande
+            // 
+            this.Btn_ResetCommande.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Btn_ResetCommande.Location = new System.Drawing.Point(541, 281);
+            this.Btn_ResetCommande.Name = "Btn_ResetCommande";
+            this.Btn_ResetCommande.Size = new System.Drawing.Size(136, 42);
+            this.Btn_ResetCommande.TabIndex = 24;
+            this.Btn_ResetCommande.Text = "Reset liste commande";
+            this.Btn_ResetCommande.UseVisualStyleBackColor = true;
+            this.Btn_ResetCommande.Click += new System.EventHandler(this.Btn_ResetCommande_Click);
+            // 
+            // lB_DateTime
+            // 
+            this.lB_DateTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lB_DateTime.Location = new System.Drawing.Point(889, 73);
+            this.lB_DateTime.Name = "lB_DateTime";
+            this.lB_DateTime.Size = new System.Drawing.Size(192, 44);
+            this.lB_DateTime.TabIndex = 25;
+            this.lB_DateTime.Text = "label2";
+            this.lB_DateTime.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // addCups1
             // 
@@ -337,22 +359,12 @@
             this.welcomePage1.Size = new System.Drawing.Size(548, 274);
             this.welcomePage1.TabIndex = 16;
             // 
-            // Btn_ResetCommande
-            // 
-            this.Btn_ResetCommande.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Btn_ResetCommande.Location = new System.Drawing.Point(541, 281);
-            this.Btn_ResetCommande.Name = "Btn_ResetCommande";
-            this.Btn_ResetCommande.Size = new System.Drawing.Size(136, 42);
-            this.Btn_ResetCommande.TabIndex = 24;
-            this.Btn_ResetCommande.Text = "Reset liste commande";
-            this.Btn_ResetCommande.UseVisualStyleBackColor = true;
-            this.Btn_ResetCommande.Click += new System.EventHandler(this.Btn_ResetCommande_Click);
-            // 
             // PageAccueil
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1088, 691);
+            this.Controls.Add(this.lB_DateTime);
             this.Controls.Add(this.Btn_ResetCommande);
             this.Controls.Add(this.lb_CommandeEnCours);
             this.Controls.Add(this.label3);
@@ -372,7 +384,6 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "PageAccueil";
             this.Text = "    Accueil";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.PageAccueil_FormClosing);
             this.Load += new System.EventHandler(this.PageAccueil_Load);
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.PBX_Logo)).EndInit();
@@ -410,5 +421,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label lb_CommandeEnCours;
         private System.Windows.Forms.Button Btn_ResetCommande;
+        private System.Windows.Forms.Label lB_DateTime;
     }
 }
