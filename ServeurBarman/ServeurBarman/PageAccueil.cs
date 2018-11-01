@@ -19,8 +19,6 @@ namespace ServeurBarman
     public partial class PageAccueil : MetroFramework.Forms.MetroForm
     {
         bool EstConnecté { get; set; }
-        static bool check;
-        List<List<(Position, int)>> ListcommandeRobot = new List<List<(Position, int)>>();
         CRS_A255 robot = CRS_A255.Instance;
         private readonly object accessLock = new object();
         List<(int, int)> numcommande = new List<(int, int)>();
@@ -28,6 +26,7 @@ namespace ServeurBarman
         Commande service;
         string commandeEnCours;
         int item1, item2;
+        int compteur;
 
 
         public PageAccueil()
@@ -80,7 +79,12 @@ namespace ServeurBarman
             welcomePage1.activiteRobot = "Connexion établie avec la base de donnée...";
             welcomePage1.BringToFront();
             Init_PageAcceuil();
+            timer2.Start();
+            timer2.Enabled = true;
+            lbFinishiCommande.Location = new Point(pnlDonnees.Width - compteur, lbFinishiCommande.Location.Y);
+            compteur++;
         }
+
 
         private void Init_PageAcceuil()
         {
@@ -114,8 +118,10 @@ namespace ServeurBarman
             }
         }
 
-        // Ici, on charge toutes les commandes disponible dans la table commande de la bd,
-        // puis on détermine le nombre de clients.
+        /// <summary>
+        /// Ici, on charge toutes les commandes disponible dans la table commande de la bd,
+        /// puis on détermine le nombre de clients.
+        /// </summary>
         private void Refresh_WaitingList()
         {
             lock (accessLock)
@@ -130,7 +136,7 @@ namespace ServeurBarman
 
         /// <summary>
         /// Cette méthode permet de servir le client sur la base des commandes disponible 
-        /// dans la liste d'attante
+        /// dans la liste d'attante tout en distinguant le type de commande
         /// </summary>
         private void ServirClient()
         {
@@ -146,12 +152,12 @@ namespace ServeurBarman
 
                         if (robot.MakeDrink(ing.ToList()))
                         {
-                            
                             this.Invoke((MethodInvoker)(() => base2Donnees.SupprimerCommande(LBX_WaitingList.Items[0].ToString())));
                             this.Invoke((MethodInvoker)(() => lb_CommandeEnCours.Text = LBX_WaitingList.Items[0].ToString()));
+
                             if (commandeEnCours != null)
                                 this.Invoke((MethodInvoker)(() => lbFinishiCommande.Text = "Commande numéro " + commandeEnCours + " terminée!"));
-                            ;
+
                             commandeEnCours = lb_CommandeEnCours.Text.ToString();
                         }
                     }
@@ -191,14 +197,34 @@ namespace ServeurBarman
             }
         }
 
-        private void button6_Click(object sender, EventArgs e)
-        {
-            base2Donnees.FermerConnexion();
-        }
-
         private void Btn_ResetCommande_Click(object sender, EventArgs e)
         {
             base2Donnees.SupprimerCommande();
+        }
+
+        private void timer2_Tick(object sender, EventArgs e)
+        {
+            if(lbFinishiCommande.Location.X==0)
+            {
+                compteur = 0;
+                lbFinishiCommande.Location = new Point(pnlDonnees.Width - compteur, lbFinishiCommande.Location.Y);
+                compteur++;
+            }
+            else
+            {
+                lbFinishiCommande.Location = new Point(pnlDonnees.Width - compteur, lbFinishiCommande.Location.Y);
+                compteur++;
+            }
+        }
+
+        private void pbx_Halt_Click(object sender, EventArgs e)
+        {
+            robot.Halt();
+        }
+
+        private void deconnexion_Click(object sender, EventArgs e)
+        {
+            base2Donnees.FermerConnexion();
         }
 
         private void timer1_Tick(object sender, EventArgs e)

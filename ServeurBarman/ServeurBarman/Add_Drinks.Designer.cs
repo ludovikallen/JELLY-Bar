@@ -45,6 +45,12 @@
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
+            this.erreurCode = new System.Windows.Forms.Label();
+            this.erreurDrink = new System.Windows.Forms.Label();
+            this.erreurPosY = new System.Windows.Forms.Label();
+            this.erreurPosX = new System.Windows.Forms.Label();
+            this.erreurPosZ = new System.Windows.Forms.Label();
+            this.erreurQty = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // Tbx_Posx
@@ -54,6 +60,7 @@
             this.Tbx_Posx.Name = "Tbx_Posx";
             this.Tbx_Posx.Size = new System.Drawing.Size(63, 26);
             this.Tbx_Posx.TabIndex = 5;
+            this.Tbx_Posx.TextChanged += new System.EventHandler(this.Tbx_NomBouteille_TextChanged);
             // 
             // label3
             // 
@@ -72,6 +79,7 @@
             this.Tbx_NomBouteille.Name = "Tbx_NomBouteille";
             this.Tbx_NomBouteille.Size = new System.Drawing.Size(63, 26);
             this.Tbx_NomBouteille.TabIndex = 6;
+            this.Tbx_NomBouteille.TextChanged += new System.EventHandler(this.Tbx_NomBouteille_TextChanged);
             // 
             // label2
             // 
@@ -90,7 +98,7 @@
             this.Tbx_CodeBouteille.Name = "Tbx_CodeBouteille";
             this.Tbx_CodeBouteille.Size = new System.Drawing.Size(63, 26);
             this.Tbx_CodeBouteille.TabIndex = 7;
-            this.Tbx_CodeBouteille.TextChanged += new System.EventHandler(this.Tbx_CodeBouteille_TextChanged);
+            this.Tbx_CodeBouteille.TextChanged += new System.EventHandler(this.Tbx_NomBouteille_TextChanged);
             // 
             // label1
             // 
@@ -119,6 +127,7 @@
             this.Tbx_Quantity.Name = "Tbx_Quantity";
             this.Tbx_Quantity.Size = new System.Drawing.Size(63, 26);
             this.Tbx_Quantity.TabIndex = 5;
+            this.Tbx_Quantity.TextChanged += new System.EventHandler(this.Tbx_NomBouteille_TextChanged);
             // 
             // Btn_Cancel
             // 
@@ -148,6 +157,7 @@
             this.Tbx_Posy.Name = "Tbx_Posy";
             this.Tbx_Posy.Size = new System.Drawing.Size(63, 26);
             this.Tbx_Posy.TabIndex = 5;
+            this.Tbx_Posy.TextChanged += new System.EventHandler(this.Tbx_NomBouteille_TextChanged);
             // 
             // Tbx_Posz
             // 
@@ -156,6 +166,7 @@
             this.Tbx_Posz.Name = "Tbx_Posz";
             this.Tbx_Posz.Size = new System.Drawing.Size(63, 26);
             this.Tbx_Posz.TabIndex = 5;
+            this.Tbx_Posz.TextChanged += new System.EventHandler(this.Tbx_NomBouteille_TextChanged);
             // 
             // Rtb_Description
             // 
@@ -202,10 +213,82 @@
             this.label8.TabIndex = 11;
             this.label8.Text = "Description";
             // 
+            // erreurCode
+            // 
+            this.erreurCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.erreurCode.ForeColor = System.Drawing.Color.Red;
+            this.erreurCode.Location = new System.Drawing.Point(229, 11);
+            this.erreurCode.Name = "erreurCode";
+            this.erreurCode.Size = new System.Drawing.Size(24, 26);
+            this.erreurCode.TabIndex = 29;
+            this.erreurCode.Text = "*";
+            this.erreurCode.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // erreurDrink
+            // 
+            this.erreurDrink.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.erreurDrink.ForeColor = System.Drawing.Color.Red;
+            this.erreurDrink.Location = new System.Drawing.Point(229, 53);
+            this.erreurDrink.Name = "erreurDrink";
+            this.erreurDrink.Size = new System.Drawing.Size(24, 26);
+            this.erreurDrink.TabIndex = 29;
+            this.erreurDrink.Text = "*";
+            this.erreurDrink.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // erreurPosY
+            // 
+            this.erreurPosY.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.erreurPosY.ForeColor = System.Drawing.Color.Red;
+            this.erreurPosY.Location = new System.Drawing.Point(229, 128);
+            this.erreurPosY.Name = "erreurPosY";
+            this.erreurPosY.Size = new System.Drawing.Size(24, 26);
+            this.erreurPosY.TabIndex = 29;
+            this.erreurPosY.Text = "*";
+            this.erreurPosY.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // erreurPosX
+            // 
+            this.erreurPosX.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.erreurPosX.ForeColor = System.Drawing.Color.Red;
+            this.erreurPosX.Location = new System.Drawing.Point(229, 96);
+            this.erreurPosX.Name = "erreurPosX";
+            this.erreurPosX.Size = new System.Drawing.Size(24, 26);
+            this.erreurPosX.TabIndex = 29;
+            this.erreurPosX.Text = "*";
+            this.erreurPosX.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // erreurPosZ
+            // 
+            this.erreurPosZ.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.erreurPosZ.ForeColor = System.Drawing.Color.Red;
+            this.erreurPosZ.Location = new System.Drawing.Point(229, 160);
+            this.erreurPosZ.Name = "erreurPosZ";
+            this.erreurPosZ.Size = new System.Drawing.Size(24, 26);
+            this.erreurPosZ.TabIndex = 29;
+            this.erreurPosZ.Text = "*";
+            this.erreurPosZ.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // erreurQty
+            // 
+            this.erreurQty.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.erreurQty.ForeColor = System.Drawing.Color.Red;
+            this.erreurQty.Location = new System.Drawing.Point(229, 201);
+            this.erreurQty.Name = "erreurQty";
+            this.erreurQty.Size = new System.Drawing.Size(24, 26);
+            this.erreurQty.TabIndex = 29;
+            this.erreurQty.Text = "*";
+            this.erreurQty.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // Add_Drinks
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.erreurPosX);
+            this.Controls.Add(this.erreurQty);
+            this.Controls.Add(this.erreurPosZ);
+            this.Controls.Add(this.erreurPosY);
+            this.Controls.Add(this.erreurDrink);
+            this.Controls.Add(this.erreurCode);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label6);
@@ -227,6 +310,7 @@
             this.MinimumSize = new System.Drawing.Size(548, 274);
             this.Name = "Add_Drinks";
             this.Size = new System.Drawing.Size(548, 274);
+            this.Load += new System.EventHandler(this.Add_Drinks_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -251,5 +335,11 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label erreurCode;
+        private System.Windows.Forms.Label erreurDrink;
+        private System.Windows.Forms.Label erreurPosY;
+        private System.Windows.Forms.Label erreurPosX;
+        private System.Windows.Forms.Label erreurPosZ;
+        private System.Windows.Forms.Label erreurQty;
     }
 }

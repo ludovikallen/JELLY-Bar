@@ -31,11 +31,12 @@
             this.Cbx_TypeVerre = new System.Windows.Forms.ComboBox();
             this.PnlShooter = new System.Windows.Forms.PictureBox();
             this.PnlVerreRouge = new System.Windows.Forms.PictureBox();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btn_Valider = new System.Windows.Forms.Button();
+            this.btn_Annuler = new System.Windows.Forms.Button();
             this.TB_NbVerre = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.erreur = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.PnlShooter)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.PnlVerreRouge)).BeginInit();
             this.SuspendLayout();
@@ -49,6 +50,7 @@
             this.Cbx_TypeVerre.Size = new System.Drawing.Size(142, 28);
             this.Cbx_TypeVerre.Sorted = true;
             this.Cbx_TypeVerre.TabIndex = 27;
+            this.Cbx_TypeVerre.SelectedIndexChanged += new System.EventHandler(this.Cbx_TypeVerre_SelectedIndexChanged);
             // 
             // PnlShooter
             // 
@@ -69,26 +71,26 @@
             this.PnlVerreRouge.TabIndex = 26;
             this.PnlVerreRouge.TabStop = false;
             // 
-            // button2
+            // btn_Valider
             // 
-            this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button2.Location = new System.Drawing.Point(210, 208);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(143, 37);
-            this.button2.TabIndex = 23;
-            this.button2.Text = "Valider";
-            this.button2.UseVisualStyleBackColor = true;
+            this.btn_Valider.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_Valider.Location = new System.Drawing.Point(210, 208);
+            this.btn_Valider.Name = "btn_Valider";
+            this.btn_Valider.Size = new System.Drawing.Size(143, 37);
+            this.btn_Valider.TabIndex = 23;
+            this.btn_Valider.Text = "Valider";
+            this.btn_Valider.UseVisualStyleBackColor = true;
+            this.btn_Valider.Click += new System.EventHandler(this.btn_Valider_Click);
             // 
-            // button1
+            // btn_Annuler
             // 
-            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(367, 208);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(143, 37);
-            this.button1.TabIndex = 24;
-            this.button1.Text = "Annuler";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.btn_Annuler.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_Annuler.Location = new System.Drawing.Point(367, 208);
+            this.btn_Annuler.Name = "btn_Annuler";
+            this.btn_Annuler.Size = new System.Drawing.Size(143, 37);
+            this.btn_Annuler.TabIndex = 24;
+            this.btn_Annuler.Text = "Annuler";
+            this.btn_Annuler.UseVisualStyleBackColor = true;
             // 
             // TB_NbVerre
             // 
@@ -118,15 +120,27 @@
             this.label1.TabIndex = 21;
             this.label1.Text = "Type de verres";
             // 
+            // erreur
+            // 
+            this.erreur.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.erreur.ForeColor = System.Drawing.Color.Red;
+            this.erreur.Location = new System.Drawing.Point(337, 97);
+            this.erreur.Name = "erreur";
+            this.erreur.Size = new System.Drawing.Size(24, 26);
+            this.erreur.TabIndex = 28;
+            this.erreur.Text = "*";
+            this.erreur.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // AddCups
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.erreur);
             this.Controls.Add(this.Cbx_TypeVerre);
             this.Controls.Add(this.PnlShooter);
             this.Controls.Add(this.PnlVerreRouge);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.btn_Valider);
+            this.Controls.Add(this.btn_Annuler);
             this.Controls.Add(this.TB_NbVerre);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -134,6 +148,7 @@
             this.MinimumSize = new System.Drawing.Size(548, 274);
             this.Name = "AddCups";
             this.Size = new System.Drawing.Size(548, 274);
+            this.Load += new System.EventHandler(this.AddCups_Load);
             ((System.ComponentModel.ISupportInitialize)(this.PnlShooter)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.PnlVerreRouge)).EndInit();
             this.ResumeLayout(false);
@@ -146,10 +161,11 @@
         private System.Windows.Forms.ComboBox Cbx_TypeVerre;
         private System.Windows.Forms.PictureBox PnlShooter;
         private System.Windows.Forms.PictureBox PnlVerreRouge;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btn_Valider;
+        private System.Windows.Forms.Button btn_Annuler;
         private System.Windows.Forms.TextBox TB_NbVerre;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label erreur;
     }
 }

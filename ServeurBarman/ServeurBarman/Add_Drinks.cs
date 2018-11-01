@@ -17,13 +17,6 @@ namespace ServeurBarman
         public Add_Drinks()
         {
             InitializeComponent();
-            db = DataBase.instance_bd;
-        }
-
-        private void AddDrink()
-        {
-            
-            
         }
 
         private void Btn_Valider_Click(object sender, EventArgs e)
@@ -38,13 +31,61 @@ namespace ServeurBarman
             ajoutIngredient.Add(Rtb_Description.Text);
             ajoutIngredient.Add(Tbx_NomBouteille.Text);
 
-            db.AjouterIngredients(ajoutIngredient);
-            
+            if(!erreurs())
+                db.AjouterIngredients(ajoutIngredient);
         }
 
-        private void Tbx_CodeBouteille_TextChanged(object sender, EventArgs e)
+        private bool erreurs()
         {
+            if (Tbx_CodeBouteille.Text != "" && Tbx_NomBouteille.Text != "" && Tbx_Posx.Text != "" &&
+                Tbx_Posy.Text != "" && Tbx_Posz.Text != "" && Tbx_Quantity.Text != "")
+                return false;
 
+            return true;
+        }
+
+        private void Tbx_NomBouteille_TextChanged(object sender, EventArgs e)
+        {
+            if (Tbx_CodeBouteille.Text != "")
+                erreurCode.Visible = false;
+            else
+                erreurCode.Visible = true;
+
+            if (Tbx_NomBouteille.Text != "")
+                erreurDrink.Visible = false;
+            else
+                erreurDrink.Visible = true;
+
+            if (Tbx_Posx.Text != "")
+                erreurPosX.Visible = false;
+            else
+                erreurPosX.Visible = true;
+
+            if (Tbx_Posy.Text != "")
+                erreurPosY.Visible = false;
+            else
+                erreurPosY.Visible = true;
+
+            if (Tbx_Posz.Text != "")
+                erreurPosZ.Visible = false;
+            else
+                erreurPosZ.Visible = true;
+
+            if (Tbx_Quantity.Text != "")
+                erreurQty.Visible = false;
+            else
+                erreurQty.Visible = true;
+        }
+
+        private void Add_Drinks_Load(object sender, EventArgs e)
+        {
+            db = DataBase.instance_bd;
+            erreurCode.Visible = false;
+            erreurDrink.Visible = false;
+            erreurPosX.Visible = false;
+            erreurPosY.Visible = false;
+            erreurPosZ.Visible = false;
+            erreurQty.Visible = false;
         }
     }
 }

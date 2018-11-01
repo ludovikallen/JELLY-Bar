@@ -104,8 +104,6 @@
     <Compile Include="DLG_Settings.Designer.cs">
       <DependentUpon>DLG_Settings.cs</DependentUpon>
     </Compile>
-    <Compile Include="Drinks.cs" />
-    <Compile Include="Liaison.cs" />
     <Compile Include="PageAccueil.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -32,7 +32,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PageAccueil));
             this.panel1 = new System.Windows.Forms.Panel();
             this.BTN_Developers = new System.Windows.Forms.Button();
-            this.button6 = new System.Windows.Forms.Button();
+            this.deconnexion = new System.Windows.Forms.Button();
             this.BTN_Setting = new System.Windows.Forms.Button();
             this.BTN_AddCup = new System.Windows.Forms.Button();
             this.BTN_AddDrink = new System.Windows.Forms.Button();
@@ -50,23 +50,26 @@
             this.panel3 = new System.Windows.Forms.Panel();
             this.label3 = new System.Windows.Forms.Label();
             this.lb_CommandeEnCours = new System.Windows.Forms.Label();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.pbx_Halt = new System.Windows.Forms.PictureBox();
             this.Btn_ResetCommande = new System.Windows.Forms.Button();
             this.lB_DateTime = new System.Windows.Forms.Label();
             this.addCups1 = new ServeurBarman.AddCups();
             this.add_Drinks1 = new ServeurBarman.Add_Drinks();
             this.welcomePage1 = new ServeurBarman.WelcomePage();
+            this.pnlDonnees = new System.Windows.Forms.Panel();
+            this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PBX_Logo)).BeginInit();
             this.pnlBar.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbx_Halt)).BeginInit();
+            this.pnlDonnees.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.Black;
             this.panel1.Controls.Add(this.BTN_Developers);
-            this.panel1.Controls.Add(this.button6);
+            this.panel1.Controls.Add(this.deconnexion);
             this.panel1.Controls.Add(this.BTN_Setting);
             this.panel1.Controls.Add(this.BTN_AddCup);
             this.panel1.Controls.Add(this.BTN_AddDrink);
@@ -88,30 +91,29 @@
             this.BTN_Developers.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.BTN_Developers.Location = new System.Drawing.Point(13, 571);
             this.BTN_Developers.Name = "BTN_Developers";
-            this.BTN_Developers.Size = new System.Drawing.Size(67, 37);
+            this.BTN_Developers.Size = new System.Drawing.Size(36, 37);
             this.BTN_Developers.TabIndex = 2;
             this.BTN_Developers.Text = "?";
-            this.BTN_Developers.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.BTN_Developers.UseVisualStyleBackColor = true;
             this.BTN_Developers.Click += new System.EventHandler(this.BTN_Developers_Click);
             // 
-            // button6
+            // deconnexion
             // 
-            this.button6.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.button6.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.button6.FlatAppearance.BorderSize = 0;
-            this.button6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button6.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.button6.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button6.Location = new System.Drawing.Point(99, 572);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(126, 35);
-            this.button6.TabIndex = 2;
-            this.button6.Text = "Deconnexion";
-            this.button6.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button6.UseVisualStyleBackColor = true;
-            this.button6.Click += new System.EventHandler(this.button6_Click);
+            this.deconnexion.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.deconnexion.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.deconnexion.FlatAppearance.BorderSize = 0;
+            this.deconnexion.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.deconnexion.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.deconnexion.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.deconnexion.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.deconnexion.Location = new System.Drawing.Point(99, 572);
+            this.deconnexion.Name = "deconnexion";
+            this.deconnexion.Size = new System.Drawing.Size(126, 35);
+            this.deconnexion.TabIndex = 2;
+            this.deconnexion.Text = "Deconnexion";
+            this.deconnexion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.deconnexion.UseVisualStyleBackColor = true;
+            this.deconnexion.Click += new System.EventHandler(this.deconnexion_Click);
             // 
             // BTN_Setting
             // 
@@ -260,9 +262,9 @@
             // 
             // lbFinishiCommande
             // 
-            this.lbFinishiCommande.Location = new System.Drawing.Point(269, 619);
+            this.lbFinishiCommande.Location = new System.Drawing.Point(18, 8);
             this.lbFinishiCommande.Name = "lbFinishiCommande";
-            this.lbFinishiCommande.Size = new System.Drawing.Size(812, 52);
+            this.lbFinishiCommande.Size = new System.Drawing.Size(695, 40);
             this.lbFinishiCommande.TabIndex = 15;
             // 
             // panel5
@@ -300,16 +302,17 @@
             this.lb_CommandeEnCours.TabIndex = 23;
             this.lb_CommandeEnCours.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // pictureBox1
+            // pbx_Halt
             // 
-            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.pictureBox1.BackgroundImage = global::ServeurBarman.Properties.Resources.stop1;
-            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.pictureBox1.Location = new System.Drawing.Point(987, 241);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(94, 83);
-            this.pictureBox1.TabIndex = 3;
-            this.pictureBox1.TabStop = false;
+            this.pbx_Halt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.pbx_Halt.BackgroundImage = global::ServeurBarman.Properties.Resources.stop1;
+            this.pbx_Halt.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.pbx_Halt.Location = new System.Drawing.Point(987, 241);
+            this.pbx_Halt.Name = "pbx_Halt";
+            this.pbx_Halt.Size = new System.Drawing.Size(94, 83);
+            this.pbx_Halt.TabIndex = 3;
+            this.pbx_Halt.TabStop = false;
+            this.pbx_Halt.Click += new System.EventHandler(this.pbx_Halt_Click);
             // 
             // Btn_ResetCommande
             // 
@@ -329,7 +332,6 @@
             this.lB_DateTime.Name = "lB_DateTime";
             this.lB_DateTime.Size = new System.Drawing.Size(192, 44);
             this.lB_DateTime.TabIndex = 25;
-            this.lB_DateTime.Text = "label2";
             this.lB_DateTime.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // addCups1
@@ -359,11 +361,25 @@
             this.welcomePage1.Size = new System.Drawing.Size(548, 274);
             this.welcomePage1.TabIndex = 16;
             // 
+            // pnlDonnees
+            // 
+            this.pnlDonnees.Controls.Add(this.lbFinishiCommande);
+            this.pnlDonnees.Location = new System.Drawing.Point(272, 614);
+            this.pnlDonnees.Name = "pnlDonnees";
+            this.pnlDonnees.Size = new System.Drawing.Size(793, 57);
+            this.pnlDonnees.TabIndex = 26;
+            // 
+            // timer2
+            // 
+            this.timer2.Interval = 1;
+            this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
+            // 
             // PageAccueil
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1088, 691);
+            this.Controls.Add(this.pnlDonnees);
             this.Controls.Add(this.lB_DateTime);
             this.Controls.Add(this.Btn_ResetCommande);
             this.Controls.Add(this.lb_CommandeEnCours);
@@ -373,13 +389,12 @@
             this.Controls.Add(this.addCups1);
             this.Controls.Add(this.add_Drinks1);
             this.Controls.Add(this.welcomePage1);
-            this.Controls.Add(this.lbFinishiCommande);
             this.Controls.Add(this.mBtnConnexionRobot);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.pnlBar);
             this.Controls.Add(this.LBX_WaitingList);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.pbx_Halt);
             this.Controls.Add(this.panel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "PageAccueil";
@@ -388,7 +403,8 @@
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.PBX_Logo)).EndInit();
             this.pnlBar.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbx_Halt)).EndInit();
+            this.pnlDonnees.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -404,8 +420,8 @@
         private System.Windows.Forms.Button BTN_Welcome;
         private System.Windows.Forms.PictureBox PBX_Logo;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.PictureBox pbx_Halt;
+        private System.Windows.Forms.Button deconnexion;
         private System.Windows.Forms.ListBox LBX_WaitingList;
         private System.Windows.Forms.Panel pnlBar;
         private System.Windows.Forms.Panel panel2;
@@ -422,5 +438,7 @@
         private System.Windows.Forms.Label lb_CommandeEnCours;
         private System.Windows.Forms.Button Btn_ResetCommande;
         private System.Windows.Forms.Label lB_DateTime;
+        private System.Windows.Forms.Panel pnlDonnees;
+        private System.Windows.Forms.Timer timer2;
     }
 }
