@@ -62,6 +62,36 @@ namespace ServeurBarman
             EtatBaseDonnées.Close();
         }
 
+        public bool Ingredient_Est_Disponible(int num)
+        {
+            List<(int,int)> listeIngredient = new List<(int,int)>();
+            bool ingredientDisponible = true;
+
+            string cmd = "e.codebouteille,e.bouteillepresente from ingredient e inner join commande c on e.codebouteille=c.ingredient where c.numcommande=" + num.ToString();
+
+            OracleCommand listeDiv = new OracleCommand(cmd, EtatBaseDonnées);
+            listeDiv.CommandType = CommandType.Text;
+            OracleDataReader divisionReader = listeDiv.ExecuteReader();
+            try
+            {
+                while (divisionReader.Read())
+                {
+                    listeIngredient.Add((divisionReader.GetInt32(0), divisionReader.GetInt32(1)));
+                }
+                divisionReader.Close();
+            }
+            catch (Exception sel) { MessageBox.Show(sel.Message.ToString()); }
+
+            foreach (var s in listeIngredient)
+            {
+                if (s.Item2 == 0)
+                {
+                    ingredientDisponible = false;
+                }
+            }
+            return ingredientDisponible;
+        }
+
 
         /// <summary>
         /// Cette méthode permet de lister la liste des commandes 
@@ -257,11 +287,11 @@ namespace ServeurBarman
         /// </summary>
         /// <exception cref="Exception">Lève une exception si la table commande n'existe pas</exception>
         /// <see cref="DataBase.SupprimerCommande()"/> Pour supprimer toutes les commandes disponibles
-        public void SupprimerCommande(string num)
+        public void SupprimerCommande(int num)
         {
             try
             {
-                string cmd = "delete  from commande where numcommande="+num;
+                string cmd = "delete  from commande where numcommande="+num.ToString();
 
                 OracleCommand disc = new OracleCommand(cmd, EtatBaseDonnées);
                 disc.ExecuteNonQuery();
@@ -277,6 +307,8 @@ namespace ServeurBarman
     public class Commande
     {
         private SpecificateurCommande commande;
+        private CRS_A255 robot;
+        private DataBase base2Donnees;
 
         /// <summary>
         /// Constructeur par défaut,
@@ -284,7 +316,9 @@ namespace ServeurBarman
         /// </summary>
         public Commande()
         {
-            commande = new Commande_Normale();
+            //commande = new Commande_Normale();
+            robot = CRS_A255.Instance;
+            base2Donnees = DataBase.instance_bd;
         }
 
         /// <summary>
@@ -292,12 +326,36 @@ namespace ServeurBarman
         /// permet de construire une commande en fonction de son numéro identificateur
         /// </summary>
         /// <param name="num">Le numéro idificateur de commande, soit 0 pour normale et 1 pour shooter</param>
-        public Commande(int num)
+        //public Commande(int num)
+        //{
+        //    if (num == 0)
+        //        commande = new Commande_Normale();
+        //    else
+        //        commande = new Shooter();
+        //}
+
+        public Task ServirClient(int item1, int item2)
         {
-            if (num == 0)
-                commande = new Commande_Normale();
-            else
-                commande = new Shooter();
+            return Task.Run(()=>
+            {
+                if (item2 == 0)
+                {
+                    commande = new Commande_Normale();
+                    var p = commande.TypeReel();
+                    var ing = p.Ingredients(item1);
+
+                    while (!robot.MakeDrink(ing.ToList())) ;
+                }
+                else
+                {
+                    /*
+                     * IL S'AGIT D'UN SHOOTER
+                     */
+                    commande = new Shooter();
+                    var p = commande.TypeReel();
+                    var ing = p.Ingredients(item1);
+                }
+            });
         }
 
         /// <summary>

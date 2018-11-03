@@ -58,6 +58,7 @@
             this.welcomePage1 = new ServeurBarman.WelcomePage();
             this.pnlDonnees = new System.Windows.Forms.Panel();
             this.timer2 = new System.Windows.Forms.Timer(this.components);
+            this.btn_Servir = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PBX_Logo)).BeginInit();
             this.pnlBar.SuspendLayout();
@@ -247,9 +248,9 @@
             // 
             this.mBtnConnexionRobot.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.mBtnConnexionRobot.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.mBtnConnexionRobot.Location = new System.Drawing.Point(887, 180);
+            this.mBtnConnexionRobot.Location = new System.Drawing.Point(710, 120);
             this.mBtnConnexionRobot.Name = "mBtnConnexionRobot";
-            this.mBtnConnexionRobot.Size = new System.Drawing.Size(194, 55);
+            this.mBtnConnexionRobot.Size = new System.Drawing.Size(194, 78);
             this.mBtnConnexionRobot.TabIndex = 13;
             this.mBtnConnexionRobot.Text = "Connexion Robot";
             this.mBtnConnexionRobot.Theme = MetroFramework.MetroThemeStyle.Dark;
@@ -317,9 +318,9 @@
             // Btn_ResetCommande
             // 
             this.Btn_ResetCommande.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Btn_ResetCommande.Location = new System.Drawing.Point(541, 281);
+            this.Btn_ResetCommande.Location = new System.Drawing.Point(541, 274);
             this.Btn_ResetCommande.Name = "Btn_ResetCommande";
-            this.Btn_ResetCommande.Size = new System.Drawing.Size(136, 42);
+            this.Btn_ResetCommande.Size = new System.Drawing.Size(140, 49);
             this.Btn_ResetCommande.TabIndex = 24;
             this.Btn_ResetCommande.Text = "Reset liste commande";
             this.Btn_ResetCommande.UseVisualStyleBackColor = true;
@@ -374,11 +375,23 @@
             this.timer2.Interval = 1;
             this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
             // 
+            // btn_Servir
+            // 
+            this.btn_Servir.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_Servir.Location = new System.Drawing.Point(710, 207);
+            this.btn_Servir.Name = "btn_Servir";
+            this.btn_Servir.Size = new System.Drawing.Size(194, 69);
+            this.btn_Servir.TabIndex = 27;
+            this.btn_Servir.Text = "Servir";
+            this.btn_Servir.UseVisualStyleBackColor = true;
+            this.btn_Servir.Click += new System.EventHandler(this.btn_Servir_Click);
+            // 
             // PageAccueil
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1088, 691);
+            this.Controls.Add(this.btn_Servir);
             this.Controls.Add(this.pnlDonnees);
             this.Controls.Add(this.lB_DateTime);
             this.Controls.Add(this.Btn_ResetCommande);
@@ -440,5 +453,6 @@
         private System.Windows.Forms.Label lB_DateTime;
         private System.Windows.Forms.Panel pnlDonnees;
         private System.Windows.Forms.Timer timer2;
+        private System.Windows.Forms.Button btn_Servir;
     }
 }
