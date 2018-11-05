@@ -270,10 +270,11 @@ public class MainActivity extends AppCompatActivity {
         couleursRDGRP =findViewById(R.id.changerCouleur_RBTNGRP);
 
         SmileRating smileRating = (SmileRating) findViewById(R.id.smile_rating);
-        smileRating.setNameForSmile(BaseRating.TERRIBLE, "Mauvais");
-        smileRating.setNameForSmile(BaseRating.BAD, "Déçu");
-        smileRating.setNameForSmile(BaseRating.GOOD, "Bon");
-        smileRating.setNameForSmile(BaseRating.GREAT, "Très bon");
+        smileRating.setNameForSmile(BaseRating.TERRIBLE, "Mauvais (1)");
+        smileRating.setNameForSmile(BaseRating.BAD, "Déçu (2)");
+        smileRating.setNameForSmile(BaseRating.OKAY, "Okay (3)");
+        smileRating.setNameForSmile(BaseRating.GOOD, "Bon (4)");
+        smileRating.setNameForSmile(BaseRating.GREAT, "Très bon (5)");
 
         findViewById(R.id.connexion_BTN).setVisibility(View.VISIBLE);
 
@@ -808,6 +809,7 @@ public class MainActivity extends AppCompatActivity {
 
         envoyerNoteBTN.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                envoyerNoteBTN.setVisibility(View.INVISIBLE);
                 envoyerNote();
             }
         });
@@ -1113,6 +1115,7 @@ public class MainActivity extends AppCompatActivity {
         smileRating.setOnSmileySelectionListener(new SmileRating.OnSmileySelectionListener() {
             @Override
             public void onSmileySelected(@BaseRating.Smiley int smiley, boolean reselected) {
+                findViewById(R.id.envoyerNote_BTN).setVisibility(View.VISIBLE);
                 note=smileRating.getRating();
             }
         });
@@ -2090,6 +2093,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Compte le nombre de drinks disponibles
+     * @return Décimal du nombre de drinks disponibles
      */
     int compterNombreRecettes()
     {
