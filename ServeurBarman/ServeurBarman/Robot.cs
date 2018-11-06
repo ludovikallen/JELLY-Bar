@@ -133,7 +133,7 @@ namespace Bras_Robot
         {
             FuncNSleep(() => serialPort.Write(command), 200);
         }
-        public bool EnMarche() => task.IsCompleted;
+        public bool EnMarche() => !task.IsCompleted;
         public int AjouterCup(int ajout) => nbCup = ajout; //DE MEME, JE FUS OBLIGE DE REVOIR CETTE METHODE
         public void DeplacerBase(int val)
         {
@@ -350,16 +350,38 @@ namespace Bras_Robot
             });
         }
         #endregion
+        //retourne si il accepte de faire l'operation ou non
         public bool MakeDrink(List<(Position pos, int nbShots)> positions)
         {
             if (task.IsCompleted && positions.Capacity != 0 && !Calibration)
             {
                 task=DrinkOperation(positions);
-               
                 return true;
             }
             return false;
         }
+        //retourne si il accepte de faire l'operation ou non
+        public bool MakeShooterTest(Position position, int nbShooter)
+        {
+            if(task.IsCompleted && !Calibration)
+            {
+                task = Task.Delay(10000);
+                return true;
+            }
+            return true;
+        }
+
+        //retourne si il accepte de faire l'operation ou non
+        public bool MakeDrinkTest(List<(Position pos, int nbShots)> positions)
+        {
+            if (task.IsCompleted && positions.Capacity != 0 && !Calibration)
+            {
+                task = Task.Delay(10000);
+                return true;
+            }
+            return false;
+        }
+
         public List<(Position position, int nbShots)> Exemple = new List<(Position pos, int nbShots)>
         {
             (new Position(130,-200, -365), 1),
