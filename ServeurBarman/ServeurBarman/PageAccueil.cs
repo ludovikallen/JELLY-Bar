@@ -11,7 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Bras_Robot;
-
+using System.Speech.Synthesis;
 
 namespace ServeurBarman
 {
@@ -28,6 +28,7 @@ namespace ServeurBarman
         int item1, item2;
         int compteur;
         bool enService;
+        SpeechSynthesizer read;
 
 
         public PageAccueil()
@@ -83,7 +84,7 @@ namespace ServeurBarman
 
         private void PageAccueil_Load(object sender, EventArgs e)
         {
-            welcomePage1.activiteRobot = "Connexion établie avec la base de donnée...";
+            read = new SpeechSynthesizer();
             welcomePage1.BringToFront();
             Init_PageAcceuil();
             timer2.Start();
@@ -92,6 +93,8 @@ namespace ServeurBarman
             compteur++;
             btn_Servir.Enabled = false;
             pbx_Halt.Enabled = false;
+            //service = new Commande();
+            read.SpeakAsync("Connexion base données établie avec succès");
         }
 
 
@@ -105,9 +108,9 @@ namespace ServeurBarman
             {
                 while (true)
                 {
-                    Thread.Sleep(1000);
+                    Thread.Sleep(500);
                     Show_WaitingDrinksList();
-                    Thread.Sleep(1000);
+                    Thread.Sleep(500);
                 }
             });
 
@@ -137,10 +140,13 @@ namespace ServeurBarman
             lock (accessLock)
             {
                 numcommande.Clear();
-                LBX_WaitingList.Items.Clear();
+                this.Invoke((MethodInvoker)(() => LBX_WaitingList.Items.Clear()));
                 numcommande = base2Donnees.ListeCommande();
-                item1 = numcommande[0].Item1;
-                item2 = numcommande[0].Item2;
+                if (numcommande.Count != 0)
+                {
+                    item1 = numcommande[0].Item1;
+                    item2 = numcommande[0].Item2;
+                }
             }
         }
 
@@ -166,14 +172,21 @@ namespace ServeurBarman
 
                                 if (robot.MakeDrink(ing.ToList()))
                                 {
+                                    read.SpeakAsync("Commande normale numéro "+ item1.ToString()+ " en cours");
                                     base2Donnees.SupprimerCommande(item1);
-                                    this.Invoke((MethodInvoker)(() => lb_CommandeEnCours.Text = item1.ToString()));
+                                    lb_CommandeEnCours.Text = item1.ToString();
 
-                                    if (commandePrecedente != null && commandePrecedente != lb_CommandeEnCours.Text)
+                                    if (commandePrecedente != null)
+                                    {
                                         this.Invoke((MethodInvoker)(() => lbFinishiCommande.Text = "Commande numéro " + commandePrecedente + " terminée!"));
-
+                                        read.SpeakAsync(lbFinishiCommande.Text);
+                                    }
                                     commandePrecedente = lb_CommandeEnCours.Text.ToString();
                                 }
+                                //if(commandePrecedente.Equals(lb_CommandeEnCours.Text))
+                                //{
+                                //    this.Invoke((MethodInvoker)(() => lbFinishiCommande.Text = "Commande numéro " + commandePrecedente + " terminée!"));
+                                //}
                             }
                         }
                         else
@@ -186,18 +199,37 @@ namespace ServeurBarman
                         /*
                          * IL S'AGIT D'UN SHOOTER
                          */
+                        
                         service = new Commande(item2);
                         var p = service.TypeReel();
+                        List<(Position, int)> ing = p.Ingredients(item1);
+                        if (robot.MakeDrink(ing.ToList()))
+                        {
+                            read.SpeakAsync("Commande normale numéro " + item1.ToString() + " en cours");
+                            welcomePage1.activiteRobot = "Shooter en cours";
+                            read.SpeakAsync("Shooter en cours");
+                            base2Donnees.SupprimerCommande(item1);
+                            lb_CommandeEnCours.Text = item1.ToString();
 
-                        base2Donnees.SupprimerCommande(item1);
-                        if (commandePrecedente != null && commandePrecedente != lb_CommandeEnCours.Text)
-                            this.Invoke((MethodInvoker)(() => lbFinishiCommande.Text = "Commande numéro " + commandePrecedente + " terminée!"));
-                        commandePrecedente = lb_CommandeEnCours.Text.ToString();
+                            if (commandePrecedente != null)
+                            {
+                                this.Invoke((MethodInvoker)(() => lbFinishiCommande.Text = "Commande numéro " + commandePrecedente + " terminée!"));
+                                read.SpeakAsync(lbFinishiCommande.Text);
+                            }
+                            commandePrecedente = lb_CommandeEnCours.Text.ToString();
+                        }
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Ingrédient numéro "+ item1.ToString()+" non disponible");
+                    MessageBox.Show("Ingrédient numéro " + item1.ToString() + " non disponible");
+                }
+
+                if (numcommande.Count == 0)
+                {
+                    this.Invoke((MethodInvoker)(() => lbFinishiCommande.Text = "Commande numéro " + commandePrecedente + " terminée!"));
+                    read.SpeakAsync(lbFinishiCommande.Text);
+                    commandePrecedente = "";
                 }
             }
         }
@@ -279,21 +311,23 @@ namespace ServeurBarman
                 //        {
                 //            if (base2Donnees.Ingredient_Est_Disponible(item1))
                 //            {
+                                
+                //                service.ServirClient(item1, item2);
+
                 //                if (lb_CommandeEnCours.Text != item1.ToString())
                 //                {
                 //                    this.Invoke((MethodInvoker)(() => lb_CommandeEnCours.Text = item1.ToString()));
-                //                    commandeEnCours = lb_CommandeEnCours.Text.ToString();
+                //                    commandePrecedente = lb_CommandeEnCours.Text.ToString();
                 //                }
-                //                service.ServirClient(item1, item2) ;
 
-                //                if (commandeEnCours != null && commandeEnCours != "")
-                //                    this.Invoke((MethodInvoker)(() => lbFinishiCommande.Text = "Commande numéro " + commandeEnCours + " terminée!"));
+                //                if (commandePrecedente != null && commandePrecedente != item1.ToString())
+                //                    this.Invoke((MethodInvoker)(() => lbFinishiCommande.Text = "Commande numéro " + commandePrecedente + " terminée!"));
 
                 //                // supprime la commande terminée
                 //                base2Donnees.SupprimerCommande(item1);
 
                 //                this.Invoke((MethodInvoker)(() => lb_CommandeEnCours.Text = ""));
-                //                commandeEnCours = "";
+                //                commandePrecedente = "";
                 //                // prépare la nouvelle commande
                 //                System.Threading.Thread.Sleep(500);
 

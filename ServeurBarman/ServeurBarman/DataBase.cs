@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Speech.Synthesis;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -23,6 +24,7 @@ namespace ServeurBarman
         public OracleConnection EtatBaseDonnées { get; private set; }
 
         public static readonly DataBase instance_bd = new DataBase();
+        
 
         private DataBase()
         {
@@ -314,12 +316,12 @@ namespace ServeurBarman
         /// Constructeur par défaut,
         /// Permet de construire une commande normale
         /// </summary>
-        public Commande()
-        {
-            //commande = new Commande_Normale();
-            //robot = CRS_A255.Instance;
-            base2Donnees = DataBase.instance_bd;
-        }
+        //public Commande()
+        //{
+        //    commande = new Commande_Normale();
+        //    robot = CRS_A255.Instance;
+        //    base2Donnees = DataBase.instance_bd;
+        //}
 
         /// <summary>
         /// Constructeur paramétrique,
@@ -337,23 +339,23 @@ namespace ServeurBarman
         //public void ServirClient(int item1, int item2)
         //{
 
-        //        if (item2 == 0)
-        //        {
-        //            commande = new Commande_Normale();
-        //            var p = commande.TypeReel();
-        //            var ing = p.Ingredients(item1);
+        //    if (item2 == 0)
+        //    {
+        //        commande = new Commande_Normale();
+        //        var p = commande.TypeReel();
+        //        var ing = p.Ingredients(item1);
 
-        //            while (!robot.MakeDrink(ing.ToList())) ;
-        //        }
-        //        else
-        //        {
-        //            /*
-        //             * IL S'AGIT D'UN SHOOTER
-        //             */
-        //            commande = new Shooter();
-        //            var p = commande.TypeReel();
-        //            var ing = p.Ingredients(item1);
-        //        }
+        //        while(!robot.MakeDrink(ing.ToList()));
+        //    }
+        //    else
+        //    {
+        //        /*
+        //         * IL S'AGIT D'UN SHOOTER
+        //         */
+        //        commande = new Shooter();
+        //        var p = commande.TypeReel();
+        //        var ing = p.Ingredients(item1);
+        //    }
 
         //}
 

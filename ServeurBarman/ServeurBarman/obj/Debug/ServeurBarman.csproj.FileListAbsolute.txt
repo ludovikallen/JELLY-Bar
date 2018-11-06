@@ -124,7 +124,6 @@ C:\Users\Sanogo Mael\Desktop\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman
 C:\Users\Sanogo Mael\Desktop\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.csproj.CopyComplete
 C:\Users\Sanogo Mael\Desktop\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.exe
 C:\Users\Sanogo Mael\Desktop\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.pdb
-C:\Users\201605878\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.csprojAssemblyReference.cache
 C:\Users\201605878\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.exe.config
 C:\Users\201605878\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.AddCups.resources
 C:\Users\201605878\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.Add_Drinks.resources
@@ -730,3 +729,4 @@ C:\Users\Mael\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\obj\Debug\ServeurBar
 C:\Users\Mael\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.exe
 C:\Users\Mael\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.pdb
 C:\Users\Mael\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.csprojAssemblyReference.cache
+C:\Users\201605878\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.csprojAssemblyReference.cache
