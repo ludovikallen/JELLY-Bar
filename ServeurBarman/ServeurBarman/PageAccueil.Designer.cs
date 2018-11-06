@@ -53,12 +53,12 @@
             this.pbx_Halt = new System.Windows.Forms.PictureBox();
             this.Btn_ResetCommande = new System.Windows.Forms.Button();
             this.lB_DateTime = new System.Windows.Forms.Label();
-            this.addCups1 = new ServeurBarman.AddCups();
-            this.add_Drinks1 = new ServeurBarman.Add_Drinks();
-            this.welcomePage1 = new ServeurBarman.WelcomePage();
             this.pnlDonnees = new System.Windows.Forms.Panel();
             this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.btn_Servir = new System.Windows.Forms.Button();
+            this.addCups1 = new ServeurBarman.AddCups();
+            this.add_Drinks1 = new ServeurBarman.Add_Drinks();
+            this.welcomePage1 = new ServeurBarman.WelcomePage();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PBX_Logo)).BeginInit();
             this.pnlBar.SuspendLayout();
@@ -79,7 +79,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel1.Location = new System.Drawing.Point(20, 60);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(246, 611);
+            this.panel1.Size = new System.Drawing.Size(270, 611);
             this.panel1.TabIndex = 0;
             // 
             // BTN_Developers
@@ -90,7 +90,7 @@
             this.BTN_Developers.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BTN_Developers.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.BTN_Developers.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.BTN_Developers.Location = new System.Drawing.Point(13, 571);
+            this.BTN_Developers.Location = new System.Drawing.Point(25, 571);
             this.BTN_Developers.Name = "BTN_Developers";
             this.BTN_Developers.Size = new System.Drawing.Size(36, 37);
             this.BTN_Developers.TabIndex = 2;
@@ -107,7 +107,7 @@
             this.deconnexion.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.deconnexion.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.deconnexion.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.deconnexion.Location = new System.Drawing.Point(99, 572);
+            this.deconnexion.Location = new System.Drawing.Point(111, 572);
             this.deconnexion.Name = "deconnexion";
             this.deconnexion.Size = new System.Drawing.Size(126, 35);
             this.deconnexion.TabIndex = 2;
@@ -143,9 +143,9 @@
             this.BTN_AddCup.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.BTN_AddCup.Location = new System.Drawing.Point(3, 299);
             this.BTN_AddCup.Name = "BTN_AddCup";
-            this.BTN_AddCup.Size = new System.Drawing.Size(214, 35);
+            this.BTN_AddCup.Size = new System.Drawing.Size(260, 35);
             this.BTN_AddCup.TabIndex = 2;
-            this.BTN_AddCup.Text = "       Ajouter des verres";
+            this.BTN_AddCup.Text = "       Ajouter verres à shooter";
             this.BTN_AddCup.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.BTN_AddCup.UseVisualStyleBackColor = true;
             this.BTN_AddCup.Click += new System.EventHandler(this.BTN_AddCup_Click);
@@ -191,7 +191,7 @@
             this.PBX_Logo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.PBX_Logo.Location = new System.Drawing.Point(0, 0);
             this.PBX_Logo.Name = "PBX_Logo";
-            this.PBX_Logo.Size = new System.Drawing.Size(246, 153);
+            this.PBX_Logo.Size = new System.Drawing.Size(270, 175);
             this.PBX_Logo.TabIndex = 1;
             this.PBX_Logo.TabStop = false;
             // 
@@ -199,7 +199,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(272, 97);
+            this.label1.Location = new System.Drawing.Point(296, 99);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(196, 20);
             this.label1.TabIndex = 5;
@@ -207,13 +207,13 @@
             // 
             // LBX_WaitingList
             // 
-            this.LBX_WaitingList.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LBX_WaitingList.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LBX_WaitingList.FormattingEnabled = true;
-            this.LBX_WaitingList.ItemHeight = 20;
-            this.LBX_WaitingList.Location = new System.Drawing.Point(272, 120);
+            this.LBX_WaitingList.ItemHeight = 25;
+            this.LBX_WaitingList.Location = new System.Drawing.Point(296, 122);
             this.LBX_WaitingList.Name = "LBX_WaitingList";
             this.LBX_WaitingList.ScrollAlwaysVisible = true;
-            this.LBX_WaitingList.Size = new System.Drawing.Size(262, 204);
+            this.LBX_WaitingList.Size = new System.Drawing.Size(247, 204);
             this.LBX_WaitingList.TabIndex = 11;
             // 
             // pnlBar
@@ -221,9 +221,9 @@
             this.pnlBar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.pnlBar.BackColor = System.Drawing.Color.Black;
             this.pnlBar.Controls.Add(this.panel4);
-            this.pnlBar.Location = new System.Drawing.Point(263, 332);
+            this.pnlBar.Location = new System.Drawing.Point(288, 332);
             this.pnlBar.Name = "pnlBar";
-            this.pnlBar.Size = new System.Drawing.Size(825, 10);
+            this.pnlBar.Size = new System.Drawing.Size(954, 10);
             this.pnlBar.TabIndex = 12;
             // 
             // panel4
@@ -239,16 +239,16 @@
             this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel2.BackColor = System.Drawing.Color.Gold;
-            this.panel2.Location = new System.Drawing.Point(266, 60);
+            this.panel2.Location = new System.Drawing.Point(290, 60);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(824, 10);
+            this.panel2.Size = new System.Drawing.Size(878, 10);
             this.panel2.TabIndex = 12;
             // 
             // mBtnConnexionRobot
             // 
             this.mBtnConnexionRobot.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.mBtnConnexionRobot.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.mBtnConnexionRobot.Location = new System.Drawing.Point(710, 120);
+            this.mBtnConnexionRobot.Location = new System.Drawing.Point(786, 120);
             this.mBtnConnexionRobot.Name = "mBtnConnexionRobot";
             this.mBtnConnexionRobot.Size = new System.Drawing.Size(194, 78);
             this.mBtnConnexionRobot.TabIndex = 13;
@@ -271,15 +271,15 @@
             // panel5
             // 
             this.panel5.BackColor = System.Drawing.Color.Black;
-            this.panel5.Location = new System.Drawing.Point(264, 601);
+            this.panel5.Location = new System.Drawing.Point(287, 601);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(270, 10);
+            this.panel5.Size = new System.Drawing.Size(323, 10);
             this.panel5.TabIndex = 20;
             // 
             // panel3
             // 
             this.panel3.BackColor = System.Drawing.Color.Black;
-            this.panel3.Location = new System.Drawing.Point(524, 332);
+            this.panel3.Location = new System.Drawing.Point(600, 332);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(10, 276);
             this.panel3.TabIndex = 21;
@@ -288,7 +288,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(288, 351);
+            this.label3.Location = new System.Drawing.Point(330, 384);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(223, 24);
             this.label3.TabIndex = 22;
@@ -297,7 +297,7 @@
             // lb_CommandeEnCours
             // 
             this.lb_CommandeEnCours.Font = new System.Drawing.Font("Microsoft Sans Serif", 72F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lb_CommandeEnCours.Location = new System.Drawing.Point(292, 385);
+            this.lb_CommandeEnCours.Location = new System.Drawing.Point(334, 418);
             this.lb_CommandeEnCours.Name = "lb_CommandeEnCours";
             this.lb_CommandeEnCours.Size = new System.Drawing.Size(210, 122);
             this.lb_CommandeEnCours.TabIndex = 23;
@@ -308,7 +308,7 @@
             this.pbx_Halt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.pbx_Halt.BackgroundImage = global::ServeurBarman.Properties.Resources.stop1;
             this.pbx_Halt.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.pbx_Halt.Location = new System.Drawing.Point(987, 241);
+            this.pbx_Halt.Location = new System.Drawing.Point(1065, 241);
             this.pbx_Halt.Name = "pbx_Halt";
             this.pbx_Halt.Size = new System.Drawing.Size(94, 83);
             this.pbx_Halt.TabIndex = 3;
@@ -318,7 +318,7 @@
             // Btn_ResetCommande
             // 
             this.Btn_ResetCommande.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Btn_ResetCommande.Location = new System.Drawing.Point(541, 274);
+            this.Btn_ResetCommande.Location = new System.Drawing.Point(549, 277);
             this.Btn_ResetCommande.Name = "Btn_ResetCommande";
             this.Btn_ResetCommande.Size = new System.Drawing.Size(140, 49);
             this.Btn_ResetCommande.TabIndex = 24;
@@ -329,45 +329,18 @@
             // lB_DateTime
             // 
             this.lB_DateTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lB_DateTime.Location = new System.Drawing.Point(889, 73);
+            this.lB_DateTime.Location = new System.Drawing.Point(965, 73);
             this.lB_DateTime.Name = "lB_DateTime";
             this.lB_DateTime.Size = new System.Drawing.Size(192, 44);
             this.lB_DateTime.TabIndex = 25;
             this.lB_DateTime.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // addCups1
-            // 
-            this.addCups1.Location = new System.Drawing.Point(540, 345);
-            this.addCups1.MaximumSize = new System.Drawing.Size(548, 274);
-            this.addCups1.MinimumSize = new System.Drawing.Size(548, 274);
-            this.addCups1.Name = "addCups1";
-            this.addCups1.Size = new System.Drawing.Size(548, 274);
-            this.addCups1.TabIndex = 18;
-            // 
-            // add_Drinks1
-            // 
-            this.add_Drinks1.Location = new System.Drawing.Point(540, 345);
-            this.add_Drinks1.MaximumSize = new System.Drawing.Size(548, 274);
-            this.add_Drinks1.MinimumSize = new System.Drawing.Size(548, 274);
-            this.add_Drinks1.Name = "add_Drinks1";
-            this.add_Drinks1.Size = new System.Drawing.Size(548, 274);
-            this.add_Drinks1.TabIndex = 17;
-            // 
-            // welcomePage1
-            // 
-            this.welcomePage1.Location = new System.Drawing.Point(540, 345);
-            this.welcomePage1.MaximumSize = new System.Drawing.Size(548, 274);
-            this.welcomePage1.MinimumSize = new System.Drawing.Size(548, 274);
-            this.welcomePage1.Name = "welcomePage1";
-            this.welcomePage1.Size = new System.Drawing.Size(548, 274);
-            this.welcomePage1.TabIndex = 16;
-            // 
             // pnlDonnees
             // 
             this.pnlDonnees.Controls.Add(this.lbFinishiCommande);
-            this.pnlDonnees.Location = new System.Drawing.Point(272, 614);
+            this.pnlDonnees.Location = new System.Drawing.Point(296, 614);
             this.pnlDonnees.Name = "pnlDonnees";
-            this.pnlDonnees.Size = new System.Drawing.Size(793, 57);
+            this.pnlDonnees.Size = new System.Drawing.Size(861, 57);
             this.pnlDonnees.TabIndex = 26;
             // 
             // timer2
@@ -378,7 +351,7 @@
             // btn_Servir
             // 
             this.btn_Servir.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_Servir.Location = new System.Drawing.Point(710, 207);
+            this.btn_Servir.Location = new System.Drawing.Point(786, 207);
             this.btn_Servir.Name = "btn_Servir";
             this.btn_Servir.Size = new System.Drawing.Size(194, 69);
             this.btn_Servir.TabIndex = 27;
@@ -386,11 +359,38 @@
             this.btn_Servir.UseVisualStyleBackColor = true;
             this.btn_Servir.Click += new System.EventHandler(this.btn_Servir_Click);
             // 
+            // addCups1
+            // 
+            this.addCups1.Location = new System.Drawing.Point(616, 345);
+            this.addCups1.MaximumSize = new System.Drawing.Size(548, 274);
+            this.addCups1.MinimumSize = new System.Drawing.Size(548, 274);
+            this.addCups1.Name = "addCups1";
+            this.addCups1.Size = new System.Drawing.Size(548, 274);
+            this.addCups1.TabIndex = 18;
+            // 
+            // add_Drinks1
+            // 
+            this.add_Drinks1.Location = new System.Drawing.Point(616, 345);
+            this.add_Drinks1.MaximumSize = new System.Drawing.Size(548, 274);
+            this.add_Drinks1.MinimumSize = new System.Drawing.Size(548, 274);
+            this.add_Drinks1.Name = "add_Drinks1";
+            this.add_Drinks1.Size = new System.Drawing.Size(548, 274);
+            this.add_Drinks1.TabIndex = 17;
+            // 
+            // welcomePage1
+            // 
+            this.welcomePage1.Location = new System.Drawing.Point(616, 345);
+            this.welcomePage1.MaximumSize = new System.Drawing.Size(548, 274);
+            this.welcomePage1.MinimumSize = new System.Drawing.Size(548, 274);
+            this.welcomePage1.Name = "welcomePage1";
+            this.welcomePage1.Size = new System.Drawing.Size(548, 274);
+            this.welcomePage1.TabIndex = 16;
+            // 
             // PageAccueil
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1088, 691);
+            this.ClientSize = new System.Drawing.Size(1166, 691);
             this.Controls.Add(this.btn_Servir);
             this.Controls.Add(this.pnlDonnees);
             this.Controls.Add(this.lB_DateTime);
