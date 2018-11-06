@@ -307,7 +307,7 @@ namespace ServeurBarman
     public class Commande
     {
         private SpecificateurCommande commande;
-        private CRS_A255 robot;
+        //private CRS_A255 robot;
         private DataBase base2Donnees;
 
         /// <summary>
@@ -317,7 +317,7 @@ namespace ServeurBarman
         public Commande()
         {
             //commande = new Commande_Normale();
-            robot = CRS_A255.Instance;
+            //robot = CRS_A255.Instance;
             base2Donnees = DataBase.instance_bd;
         }
 
@@ -326,36 +326,36 @@ namespace ServeurBarman
         /// permet de construire une commande en fonction de son numéro identificateur
         /// </summary>
         /// <param name="num">Le numéro idificateur de commande, soit 0 pour normale et 1 pour shooter</param>
-        //public Commande(int num)
-        //{
-        //    if (num == 0)
-        //        commande = new Commande_Normale();
-        //    else
-        //        commande = new Shooter();
-        //}
-
-        public void ServirClient(int item1, int item2)
+        public Commande(int num)
         {
-
-                if (item2 == 0)
-                {
-                    commande = new Commande_Normale();
-                    var p = commande.TypeReel();
-                    var ing = p.Ingredients(item1);
-
-                    while (!robot.MakeDrink(ing.ToList())) ;
-                }
-                else
-                {
-                    /*
-                     * IL S'AGIT D'UN SHOOTER
-                     */
-                    commande = new Shooter();
-                    var p = commande.TypeReel();
-                    var ing = p.Ingredients(item1);
-                }
-   
+            if (num == 0)
+                commande = new Commande_Normale();
+            else
+                commande = new Shooter();
         }
+
+        //public void ServirClient(int item1, int item2)
+        //{
+
+        //        if (item2 == 0)
+        //        {
+        //            commande = new Commande_Normale();
+        //            var p = commande.TypeReel();
+        //            var ing = p.Ingredients(item1);
+
+        //            while (!robot.MakeDrink(ing.ToList())) ;
+        //        }
+        //        else
+        //        {
+        //            /*
+        //             * IL S'AGIT D'UN SHOOTER
+        //             */
+        //            commande = new Shooter();
+        //            var p = commande.TypeReel();
+        //            var ing = p.Ingredients(item1);
+        //        }
+
+        //}
 
         /// <summary>
         /// Cette méthode permet de déterminer le type réel d'une commande

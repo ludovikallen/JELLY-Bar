@@ -24,7 +24,7 @@ namespace ServeurBarman
         List<(int, int)> numcommande = new List<(int, int)>();
         DataBase base2Donnees;
         Commande service;
-        string commandeEnCours;
+        string commandePrecedente;
         int item1, item2;
         int compteur;
         bool enService;
@@ -53,10 +53,16 @@ namespace ServeurBarman
 
         private void BTN_Setting_Click(object sender, EventArgs e)
         {
-            if (estConnecté && enService)
+            if (estConnecté)
             {
-                DLG_Settings dlg = new DLG_Settings();
-                DialogResult dlg_result = dlg.ShowDialog();
+                if (!enService)
+                {
+                    DLG_Settings dlg = new DLG_Settings();
+                    DialogResult dlg_result = dlg.ShowDialog();
+                }else
+                {
+                    MessageBox.Show("Impossible d'atteindre Paramètres, car le robot est en activité!!");
+                }
             }
             else
             {
@@ -85,6 +91,7 @@ namespace ServeurBarman
             lbFinishiCommande.Location = new Point(pnlDonnees.Width - compteur, lbFinishiCommande.Location.Y);
             compteur++;
             btn_Servir.Enabled = false;
+            pbx_Halt.Enabled = false;
         }
 
 
@@ -109,6 +116,7 @@ namespace ServeurBarman
             timer1.Enabled = true;
         }
 
+        // AFFICHE DANS L'INTERFACE LA LISTE DES COMMANDES EN ATTENTE
         private void Show_WaitingDrinksList()
         {
             if (numcommande.Count != base2Donnees.ListeCommande().Count)
@@ -140,46 +148,61 @@ namespace ServeurBarman
         /// Cette méthode permet de servir le client sur la base des commandes disponible 
         /// dans la liste d'attante tout en distinguant le type de commande
         /// </summary>
-        //private void ServirClient()
-        //{
-        //    while (true)
-        //    {
-        //        if (item2 == 0)
-        //        {
-        //            service = new Commande(item2);
-        //            var p = service.TypeReel();
-        //            if (robot.EnMarche())
-        //            {
-        //                List<(Position, int)> ing = p.Ingredients(item1);
+        private void ServirClient()
+        {
+            while (enService)
+            {
+                if (base2Donnees.Ingredient_Est_Disponible(item1))
+                {
+                    if (item2 == 0)
+                    {
+                        if (Int32.Parse(base2Donnees.NombreDeVerreRouge()) != 0)
+                        {
+                            service = new Commande(item2);
+                            var p = service.TypeReel();
+                            if (robot.EnMarche())
+                            {
+                                List<(Position, int)> ing = p.Ingredients(item1);
 
-        //                if (robot.MakeDrink(ing.ToList()))
-        //                {
-        //                    this.Invoke((MethodInvoker)(() => base2Donnees.SupprimerCommande(item1)));
-        //                    this.Invoke((MethodInvoker)(() => lb_CommandeEnCours.Text = item1.ToString()));
+                                if (robot.MakeDrink(ing.ToList()))
+                                {
+                                    base2Donnees.SupprimerCommande(item1);
+                                    this.Invoke((MethodInvoker)(() => lb_CommandeEnCours.Text = item1.ToString()));
 
-        //                    if (commandeEnCours != null)
-        //                        this.Invoke((MethodInvoker)(() => lbFinishiCommande.Text = "Commande numéro " + commandeEnCours + " terminée!"));
+                                    if (commandePrecedente != null && commandePrecedente != lb_CommandeEnCours.Text)
+                                        this.Invoke((MethodInvoker)(() => lbFinishiCommande.Text = "Commande numéro " + commandePrecedente + " terminée!"));
 
-        //                    commandeEnCours = lb_CommandeEnCours.Text.ToString();
-        //                }
-        //            }
-        //        }
-        //        else
-        //        {
-        //            /*
-        //             * IL S'AGIT D'UN SHOOTER
-        //             */
-        //            service = new Commande(item2);
-        //            var p = service.TypeReel();
+                                    commandePrecedente = lb_CommandeEnCours.Text.ToString();
+                                }
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("Plus de verres rouge, veuillez en ajouter svp!");
+                        }
+                    }
+                    else
+                    {
+                        /*
+                         * IL S'AGIT D'UN SHOOTER
+                         */
+                        service = new Commande(item2);
+                        var p = service.TypeReel();
 
-        //            this.Invoke((MethodInvoker)(() => base2Donnees.SupprimerCommande(LBX_WaitingList.Items[0].ToString())));
-        //            if (commandeEnCours != null)
-        //                this.Invoke((MethodInvoker)(() => lbFinishiCommande.Text = "Commande numéro " + commandeEnCours + " terminée!"));
-        //            commandeEnCours = lb_CommandeEnCours.Text.ToString();
-        //        }
-        //    }
-        //}
+                        base2Donnees.SupprimerCommande(item1);
+                        if (commandePrecedente != null && commandePrecedente != lb_CommandeEnCours.Text)
+                            this.Invoke((MethodInvoker)(() => lbFinishiCommande.Text = "Commande numéro " + commandePrecedente + " terminée!"));
+                        commandePrecedente = lb_CommandeEnCours.Text.ToString();
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Ingrédient numéro "+ item1.ToString()+" non disponible");
+                }
+            }
+        }
 
+        // BOUTON DE CONNEXION AU ROBOT
         private void mBtnConnexionRobot_Click(object sender, EventArgs e)
         {
             // On établie la connexion avec le robot
@@ -187,10 +210,12 @@ namespace ServeurBarman
             System.Threading.Thread.Sleep(2000);
             if (robot.Connected)
             {
-                btn_Servir.Enabled = true;
                 estConnecté = true;
+                pbx_Halt.Enabled = true;
+                btn_Servir.Enabled = true;
+                mBtnConnexionRobot.Enabled = false;
                 MessageBox.Show("Connexion robot réussie");
-                System.Threading.Thread.Sleep(5000);
+                System.Threading.Thread.Sleep(2000);
             }
             else
             {
@@ -199,9 +224,14 @@ namespace ServeurBarman
             }
         }
 
+        // BOUTON DE SUPPRESSION DES COMMANDES DISPONIBLES DANS LA TABLE COMMANDE
         private void Btn_ResetCommande_Click(object sender, EventArgs e)
         {
-            base2Donnees.SupprimerCommande();
+            DialogResult dialogResult = MessageBox.Show("Êtes-vous certain de vouloir vider la liste de commande?", "Confirmation", MessageBoxButtons.YesNo);
+            if (dialogResult == DialogResult.Yes)
+            {
+                base2Donnees.SupprimerCommande();
+            }
         }
 
         private void timer2_Tick(object sender, EventArgs e)
@@ -219,11 +249,13 @@ namespace ServeurBarman
             }
         }
 
+        // ARRET D'URGENCE DU ROBOT LORSQUE LE BOUTON EST CLICKÉ 
         private void pbx_Halt_Click(object sender, EventArgs e)
         {
             robot.Halt();
         }
 
+        // FERME LA CONNEXION À LA BASE DE DONNÉES
         private void deconnexion_Click(object sender, EventArgs e)
         {
             base2Donnees.FermerConnexion();
@@ -233,57 +265,60 @@ namespace ServeurBarman
         {
             if (btn_Servir.Text == "Servir" && estConnecté)
             {
-                service = new Commande();
+                //service = new Commande();
                 enService = true;
                 btn_Servir.Text = "Arrêter service";
+                Task.Run(() =>ServirClient());
 
-                Task.Run(() =>
-                {
-                    while (enService)
-                    {
-                        if (Int32.Parse(base2Donnees.NombreDeVerreRouge()) != 0)
-                        {
-                            if (base2Donnees.Ingredient_Est_Disponible(item1))
-                            {
-                                if (lb_CommandeEnCours.Text != item1.ToString())
-                                {
-                                    this.Invoke((MethodInvoker)(() => lb_CommandeEnCours.Text = item1.ToString()));
-                                    commandeEnCours = lb_CommandeEnCours.Text.ToString();
-                                }
-                                service.ServirClient(item1, item2) ;
+                #region À Revoir
+                //Task.Run(() =>
+                //{
+                //    while (enService)
+                //    {
+                //        if (Int32.Parse(base2Donnees.NombreDeVerreRouge()) != 0)
+                //        {
+                //            if (base2Donnees.Ingredient_Est_Disponible(item1))
+                //            {
+                //                if (lb_CommandeEnCours.Text != item1.ToString())
+                //                {
+                //                    this.Invoke((MethodInvoker)(() => lb_CommandeEnCours.Text = item1.ToString()));
+                //                    commandeEnCours = lb_CommandeEnCours.Text.ToString();
+                //                }
+                //                service.ServirClient(item1, item2) ;
 
-                                if (commandeEnCours != null && commandeEnCours != "")
-                                    this.Invoke((MethodInvoker)(() => lbFinishiCommande.Text = "Commande numéro " + commandeEnCours + " terminée!"));
+                //                if (commandeEnCours != null && commandeEnCours != "")
+                //                    this.Invoke((MethodInvoker)(() => lbFinishiCommande.Text = "Commande numéro " + commandeEnCours + " terminée!"));
 
-                                // supprime la commande terminée
-                                base2Donnees.SupprimerCommande(item1);
+                //                // supprime la commande terminée
+                //                base2Donnees.SupprimerCommande(item1);
 
-                                this.Invoke((MethodInvoker)(() => lb_CommandeEnCours.Text = ""));
-                                commandeEnCours = "";
-                                // prépare la nouvelle commande
-                                System.Threading.Thread.Sleep(500);
+                //                this.Invoke((MethodInvoker)(() => lb_CommandeEnCours.Text = ""));
+                //                commandeEnCours = "";
+                //                // prépare la nouvelle commande
+                //                System.Threading.Thread.Sleep(500);
 
-                                //if (tache.IsCompleted)
-                                //{
-                                //    if (commandeEnCours != null && commandeEnCours != "")
-                                //        this.Invoke((MethodInvoker)(() => lbFinishiCommande.Text = "Commande numéro " + commandeEnCours + " terminée!"));
+                //                //if (tache.IsCompleted)
+                //                //{
+                //                //    if (commandeEnCours != null && commandeEnCours != "")
+                //                //        this.Invoke((MethodInvoker)(() => lbFinishiCommande.Text = "Commande numéro " + commandeEnCours + " terminée!"));
 
-                                //    // supprime la commande terminée
-                                //    base2Donnees.SupprimerCommande(item1);
+                //                //    // supprime la commande terminée
+                //                //    base2Donnees.SupprimerCommande(item1);
 
-                                //    // prépare la nouvelle commande
-                                //    //System.Threading.Thread.Sleep(500);
-                                //    //service = new Commande();
+                //                //    // prépare la nouvelle commande
+                //                //    //System.Threading.Thread.Sleep(500);
+                //                //    //service = new Commande();
 
-                                //    //tache = service.ServirClient(item1, item2);
+                //                //    //tache = service.ServirClient(item1, item2);
 
-                                //    //this.Invoke((MethodInvoker)(() => lb_CommandeEnCours.Text = item1.ToString()));
-                                //    //commandeEnCours = lb_CommandeEnCours.Text.ToString();
-                                //}
-                            }
-                        }
-                    }
-                });
+                //                //    //this.Invoke((MethodInvoker)(() => lb_CommandeEnCours.Text = item1.ToString()));
+                //                //    //commandeEnCours = lb_CommandeEnCours.Text.ToString();
+                //                //}
+                //            }
+                //        }
+                //    }
+                //});
+                #endregion
             }
             else
             {

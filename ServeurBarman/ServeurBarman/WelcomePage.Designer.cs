@@ -90,9 +90,9 @@
             this.metroLabel1.FontWeight = MetroFramework.MetroLabelWeight.Bold;
             this.metroLabel1.Location = new System.Drawing.Point(291, 16);
             this.metroLabel1.Name = "metroLabel1";
-            this.metroLabel1.Size = new System.Drawing.Size(157, 38);
+            this.metroLabel1.Size = new System.Drawing.Size(199, 38);
             this.metroLabel1.TabIndex = 10;
-            this.metroLabel1.Text = "Activités robot";
+            this.metroLabel1.Text = "Panneau d\'erreurs";
             this.metroLabel1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // LBX_Activities
