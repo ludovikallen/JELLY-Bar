@@ -64,10 +64,10 @@ namespace ServeurBarman
 
         public bool Ingredient_Est_Disponible(int num)
         {
-            List<(int,int)> listeIngredient = new List<(int,int)>();
+            List<object> listeIngredient = new List<object>();
             bool ingredientDisponible = true;
 
-            string cmd = "e.codebouteille,e.bouteillepresente from ingredient e inner join commande c on e.codebouteille=c.ingredient where c.numcommande=" + num.ToString();
+            string cmd = "select e.bouteillepresente from ingredient e inner join commande c on e.codebouteille=c.ingredient where c.numcommande=" + num.ToString();
 
             OracleCommand listeDiv = new OracleCommand(cmd, EtatBaseDonnées);
             listeDiv.CommandType = CommandType.Text;
@@ -76,7 +76,7 @@ namespace ServeurBarman
             {
                 while (divisionReader.Read())
                 {
-                    listeIngredient.Add((divisionReader.GetInt32(0), divisionReader.GetInt32(1)));
+                    listeIngredient.Add(divisionReader.GetValue(0));
                 }
                 divisionReader.Close();
             }
@@ -84,7 +84,7 @@ namespace ServeurBarman
 
             foreach (var s in listeIngredient)
             {
-                if (s.Item2 == 0)
+                if (s.Equals("0"))
                 {
                     ingredientDisponible = false;
                 }
@@ -334,10 +334,9 @@ namespace ServeurBarman
         //        commande = new Shooter();
         //}
 
-        public Task ServirClient(int item1, int item2)
+        public void ServirClient(int item1, int item2)
         {
-            return Task.Run(()=>
-            {
+
                 if (item2 == 0)
                 {
                     commande = new Commande_Normale();
@@ -355,7 +354,7 @@ namespace ServeurBarman
                     var p = commande.TypeReel();
                     var ing = p.Ingredients(item1);
                 }
-            });
+   
         }
 
         /// <summary>
@@ -407,8 +406,7 @@ namespace ServeurBarman
         }
         public override List<(Position, int)> Ingredients(int numcom)
         {
-            string cmd = "e.POSITIONX,e.POSITIONY,e.POSITIONZ,c.QTY" +
-            "from ingredient e inner join commande c on e.codebouteille=c.ingredient where c.numcommande=" + numcom.ToString();
+            string cmd = "select e.POSITIONX,e.POSITIONY,e.POSITIONZ,c.QTY from ingredient e inner join commande c on e.codebouteille=c.ingredient where c.numcommande=" + numcom.ToString();
 
             OracleCommand listeDiv = new OracleCommand(cmd, Connexion.EtatBaseDonnées);
             listeDiv.CommandType = CommandType.Text;

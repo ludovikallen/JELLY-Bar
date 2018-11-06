@@ -250,7 +250,7 @@ namespace ServeurBarman
                                     this.Invoke((MethodInvoker)(() => lb_CommandeEnCours.Text = item1.ToString()));
                                     commandeEnCours = lb_CommandeEnCours.Text.ToString();
                                 }
-                                while (!service.ServirClient(item1, item2).IsCompleted) ;
+                                service.ServirClient(item1, item2) ;
 
                                 if (commandeEnCours != null && commandeEnCours != "")
                                     this.Invoke((MethodInvoker)(() => lbFinishiCommande.Text = "Commande numéro " + commandeEnCours + " terminée!"));
@@ -258,6 +258,8 @@ namespace ServeurBarman
                                 // supprime la commande terminée
                                 base2Donnees.SupprimerCommande(item1);
 
+                                this.Invoke((MethodInvoker)(() => lb_CommandeEnCours.Text = ""));
+                                commandeEnCours = "";
                                 // prépare la nouvelle commande
                                 System.Threading.Thread.Sleep(500);
 
