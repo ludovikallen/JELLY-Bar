@@ -102,8 +102,7 @@ namespace ServeurBarman
         /// <exception cref="Exception">Lance une exception lorsque la table commande n'existe pas</exception>
         public List<(int, int)> ListeCommande()
         {
-            while (true)
-            {
+            
                 List<(int, int)> numcommande = new List<(int, int)>();
                 string cmd = "select numcommande,shooter from commande";
                 try
@@ -127,7 +126,7 @@ namespace ServeurBarman
                             numcommande.Remove(numcommande[j]);
                 }
                 return numcommande;
-            }
+
         }
 
         /// <summary>

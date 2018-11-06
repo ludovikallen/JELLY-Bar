@@ -114,7 +114,7 @@ namespace ServeurBarman
                 }
             });
 
-            Task.Run(() => base2Donnees.ListeCommande());
+            //Task.Run(() => base2Donnees.ListeCommande());
             timer1.Start();
             timer1.Enabled = true;
         }
@@ -225,12 +225,7 @@ namespace ServeurBarman
                     MessageBox.Show("Ingrédient numéro " + item1.ToString() + " non disponible");
                 }
 
-                if (numcommande.Count == 0)
-                {
-                    this.Invoke((MethodInvoker)(() => lbFinishiCommande.Text = "Commande numéro " + commandePrecedente + " terminée!"));
-                    read.SpeakAsync(lbFinishiCommande.Text);
-                    commandePrecedente = "";
-                }
+                
             }
         }
 
