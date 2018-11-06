@@ -221,7 +221,7 @@ namespace ServeurBarman
         {
             try
             {
-                string cmd = "insert into shooter values(" + nombre + ")";
+                string cmd = "update verreshooter set nbshooter= " + nombre.ToString() ;
 
                 OracleCommand disc = new OracleCommand(cmd, EtatBaseDonnées);
                 disc.ExecuteNonQuery();
@@ -252,16 +252,16 @@ namespace ServeurBarman
                     + Int32.Parse(ingredients[2]) + "," + Int32.Parse(ingredients[3]) + "," + "'1'" + "," + Int32.Parse(ingredients[4]) + ",'"
                     + ingredients[5] + "','" + ingredients[6] + "')";
 
-                OracleCommand disc = new OracleCommand(cmd, EtatBaseDonnées);
-                disc.ExecuteNonQuery();
+                OracleCommand insert = new OracleCommand(cmd, EtatBaseDonnées);
+                insert.ExecuteNonQuery();
             }
             catch (Exception sel) { MessageBox.Show(sel.Message.ToString()); }
 
             try
             {
                 string cmd1 = "commit";
-                OracleCommand disc1 = new OracleCommand(cmd1, EtatBaseDonnées);
-                disc1.ExecuteNonQuery();
+                OracleCommand commit = new OracleCommand(cmd1, EtatBaseDonnées);
+                commit.ExecuteNonQuery();
             }
             catch (Exception) { MessageBox.Show(" Échec de l'enregistrement."); }
         }
@@ -277,8 +277,8 @@ namespace ServeurBarman
             {
                 string cmd = "delete  from commande";
 
-                OracleCommand disc = new OracleCommand(cmd, EtatBaseDonnées);
-                disc.ExecuteNonQuery();
+                OracleCommand delete = new OracleCommand(cmd, EtatBaseDonnées);
+                delete.ExecuteNonQuery();
             }
             catch (Exception sel) { MessageBox.Show(sel.Message); }
         }
@@ -294,8 +294,8 @@ namespace ServeurBarman
             {
                 string cmd = "delete  from commande where numcommande="+num.ToString();
 
-                OracleCommand disc = new OracleCommand(cmd, EtatBaseDonnées);
-                disc.ExecuteNonQuery();
+                OracleCommand delete = new OracleCommand(cmd, EtatBaseDonnées);
+                delete.ExecuteNonQuery();
             }
             catch (Exception sel) { MessageBox.Show(sel.Message.ToString()); }
         }
@@ -309,7 +309,7 @@ namespace ServeurBarman
     {
         private SpecificateurCommande commande;
         //private CRS_A255 robot;
-        private DataBase base2Donnees;
+        //private DataBase base2Donnees;
 
         /// <summary>
         /// Constructeur par défaut,

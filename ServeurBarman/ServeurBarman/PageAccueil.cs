@@ -123,17 +123,17 @@ namespace ServeurBarman
         // AFFICHE DANS L'INTERFACE LA LISTE DES COMMANDES EN ATTENTE
         private void Show_WaitingDrinksList()
         {
-            if (numcommande.Count != base2Donnees.ListeCommande().Count && base2Donnees.ListeCommande().Count != 0)
+            if (numcommande.Count != base2Donnees.ListeCommande().Count )
             {
                 Refresh_WaitingList();
 
                 foreach (var e in numcommande)
                     this.Invoke((MethodInvoker)(() => LBX_WaitingList.Items.Add(e.Item1)));
             }
-            else if (base2Donnees.ListeCommande().Count == 0)
-            {
-                LBX_WaitingList.Items.Clear();
-            }
+            //else if (base2Donnees.ListeCommande().Count == 0)
+            //{
+            //    LBX_WaitingList.Items.Clear();
+            //}
         }
 
         /// <summary>
@@ -175,19 +175,26 @@ namespace ServeurBarman
                             {
                                 List<(Position, int)> ing = p.Ingredients(item1);
 
+                                
                                 if (robot.MakeDrink(ing.ToList()))
                                 {
                                     read.SpeakAsync("Commande normale numéro " + item1.ToString() + " en cours");
-                                    base2Donnees.SupprimerCommande(item1);
-                                    lb_CommandeEnCours.Text = item1.ToString();
+                                    base2Donnees.SupprimerCommande(item1); 
+                                    this.Invoke((MethodInvoker)(() => lb_CommandeEnCours.Text = item1.ToString()));
 
                                     if (commandePrecedente != null)
                                     {
                                         this.Invoke((MethodInvoker)(() => lbFinishiCommande.Text = "Commande numéro " + commandePrecedente + " terminée!"));
                                         read.SpeakAsync(lbFinishiCommande.Text);
                                     }
-                                    commandePrecedente = lb_CommandeEnCours.Text.ToString();
+                                    
+                                    this.Invoke((MethodInvoker)(() => commandePrecedente = lb_CommandeEnCours.Text.ToString()));
                                 }
+                                //if(robot.task.IsCompleted)
+                                //{
+                                //    this.Invoke((MethodInvoker)(() => lbFinishiCommande.Text = "Commande numéro " + commandePrecedente + " terminée!"));
+                                //    read.SpeakAsync(lbFinishiCommande.Text);
+                                //}
                             }
                         }
                         else
@@ -312,13 +319,13 @@ namespace ServeurBarman
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            Random rand = new Random();
-            int one = rand.Next(0, 255);
-            int two = rand.Next(0, 255);
-            int three = rand.Next(0, 255);
-            int four = rand.Next(0, 255);
+            //Random rand = new Random();
+            //int one = rand.Next(0, 255);
+            //int two = rand.Next(0, 255);
+            //int three = rand.Next(0, 255);
+            //int four = rand.Next(0, 255);
             lB_DateTime.Text = DateTime.Now.ToString("hh:mm:ss");
-            lbFinishiCommande.ForeColor = Color.FromArgb(one, two, three, four);
+            //lbFinishiCommande.ForeColor = Color.FromArgb(one, two, three, four);
         }
     }
 }
