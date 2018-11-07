@@ -9,13 +9,15 @@
     tools:context=".MainActivity">
 
     <include layout="@layout/custom_list_drink" />
+
     <include layout="@layout/custom_list_ing" />
+
     <include layout="@layout/custom_list_itemcourant" />
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/listeDrink_LYT"
         android:layout_width="584dip"
-        android:layout_height="677dp"
+        android:layout_height="536dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -26,7 +28,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/backgroundTitle_TView"
-        app:layout_constraintVertical_bias="0.86">
+        app:layout_constraintVertical_bias="0.387">
 
         <Button
             android:id="@+id/triNote_BTN"
@@ -44,19 +46,16 @@
         <ListView
             android:id="@+id/drink_LVIEW"
             android:layout_width="592dp"
-            android:layout_height="595dp"
+            android:layout_height="596dp"
             android:layout_alignParentTop="true"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="64dp"
             android:divider="@color/listDivider"
             android:dividerHeight="2dp"
             android:listSelector="@color/listSelector"
             android:paddingLeft="5dp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0">
+            app:layout_constraintTop_toTopOf="parent">
 
         </ListView>
 
@@ -64,51 +63,49 @@
             android:id="@+id/drink_TXT"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="612dp"
+            android:layout_marginBottom="576dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:text="@string/drinks_str"
             android:textColor="@color/noir"
             android:textSize="36sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.082" />
 
     </android.support.constraint.ConstraintLayout>
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/listeShooter_LYT"
         android:layout_width="584dip"
-        android:layout_height="677dp"
-        android:layout_marginBottom="8dp"
+        android:layout_height="548dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="100dp"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/backgroundFooter_TView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/backgroundTitle_TView"
-        app:layout_constraintVertical_bias="0.86">
+        app:layout_constraintTop_toTopOf="@+id/backgroundTitle_TView">
 
         <ListView
             android:id="@+id/shooter_LVIEW"
             android:layout_width="592dp"
             android:layout_height="595dp"
             android:layout_alignParentTop="true"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="64dp"
             android:divider="@color/listDivider"
             android:dividerHeight="2dp"
             android:listSelector="@color/listSelector"
             android:paddingLeft="5dp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0">
+            app:layout_constraintTop_toTopOf="parent">
 
         </ListView>
 
@@ -119,8 +116,8 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:background="@color/blanc"
-            android:textSize="30sp"
             android:text="▼"
+            android:textSize="30sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -133,13 +130,16 @@
             android:layout_marginBottom="612dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:text="@string/shooters_str"
             android:textColor="@color/noir"
             android:textSize="36sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
     </android.support.constraint.ConstraintLayout>
 
     <android.support.constraint.ConstraintLayout
@@ -270,7 +270,7 @@
     <android.support.constraint.ConstraintLayout
         android:id="@+id/panier_LYT"
         android:layout_width="584dip"
-        android:layout_height="677dp"
+        android:layout_height="537dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -281,7 +281,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/backgroundTitle_TView"
-        app:layout_constraintVertical_bias="0.86">
+        app:layout_constraintVertical_bias="0.448">
 
         <Button
             android:id="@+id/supprimerTout_BTN"
@@ -303,32 +303,28 @@
             android:layout_width="592dp"
             android:layout_height="589dp"
             android:layout_alignParentTop="true"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="72dp"
             android:divider="@color/listDivider"
             android:dividerHeight="2dp"
             android:listSelector="@color/listSelector"
             android:paddingLeft="5dp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.882" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/panier_TXT"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="612dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:text="@string/panierVide_str"
             android:textColor="@color/noir"
             android:textSize="36sp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            tools:layout_editor_absoluteY="17dp" />
 
         <Button
             android:id="@+id/supprimer_BTN"
@@ -353,69 +349,59 @@
             android:id="@+id/commander_BTN"
             android:layout_width="59dp"
             android:layout_height="55dp"
-            android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:background="@drawable/commander_bouton"
-            android:visibility="visible"
             android:text="▶"
-            app:layout_constraintBottom_toBottomOf="@+id/panier_LYT"
+            android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.22"
+            app:layout_constraintHorizontal_bias="0.229"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/panier_LYT"
-            app:layout_constraintVertical_bias="0.013" />
+            app:layout_constraintTop_toTopOf="@+id/panier_LYT" />
 
     </android.support.constraint.ConstraintLayout>
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/infos_LYT"
         android:layout_width="584dip"
-        android:layout_height="677dp"
-        android:layout_marginBottom="8dp"
+        android:layout_height="546dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="112dp"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/backgroundFooter_TView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/backgroundTitle_TView"
-        app:layout_constraintVertical_bias="0.888">
+        app:layout_constraintTop_toTopOf="@+id/backgroundTitle_TView">
 
         <TextView
             android:id="@+id/infos_TXT"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="612dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:text="@string/infos_str"
             android:textColor="@color/noir"
             android:textSize="36sp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            tools:layout_editor_absoluteY="8dp" />
 
         <TextView
             android:id="@+id/informations_TXT"
             android:layout_width="571dp"
-            android:layout_height="588dp"
-            android:layout_marginBottom="8dp"
+            android:layout_height="488dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="56dp"
             android:text="@string/informations"
-            android:textSize="24sp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.333"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintTop_toTopOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 
