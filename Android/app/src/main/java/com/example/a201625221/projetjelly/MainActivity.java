@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Layout;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -25,6 +26,8 @@ import android.widget.Toast;
 
 import com.hsalf.smilerating.BaseRating;
 import com.hsalf.smilerating.SmileRating;
+
+import org.w3c.dom.Text;
 
 import java.math.RoundingMode;
 import java.sql.CallableStatement;
@@ -148,6 +151,7 @@ public class MainActivity extends AppCompatActivity {
     boolean premiereNote;
     boolean premiereConnexion=true;
     int NBrecette;
+    int LayoutActif=-1;
     /**
      * Fonction lancée à la création de l'activité
      */
@@ -678,13 +682,83 @@ public class MainActivity extends AppCompatActivity {
                         if (rect.contains(v.getLeft() + (int) event.getX(), v.getTop() + (int) event.getY())) {
                             //commanderBTN.performClick();
                         }
-                        else
-                        {
-                            commanderBTN.setBackground(getResources().getDrawable(R.drawable.commander_bouton));
-                        }
+                        commanderBTN.setBackground(getResources().getDrawable(R.drawable.commander_bouton));
                         return false;
                     default:
                         return true;
+                }
+            }
+        });
+
+        ConstraintLayout swipeListener=findViewById(R.id.background_LYT);
+        swipeListener.setOnTouchListener(new OnSwipeTouchListener(MainActivity.this) {
+            public void onSwipeRight() {
+                if(LayoutActif>1)
+                    LayoutActif--;
+                switch(LayoutActif) {
+                    case 1:
+                        drinkLYT.setVisibility(View.VISIBLE);
+                        shooterLYT.setVisibility(View.INVISIBLE);
+                        modifierLYT.setVisibility(View.INVISIBLE);
+                        panierLYT.setVisibility(View.INVISIBLE);
+                        infosLYT.setVisibility(View.INVISIBLE);
+                        break;
+                    case 2:
+                        drinkLYT.setVisibility(View.INVISIBLE);
+                        shooterLYT.setVisibility(View.VISIBLE);
+                        modifierLYT.setVisibility(View.INVISIBLE);
+                        panierLYT.setVisibility(View.INVISIBLE);
+                        infosLYT.setVisibility(View.INVISIBLE);
+                        break;
+                    case 3:
+                        drinkLYT.setVisibility(View.INVISIBLE);
+                        shooterLYT.setVisibility(View.INVISIBLE);
+                        modifierLYT.setVisibility(View.INVISIBLE);
+                        panierLYT.setVisibility(View.VISIBLE);
+                        infosLYT.setVisibility(View.INVISIBLE);
+                        break;
+                    case 4:
+                        drinkLYT.setVisibility(View.INVISIBLE);
+                        shooterLYT.setVisibility(View.INVISIBLE);
+                        modifierLYT.setVisibility(View.INVISIBLE);
+                        panierLYT.setVisibility(View.INVISIBLE);
+                        infosLYT.setVisibility(View.VISIBLE);
+                        break;
+                }
+
+            }
+            public void onSwipeLeft() {
+                if(LayoutActif<5)
+                    LayoutActif++;
+                switch(LayoutActif) {
+                    case 1:
+                        drinkLYT.setVisibility(View.VISIBLE);
+                        shooterLYT.setVisibility(View.INVISIBLE);
+                        modifierLYT.setVisibility(View.INVISIBLE);
+                        panierLYT.setVisibility(View.INVISIBLE);
+                        infosLYT.setVisibility(View.INVISIBLE);
+                        break;
+                    case 2:
+                        drinkLYT.setVisibility(View.INVISIBLE);
+                        shooterLYT.setVisibility(View.VISIBLE);
+                        modifierLYT.setVisibility(View.INVISIBLE);
+                        panierLYT.setVisibility(View.INVISIBLE);
+                        infosLYT.setVisibility(View.INVISIBLE);
+                        break;
+                    case 3:
+                        drinkLYT.setVisibility(View.INVISIBLE);
+                        shooterLYT.setVisibility(View.INVISIBLE);
+                        modifierLYT.setVisibility(View.INVISIBLE);
+                        panierLYT.setVisibility(View.VISIBLE);
+                        infosLYT.setVisibility(View.INVISIBLE);
+                        break;
+                    case 4:
+                        drinkLYT.setVisibility(View.INVISIBLE);
+                        shooterLYT.setVisibility(View.INVISIBLE);
+                        modifierLYT.setVisibility(View.INVISIBLE);
+                        panierLYT.setVisibility(View.INVISIBLE);
+                        infosLYT.setVisibility(View.VISIBLE);
+                        break;
                 }
             }
         });
@@ -713,7 +787,6 @@ public class MainActivity extends AppCompatActivity {
                 drinkLYT.setVisibility(View.INVISIBLE);
                 shooterLYT.setVisibility(View.INVISIBLE);
                 modifierLYT.setVisibility(View.INVISIBLE);
-                shooterLYT.setVisibility(View.INVISIBLE);
                 panierLYT.setVisibility(View.INVISIBLE);
                 infosLYT.setVisibility(View.INVISIBLE);
 
@@ -723,6 +796,7 @@ public class MainActivity extends AppCompatActivity {
                 infosBTN.setVisibility(View.GONE);
 
                 connexionLYT.setVisibility(View.VISIBLE);
+                LayoutActif=-1;
             }
         });
 
@@ -740,6 +814,7 @@ public class MainActivity extends AppCompatActivity {
                 enleverTri();
 
                 selectionPositionsPanier.clear();
+                LayoutActif=1;
             }
         });
 
@@ -750,6 +825,7 @@ public class MainActivity extends AppCompatActivity {
                 modifierLYT.setVisibility(View.INVISIBLE);
                 panierLYT.setVisibility(View.VISIBLE);
                 infosLYT.setVisibility(View.INVISIBLE);
+                LayoutActif=3;
             }
         });
 
@@ -763,6 +839,7 @@ public class MainActivity extends AppCompatActivity {
 
                 trierBas();
                 selectionPositionsPanier.clear();
+                LayoutActif=2;
             }
         });
 
@@ -775,6 +852,7 @@ public class MainActivity extends AppCompatActivity {
                 infosLYT.setVisibility(View.VISIBLE);
 
                 selectionPositionsPanier.clear();
+                LayoutActif=4;
             }
         });
 
@@ -866,7 +944,7 @@ public class MainActivity extends AppCompatActivity {
                 indexItemModification=-1;
                 arrayListItemCourant.clear();
                 modifierLYT.setVisibility(View.INVISIBLE);
-                drinkLYT.setVisibility(View.VISIBLE);
+                //drinkLYT.setVisibility(View.VISIBLE);
             }
         });
 
@@ -887,6 +965,7 @@ public class MainActivity extends AppCompatActivity {
                 Alcoolique+="...";
                 connecterBTN.setText(String.format("Continuer à boire un coup\n%s", Alcoolique));
                 OracleConnexion();
+                LayoutActif=0;
             }
         });
 
@@ -1024,7 +1103,7 @@ public class MainActivity extends AppCompatActivity {
                     arrayListItemCourant.add(item);
                     rafraichirItemCourant();
 
-                    if(arrayListDrink.contains(item.get("nom"))) {
+                    if(listeNomsDrinks.contains(item.get("nom"))) {
                         panierLYT.setVisibility(View.INVISIBLE);
                         modifierLYT.setVisibility(View.VISIBLE);
                         remplirListeIngredients();
@@ -1328,7 +1407,6 @@ public class MainActivity extends AppCompatActivity {
                 if (!description.trim().equals("")){
                     description = description.substring(0, description.length() - 2);
                 }
-                listeNomsDrinks.add(nom);
                 HashMap<String,String> hashMap=new HashMap<>();//create a hashmap to store the data in key value pair
                 hashMap.put("nom", nom);
                 hashMap.put("desc",description);
@@ -1343,6 +1421,7 @@ public class MainActivity extends AppCompatActivity {
                 if (drinkPossible)
                 {
                     arrayListDrink.add(hashMap);//add the hashmap into arrayList
+                    listeNomsDrinks.add(hashMap.get("nom"));
                 }
                 try {
                     stm1.close();
@@ -1354,7 +1433,16 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-
+        if(arrayListDrink.size()==0) {
+            TextView drink=findViewById(R.id.drink_TXT);
+            drink.setText("Aucun drink disponible.");
+            drink.setPaintFlags(drink.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        }
+        else {
+            TextView drink=findViewById(R.id.drink_TXT);
+            drink.setText(getResources().getString(R.string.drinks_str));
+            drink.setPaintFlags(drink.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        }
         enleverTri();
         rafraichirListes();
     }
@@ -1447,7 +1535,7 @@ public class MainActivity extends AppCompatActivity {
         arrayListIng.clear();
         Statement stm1 = null;
         ResultSet resultSet = null;
-        String sql="select NOMBOUTEILLE,DESCRIPTIONS from INGREDIENT";
+        String sql="select NOMBOUTEILLE,DESCRIPTIONS,BOUTEILLEPRESENTE,QTYRESTANTE from INGREDIENT";
         try {
             stm1 = conn_.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
 
@@ -1459,7 +1547,9 @@ public class MainActivity extends AppCompatActivity {
 
                 hashMap.put("nom",resultSet.getString(1));
                 hashMap.put("desc",resultSet.getString(2));
-                arrayListIng.add(hashMap);//add the hashmap into arrayList
+
+                if(resultSet.getInt(3)==1&&resultSet.getInt(4)!=0)
+                    arrayListIng.add(hashMap);//add the hashmap into arrayList
             }
 
         } catch (SQLException e) {
