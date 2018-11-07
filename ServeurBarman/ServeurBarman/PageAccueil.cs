@@ -172,29 +172,19 @@ namespace ServeurBarman
 
                                 if (robot.MakeDrink(ing.ToList()))
                                 {
-                                    read.SpeakAsync("Commande normale numéro " + item1.ToString() + " en cours");
-                                    base2Donnees.SupprimerCommande(item1);
-                                    this.Invoke((MethodInvoker)(() => lb_CommandeEnCours.Text = item1.ToString()));
-
                                     if (commandePrecedente != null)
                                     {
                                         this.Invoke((MethodInvoker)(() => lbFinishiCommande.Text = "Commande numéro " + commandePrecedente + " terminée!"));
                                         read.SpeakAsync(lbFinishiCommande.Text);
                                     }
+                                    read.SpeakAsync("Commande normale numéro " + item1.ToString() + " en cours");
+                                    base2Donnees.SupprimerCommande(item1);
+                                    this.Invoke((MethodInvoker)(() => lb_CommandeEnCours.Text = item1.ToString()));
 
                                     this.Invoke((MethodInvoker)(() => commandePrecedente = lb_CommandeEnCours.Text.ToString()));
                                 }
                             }
-                            while (robot.EnMarche()) ; // ON S'ASSURE QUE LE ROBOT TERMINE LA TACHE EN COURS
-
-                            this.Invoke((MethodInvoker)(() => lb_CommandeEnCours.Text = ""));
-
-                            // ACTIONS NECESSAIRES SUR LA DERNIÈRE COMMANDE
-                            if (numcommande.Count == 0)
-                            {
-                                read.SpeakAsync("Commande numéro " + commandePrecedente + " terminée!");
-                                commandePrecedente = null;
-                            }
+                            VerifierActivitéRobot();
                         }
                         else
                         {
@@ -217,28 +207,22 @@ namespace ServeurBarman
 
                                 if (robot.MakeShooterTest(ing[0].Item1,ing[0].Item2))
                                 {
-                                    read.SpeakAsync("Commande shooter numéro " + item1.ToString() + " en cours");
-                                    base2Donnees.SupprimerCommande(item1);
-                                    this.Invoke((MethodInvoker)(() => lb_CommandeEnCours.Text = item1.ToString()));
-
                                     if (commandePrecedente != null)
                                     {
                                         this.Invoke((MethodInvoker)(() => lbFinishiCommande.Text = "Commande numéro " + commandePrecedente + " terminée!"));
                                         read.SpeakAsync(lbFinishiCommande.Text);
                                     }
+
+                                    read.SpeakAsync("Commande shooter numéro " + item1.ToString() + " en cours");
+                                    base2Donnees.SupprimerCommande(item1);
+                                    this.Invoke((MethodInvoker)(() => lb_CommandeEnCours.Text = item1.ToString()));
+
                                     this.Invoke((MethodInvoker)(() => commandePrecedente = lb_CommandeEnCours.Text.ToString()));
                                 }
                             }
-                            while (robot.EnMarche()) ; // ON S'ASSURE QUE LE ROBOT TERMINE LA TACHE EN COURS
 
-                            this.Invoke((MethodInvoker)(() => lb_CommandeEnCours.Text = ""));
-
-                            // ACTIONS NECESSAIRES SUR LA DERNIÈRE COMMANDE
-                            if (numcommande.Count == 0)
-                            {
-                                read.SpeakAsync("Commande numéro " + commandePrecedente + " terminée!");
-                                commandePrecedente = null;
-                            }
+                            VerifierActivitéRobot();
+                           
                         }
                         else
                         {
@@ -259,28 +243,37 @@ namespace ServeurBarman
 
         private void VerifierActivitéRobot()
         {
+            while (robot.EnMarche()) ; // ON S'ASSURE QUE LE ROBOT TERMINE LA TACHE EN COURS
 
+            this.Invoke((MethodInvoker)(() => lb_CommandeEnCours.Text = ""));
+
+            // ACTIONS NECESSAIRES SUR LA DERNIÈRE COMMANDE
+            if (numcommande.Count == 0)
+            {
+                read.SpeakAsync("Commande numéro " + commandePrecedente + " terminée!");
+                commandePrecedente = null;
+            }
         }
 
         // BOUTON DE CONNEXION AU ROBOT
         private void mBtnConnexionRobot_Click(object sender, EventArgs e)
         {
             // On établie la connexion avec le robot
-            robot.ConnexionRobot();
-            System.Threading.Thread.Sleep(2000); // CECI PERMET DE S'ASSURER QUE LE ROBOT SE CONNECTE PARFAITEMENT 
-                                                 // SINON UNE EXCEPTION EST LEVÉE
-            if (robot.Connected)
+
+            Task.Run(() =>
             {
+                while(robot.ConnexionRobot()==1)
+                {
+                    robot.ConnexionRobot();
+                    Thread.Sleep(2000);
+                }
+
                 estConnecté = true;
                 pbx_Halt.Enabled = true;
                 btn_Servir.Enabled = true;
                 mBtnConnexionRobot.Enabled = false;
-            }
-            else
-            {
-                welcomePage1.activiteRobot = "Connexion robot impossible";
-                robot.Deconnexion();
-            }
+            });
+           
         }
 
         // BOUTON DE SUPPRESSION DES COMMANDES DISPONIBLES DANS LA TABLE COMMANDE

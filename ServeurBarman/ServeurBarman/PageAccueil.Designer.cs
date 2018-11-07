@@ -369,6 +369,7 @@
             this.Controls.Add(this.pbx_Halt);
             this.Controls.Add(this.panel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
             this.Name = "PageAccueil";
             this.Text = "    Accueil";
             this.Load += new System.EventHandler(this.PageAccueil_Load);
