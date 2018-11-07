@@ -15,7 +15,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioButton;
@@ -43,6 +42,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Set;
 //endregion
 
@@ -146,6 +146,7 @@ public class MainActivity extends AppCompatActivity {
     String Alcoolique="";
     boolean PasInitialiser = false;
     boolean premiereNote;
+    boolean premiereConnexion=true;
     int NBrecette;
     /**
      * Fonction lancée à la création de l'activité
@@ -241,6 +242,10 @@ public class MainActivity extends AppCompatActivity {
         InitialiserListes();
         InitialiserCouleurs();
         InitialiserListeners();
+        if(premiereConnexion) {
+            changerBlanc();
+            premiereConnexion=false;
+        }
     }
 
     /**
@@ -269,15 +274,12 @@ public class MainActivity extends AppCompatActivity {
 
         couleursRDGRP =findViewById(R.id.changerCouleur_RBTNGRP);
 
-        SmileRating smileRating = (SmileRating) findViewById(R.id.smile_rating);
+        SmileRating smileRating = findViewById(R.id.smile_rating);
         smileRating.setNameForSmile(BaseRating.TERRIBLE, "Mauvais (1)");
         smileRating.setNameForSmile(BaseRating.BAD, "Déçu (2)");
         smileRating.setNameForSmile(BaseRating.OKAY, "Okay (3)");
         smileRating.setNameForSmile(BaseRating.GOOD, "Bon (4)");
         smileRating.setNameForSmile(BaseRating.GREAT, "Très bon (5)");
-
-        findViewById(R.id.connexion_BTN).setVisibility(View.VISIBLE);
-
     }
 
     /**
@@ -674,7 +676,7 @@ public class MainActivity extends AppCompatActivity {
                         return false;
                     case MotionEvent.ACTION_UP:
                         if (rect.contains(v.getLeft() + (int) event.getX(), v.getTop() + (int) event.getY())) {
-                            commanderBTN.performClick();
+                            //commanderBTN.performClick();
                         }
                         else
                         {
@@ -765,7 +767,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         infosBTN.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) { ;
+            public void onClick(View v) {
                 drinkLYT.setVisibility(View.INVISIBLE);
                 shooterLYT.setVisibility(View.INVISIBLE);
                 modifierLYT.setVisibility(View.INVISIBLE);
@@ -976,19 +978,19 @@ public class MainActivity extends AppCompatActivity {
                         else {
                             switch (couleurChoisie) {
                                 case "blanc":
-                                    panierLVIEW.getChildAt(position).setBackgroundColor(couleurs.get("blanc").getDefaultColor());
+                                    panierLVIEW.getChildAt(position).setBackgroundColor(Objects.requireNonNull(couleurs.get("blanc")).getDefaultColor());
                                     break;
                                 case "noir":
-                                    panierLVIEW.getChildAt(position).setBackgroundColor(couleurs.get("noir").getDefaultColor());
+                                    panierLVIEW.getChildAt(position).setBackgroundColor(Objects.requireNonNull(couleurs.get("noir")).getDefaultColor());
                                     break;
                                 case "jaune":
-                                    panierLVIEW.getChildAt(position).setBackgroundColor(couleurs.get("jaune").getDefaultColor());
+                                    panierLVIEW.getChildAt(position).setBackgroundColor(Objects.requireNonNull(couleurs.get("jaune")).getDefaultColor());
                                     break;
                                 case "gris":
-                                    panierLVIEW.getChildAt(position).setBackgroundColor(couleurs.get("gris").getDefaultColor());
+                                    panierLVIEW.getChildAt(position).setBackgroundColor(Objects.requireNonNull(couleurs.get("gris")).getDefaultColor());
                                     break;
                                 case "bleu":
-                                    panierLVIEW.getChildAt(position).setBackgroundColor(couleurs.get("bleu").getDefaultColor());
+                                    panierLVIEW.getChildAt(position).setBackgroundColor(Objects.requireNonNull(couleurs.get("bleu")).getDefaultColor());
                                     break;
                             }
 
@@ -1078,6 +1080,7 @@ public class MainActivity extends AppCompatActivity {
         {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
+                findViewById(R.id.connexion_BTN).setVisibility(View.VISIBLE);
                 if(checkedId==R.id.changerBlanc_RBTN)
                 {
                     changerBlanc();
@@ -1111,12 +1114,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        final SmileRating smileRating = (SmileRating) findViewById(R.id.smile_rating);
+        final SmileRating smileRating = findViewById(R.id.smile_rating);
         smileRating.setOnSmileySelectionListener(new SmileRating.OnSmileySelectionListener() {
             @Override
             public void onSmileySelected(@BaseRating.Smiley int smiley, boolean reselected) {
-                findViewById(R.id.envoyerNote_BTN).setVisibility(View.VISIBLE);
                 note=smileRating.getRating();
+                if(note!=0)
+                    findViewById(R.id.envoyerNote_BTN).setVisibility(View.VISIBLE);
             }
         });
     }
@@ -1162,8 +1166,8 @@ public class MainActivity extends AppCompatActivity {
             HashMap<String, Integer> drink;
             String sql2 = "Select max(numcommande) from commande";
             int Numcommande=0;
-            ResultSet resultSetMax = null;
-            Statement stm12 = null;
+            ResultSet resultSetMax;
+            Statement stm12;
             try {
                 stm12 = conn_.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                 resultSetMax = stm12.executeQuery(sql2);
@@ -1176,8 +1180,8 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            Statement stm1 = null;
-            ResultSet resultSet = null;
+            Statement stm1;
+            ResultSet resultSet;
             for (int i = 0; i < arrayListPanier.size(); i++) {
                 drink = defaireDescription(arrayListPanier.get(i).get("desc"));
                 for (String key : drink.keySet()) {
@@ -1258,14 +1262,16 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Affiche le nombre d'éléments dans le panier sous l'icone de celui-ci
      */
+    @SuppressLint("SetTextI18n")
     void afficherNombreItemsPanier()
     {
         final TextView itemCountTXT=findViewById(R.id.nombreArticlesPanier_TXT);
         itemCountTXT.setText(Integer.toString(arrayListPanier.size()));
         final TextView panierTXT=findViewById(R.id.panier_TXT);
-        if(arrayListPanier.size()==0)
-
+        if(arrayListPanier.size()==0){
             panierTXT.setText(getResources().getString(R.string.panierVide_str));
+            panierTXT.setPaintFlags(panierTXT.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);
+        }
         else {
             panierTXT.setText(getResources().getString(R.string.panier_str));
             panierTXT.setPaintFlags(panierTXT.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);
@@ -1292,7 +1298,7 @@ public class MainActivity extends AppCompatActivity {
         {
             try {
                 String requeteDescription = "select recette.NOMRECETTE, NOMBOUTEILLE, INGREDIENTRECETTE.QTYSHOT,INGREDIENT.BOUTEILLEPRESENTE,INGREDIENT.QTYRESTANTE from INGREDIENT INNER JOIN INGREDIENTRECETTE ON INGREDIENT.CODEBOUTEILLE = INGREDIENTRECETTE.CODEBOUTEILLE INNER JOIN RECETTE ON INGREDIENTRECETTE.CODERECETTE = RECETTE.CODERECETTE WHERE RECETTE.CODERECETTE = " + i;
-                stm1 = conn_.createStatement();;
+                stm1 = conn_.createStatement();
                 resultSet = stm1.executeQuery(requeteDescription);
                 String nom = null;
                 String description;
@@ -1783,13 +1789,8 @@ public class MainActivity extends AppCompatActivity {
             {
                 demanderNote(arrayListPanier.get(0).get("nom"));
             }
-            else
-            {
-                TextView panierTXT=findViewById(R.id.panier_TXT);
-                panierTXT.setText(getResources().getString(R.string.panierVide_str));
-                panierTXT.setPaintFlags(panierTXT.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-            }
         }
+        afficherNombreItemsPanier();
         rafraichirListePanier();
     }
 
@@ -1817,7 +1818,7 @@ public class MainActivity extends AppCompatActivity {
      * Envoie la note courante à la BD
      */
     void envoyerNote() {
-        SmileRating smileRating = (SmileRating) findViewById(R.id.smile_rating);
+        SmileRating smileRating = findViewById(R.id.smile_rating);
         if(smileRating.getRating()==0)
             faireToast("Désolé de votre mauvaise expérience. Revenez nous voir.");
         else
@@ -1853,6 +1854,7 @@ public class MainActivity extends AppCompatActivity {
         }
         reinitTableauNotes();
         notesLYT.setVisibility(View.INVISIBLE);
+        findViewById(R.id.envoyerNote_BTN).setVisibility(View.INVISIBLE);
         if(arrayListPanier.size()!=0) {
             demanderNote(arrayListPanier.get(0).get("nom"));
         }
@@ -1865,7 +1867,7 @@ public class MainActivity extends AppCompatActivity {
      * Réinitialise les notes
      */
     void reinitTableauNotes() {
-        final SmileRating smileRating = (SmileRating) findViewById(R.id.smile_rating);
+        final SmileRating smileRating = findViewById(R.id.smile_rating);
         smileRating.setSelectedSmile(BaseRating.NONE,true);
     }
 
@@ -1887,20 +1889,20 @@ public class MainActivity extends AppCompatActivity {
             public int compare(HashMap<String,String> o1,
                                HashMap<String,String> o2)
             {
-                    if(!o1.get("note").equals("NA")&&!o2.get("note").equals("NA")) {
-                        float o1note = Float.valueOf(o1.get("note"));
-                        float o2note = Float.valueOf(o2.get("note"));
+                    if(!Objects.equals(o1.get("note"), "NA") &&!Objects.equals(o2.get("note"), "NA")) {
+                        float o1note = Float.valueOf(Objects.requireNonNull(o1.get("note")));
+                        float o2note = Float.valueOf(Objects.requireNonNull(o2.get("note")));
                         if (o1note < o2note) {
                             return -1;
                         } else if (o1note > o2note) {
                             return 1;
                         }
                     }
-                    else if(!o1.get("note").equals("NA")&&o2.get("note").equals("NA"))
+                    else if(!Objects.equals(o1.get("note"), "NA") && Objects.equals(o2.get("note"), "NA"))
                     {
                         return -1;
                     }
-                    else if(o1.get("note").equals("NA")&&!o2.get("note").equals("NA"))
+                    else if(Objects.equals(o1.get("note"), "NA") &&!Objects.equals(o2.get("note"), "NA"))
                     {
                         return 1;
                     }
@@ -1915,7 +1917,7 @@ public class MainActivity extends AppCompatActivity {
             public int compare(HashMap<String,String> o1,
                                HashMap<String,String> o2)
             {
-                return -o1.get("nom").compareTo(o2.get("nom"));
+                return -Objects.requireNonNull(o1.get("nom")).compareTo(Objects.requireNonNull(o2.get("nom")));
             }
         });
         rafraichirListeShooters();
@@ -1935,20 +1937,20 @@ public class MainActivity extends AppCompatActivity {
             public int compare(HashMap<String,String> o1,
                                HashMap<String,String> o2)
             {
-                    if(!o1.get("note").equals("NA")&&!o2.get("note").equals("NA")) {
-                        float o1note = Float.valueOf(o1.get("note"));
-                        float o2note = Float.valueOf(o2.get("note"));
+                    if(!Objects.equals(o1.get("note"), "NA") &&!Objects.equals(o2.get("note"), "NA")) {
+                        float o1note = Float.valueOf(Objects.requireNonNull(o1.get("note")));
+                        float o2note = Float.valueOf(Objects.requireNonNull(o2.get("note")));
                         if (o1note < o2note) {
                             return 1;
                         } else if (o1note > o2note) {
                             return -1;
                         }
                     }
-                    else if(!o1.get("note").equals("NA")&&o2.get("note").equals("NA"))
+                    else if(!Objects.equals(o1.get("note"), "NA") && Objects.equals(o2.get("note"), "NA"))
                     {
                         return -1;
                     }
-                    else if(o1.get("note").equals("NA")&&!o2.get("note").equals("NA"))
+                    else if(Objects.equals(o1.get("note"), "NA") &&!Objects.equals(o2.get("note"), "NA"))
                     {
                         return 1;
                     }
@@ -1962,7 +1964,7 @@ public class MainActivity extends AppCompatActivity {
             public int compare(HashMap<String,String> o1,
                                HashMap<String,String> o2)
             {
-                return o1.get("nom").compareTo(o2.get("nom"));
+                return Objects.requireNonNull(o1.get("nom")).compareTo(Objects.requireNonNull(o2.get("nom")));
             }
         });
         rafraichirListeShooters();
@@ -1980,7 +1982,7 @@ public class MainActivity extends AppCompatActivity {
             public int compare(HashMap<String,String> o1,
                                HashMap<String,String> o2)
             {
-                if(!o1.containsValue(null)&&!o2.containsValue(null)) return o1.get("nom").compareTo(o2.get("nom"));
+                if(!o1.containsValue(null)&&!o2.containsValue(null)) return Objects.requireNonNull(o1.get("nom")).compareTo(Objects.requireNonNull(o2.get("nom")));
                 return 0;
             }
         });
@@ -1991,7 +1993,7 @@ public class MainActivity extends AppCompatActivity {
             public int compare(HashMap<String,String> o1,
                                HashMap<String,String> o2)
             {
-                if(!o1.containsValue(null)&&!o2.containsValue(null)) return o1.get("nom").compareTo(o2.get("nom"));
+                if(!o1.containsValue(null)&&!o2.containsValue(null)) return Objects.requireNonNull(o1.get("nom")).compareTo(Objects.requireNonNull(o2.get("nom")));
                 return 0;
             }
         });
