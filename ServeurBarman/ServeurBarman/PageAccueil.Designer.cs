@@ -56,6 +56,7 @@
             this.btn_Servir = new System.Windows.Forms.Button();
             this.addCups1 = new ServeurBarman.AddCups();
             this.welcomePage1 = new ServeurBarman.WelcomePage();
+            this.btn_Supp = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PBX_Logo)).BeginInit();
             this.pnlBar.SuspendLayout();
@@ -347,11 +348,22 @@
             this.welcomePage1.Size = new System.Drawing.Size(548, 274);
             this.welcomePage1.TabIndex = 16;
             // 
+            // btn_Supp
+            // 
+            this.btn_Supp.Location = new System.Drawing.Point(550, 219);
+            this.btn_Supp.Name = "btn_Supp";
+            this.btn_Supp.Size = new System.Drawing.Size(139, 52);
+            this.btn_Supp.TabIndex = 28;
+            this.btn_Supp.Text = "Supprimer commande";
+            this.btn_Supp.UseVisualStyleBackColor = true;
+            this.btn_Supp.Click += new System.EventHandler(this.btn_Supp_Click);
+            // 
             // PageAccueil
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1166, 691);
+            this.Controls.Add(this.btn_Supp);
             this.Controls.Add(this.btn_Servir);
             this.Controls.Add(this.pnlDonnees);
             this.Controls.Add(this.Btn_ResetCommande);
@@ -370,6 +382,8 @@
             this.Controls.Add(this.panel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(1166, 691);
+            this.MinimumSize = new System.Drawing.Size(1166, 691);
             this.Name = "PageAccueil";
             this.Text = "    Accueil";
             this.Load += new System.EventHandler(this.PageAccueil_Load);
@@ -411,5 +425,6 @@
         private System.Windows.Forms.Panel pnlDonnees;
         private System.Windows.Forms.Timer timer2;
         private System.Windows.Forms.Button btn_Servir;
+        private System.Windows.Forms.Button btn_Supp;
     }
 }

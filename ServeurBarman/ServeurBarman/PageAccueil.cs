@@ -180,7 +180,6 @@ namespace ServeurBarman
                                     read.SpeakAsync("Commande normale numéro " + item1.ToString() + " en cours");
                                     base2Donnees.SupprimerCommande(item1);
                                     this.Invoke((MethodInvoker)(() => lb_CommandeEnCours.Text = item1.ToString()));
-
                                     this.Invoke((MethodInvoker)(() => commandePrecedente = lb_CommandeEnCours.Text.ToString()));
                                 }
                             }
@@ -351,6 +350,17 @@ namespace ServeurBarman
             else
             {
                 MessageBox.Show("veuillez d'abord connecter le robot svp");
+            }
+        }
+
+
+        // ICI ON SUUPRIME LA COMMANDE SELECTIONNÉE
+        private void btn_Supp_Click(object sender, EventArgs e)
+        {
+            if (LBX_WaitingList.SelectedIndex != 0)
+            {
+                var x = LBX_WaitingList.SelectedItem.ToString();
+                base2Donnees.SupprimerCommande(int.Parse(x));
             }
         }
 

@@ -114,6 +114,9 @@
             this.Controls.Add(this.TBX_User);
             this.Controls.Add(this.pictureBox1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(382, 500);
+            this.MinimumSize = new System.Drawing.Size(382, 500);
             this.Name = "PageConnexion";
             this.Load += new System.EventHandler(this.PageConnexion_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
