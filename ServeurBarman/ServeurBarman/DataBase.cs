@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Speech.Synthesis;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -23,6 +24,7 @@ namespace ServeurBarman
         public OracleConnection EtatBaseDonnées { get; private set; }
 
         public static readonly DataBase instance_bd = new DataBase();
+        
 
         private DataBase()
         {
@@ -46,10 +48,8 @@ namespace ServeurBarman
                 string bd = "Data Source=" + dsource + ";User id=" + user + ";Password=" + pass;
                 EtatBaseDonnées.ConnectionString = bd;
                 EtatBaseDonnées.Open();
-                MessageBox.Show("Connecté avec succès!!!!");
-
             }
-            catch (Exception) { MessageBox.Show("Erreur de connexion!!!"); }
+            catch (Exception) {  }
 
             return EtatBaseDonnées;
         }
@@ -64,10 +64,10 @@ namespace ServeurBarman
 
         public bool Ingredient_Est_Disponible(int num)
         {
-            List<(int,int)> listeIngredient = new List<(int,int)>();
+            List<object> listeIngredient = new List<object>();
             bool ingredientDisponible = true;
 
-            string cmd = "e.codebouteille,e.bouteillepresente from ingredient e inner join commande c on e.codebouteille=c.ingredient where c.numcommande=" + num.ToString();
+            string cmd = "select e.bouteillepresente from ingredient e inner join commande c on e.codebouteille=c.ingredient where c.numcommande=" + num.ToString();
 
             OracleCommand listeDiv = new OracleCommand(cmd, EtatBaseDonnées);
             listeDiv.CommandType = CommandType.Text;
@@ -76,7 +76,7 @@ namespace ServeurBarman
             {
                 while (divisionReader.Read())
                 {
-                    listeIngredient.Add((divisionReader.GetInt32(0), divisionReader.GetInt32(1)));
+                    listeIngredient.Add(divisionReader.GetValue(0));
                 }
                 divisionReader.Close();
             }
@@ -84,7 +84,7 @@ namespace ServeurBarman
 
             foreach (var s in listeIngredient)
             {
-                if (s.Item2 == 0)
+                if (s.Equals("0"))
                 {
                     ingredientDisponible = false;
                 }
@@ -100,8 +100,7 @@ namespace ServeurBarman
         /// <exception cref="Exception">Lance une exception lorsque la table commande n'existe pas</exception>
         public List<(int, int)> ListeCommande()
         {
-            while (true)
-            {
+            
                 List<(int, int)> numcommande = new List<(int, int)>();
                 string cmd = "select numcommande,shooter from commande";
                 try
@@ -125,7 +124,7 @@ namespace ServeurBarman
                             numcommande.Remove(numcommande[j]);
                 }
                 return numcommande;
-            }
+
         }
 
         /// <summary>
@@ -153,6 +152,30 @@ namespace ServeurBarman
             catch (Exception sel) { MessageBox.Show(sel.Message.ToString()); }
 
             return nombreShooter;
+        }
+
+        public bool VerreShooterSuffisant(int numcommnde)
+        {
+            int val = 0;
+
+            string cmd = "select qty from commande where numcommande=" + numcommnde.ToString();
+            OracleCommand listeDiv = new OracleCommand(cmd, EtatBaseDonnées);
+            listeDiv.CommandType = CommandType.Text;
+            OracleDataReader divisionReader = listeDiv.ExecuteReader();
+            try
+            {
+                while (divisionReader.Read())
+                {
+                    val= divisionReader.GetInt32(0);
+                }
+                divisionReader.Close();
+            }
+            catch (Exception sel) { MessageBox.Show(sel.Message.ToString()); }
+
+            if (val > Int32.Parse(NombreDeShooter()))
+                return true;
+
+            return false;
         }
 
         /// <summary>
@@ -216,11 +239,11 @@ namespace ServeurBarman
         /// <param name="nombre">nombre de verres de shooter à ajouter à la table shooter</param>
         /// <exception cref="Exception">Lance une exception si la table shooter n'existe pas</exception>
         /// <seealso cref="DataBase.AjouterShooter(int)"/> Ajouter des ingrédients
-        public void AjouterShooter(int nombre )
+        public void AjouterShooter(ref int nombre )
         {
             try
             {
-                string cmd = "insert into shooter values(" + nombre + ")";
+                string cmd = "update verreshooter set nbshooter= " + nombre.ToString() ;
 
                 OracleCommand disc = new OracleCommand(cmd, EtatBaseDonnées);
                 disc.ExecuteNonQuery();
@@ -251,16 +274,16 @@ namespace ServeurBarman
                     + Int32.Parse(ingredients[2]) + "," + Int32.Parse(ingredients[3]) + "," + "'1'" + "," + Int32.Parse(ingredients[4]) + ",'"
                     + ingredients[5] + "','" + ingredients[6] + "')";
 
-                OracleCommand disc = new OracleCommand(cmd, EtatBaseDonnées);
-                disc.ExecuteNonQuery();
+                OracleCommand insert = new OracleCommand(cmd, EtatBaseDonnées);
+                insert.ExecuteNonQuery();
             }
             catch (Exception sel) { MessageBox.Show(sel.Message.ToString()); }
 
             try
             {
                 string cmd1 = "commit";
-                OracleCommand disc1 = new OracleCommand(cmd1, EtatBaseDonnées);
-                disc1.ExecuteNonQuery();
+                OracleCommand commit = new OracleCommand(cmd1, EtatBaseDonnées);
+                commit.ExecuteNonQuery();
             }
             catch (Exception) { MessageBox.Show(" Échec de l'enregistrement."); }
         }
@@ -276,8 +299,8 @@ namespace ServeurBarman
             {
                 string cmd = "delete  from commande";
 
-                OracleCommand disc = new OracleCommand(cmd, EtatBaseDonnées);
-                disc.ExecuteNonQuery();
+                OracleCommand delete = new OracleCommand(cmd, EtatBaseDonnées);
+                delete.ExecuteNonQuery();
             }
             catch (Exception sel) { MessageBox.Show(sel.Message); }
         }
@@ -293,8 +316,8 @@ namespace ServeurBarman
             {
                 string cmd = "delete  from commande where numcommande="+num.ToString();
 
-                OracleCommand disc = new OracleCommand(cmd, EtatBaseDonnées);
-                disc.ExecuteNonQuery();
+                OracleCommand delete = new OracleCommand(cmd, EtatBaseDonnées);
+                delete.ExecuteNonQuery();
             }
             catch (Exception sel) { MessageBox.Show(sel.Message.ToString()); }
         }
@@ -307,56 +330,55 @@ namespace ServeurBarman
     public class Commande
     {
         private SpecificateurCommande commande;
-        private CRS_A255 robot;
-        private DataBase base2Donnees;
+        //private CRS_A255 robot;
+        //private DataBase base2Donnees;
 
         /// <summary>
         /// Constructeur par défaut,
         /// Permet de construire une commande normale
         /// </summary>
-        public Commande()
-        {
-            //commande = new Commande_Normale();
-            robot = CRS_A255.Instance;
-            base2Donnees = DataBase.instance_bd;
-        }
+        //public Commande()
+        //{
+        //    commande = new Commande_Normale();
+        //    robot = CRS_A255.Instance;
+        //    base2Donnees = DataBase.instance_bd;
+        //}
 
         /// <summary>
         /// Constructeur paramétrique,
         /// permet de construire une commande en fonction de son numéro identificateur
         /// </summary>
         /// <param name="num">Le numéro idificateur de commande, soit 0 pour normale et 1 pour shooter</param>
-        //public Commande(int num)
-        //{
-        //    if (num == 0)
-        //        commande = new Commande_Normale();
-        //    else
-        //        commande = new Shooter();
-        //}
-
-        public Task ServirClient(int item1, int item2)
+        public Commande(int num)
         {
-            return Task.Run(()=>
-            {
-                if (item2 == 0)
-                {
-                    commande = new Commande_Normale();
-                    var p = commande.TypeReel();
-                    var ing = p.Ingredients(item1);
-
-                    while (!robot.MakeDrink(ing.ToList())) ;
-                }
-                else
-                {
-                    /*
-                     * IL S'AGIT D'UN SHOOTER
-                     */
-                    commande = new Shooter();
-                    var p = commande.TypeReel();
-                    var ing = p.Ingredients(item1);
-                }
-            });
+            if (num == 0)
+                commande = new Commande_Normale();
+            else
+                commande = new Shooter();
         }
+
+        //public void ServirClient(int item1, int item2)
+        //{
+
+        //    if (item2 == 0)
+        //    {
+        //        commande = new Commande_Normale();
+        //        var p = commande.TypeReel();
+        //        var ing = p.Ingredients(item1);
+
+        //        while(!robot.MakeDrink(ing.ToList()));
+        //    }
+        //    else
+        //    {
+        //        /*
+        //         * IL S'AGIT D'UN SHOOTER
+        //         */
+        //        commande = new Shooter();
+        //        var p = commande.TypeReel();
+        //        var ing = p.Ingredients(item1);
+        //    }
+
+        //}
 
         /// <summary>
         /// Cette méthode permet de déterminer le type réel d'une commande
@@ -407,8 +429,7 @@ namespace ServeurBarman
         }
         public override List<(Position, int)> Ingredients(int numcom)
         {
-            string cmd = "e.POSITIONX,e.POSITIONY,e.POSITIONZ,c.QTY" +
-            "from ingredient e inner join commande c on e.codebouteille=c.ingredient where c.numcommande=" + numcom.ToString();
+            string cmd = "select e.POSITIONX,e.POSITIONY,e.POSITIONZ,c.QTY from ingredient e inner join commande c on e.codebouteille=c.ingredient where c.numcommande=" + numcom.ToString();
 
             OracleCommand listeDiv = new OracleCommand(cmd, Connexion.EtatBaseDonnées);
             listeDiv.CommandType = CommandType.Text;

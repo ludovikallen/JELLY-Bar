@@ -31,48 +31,31 @@ namespace ServeurBarman
 
         private void btn_Valider_Click(object sender, EventArgs e)
         {
-            DialogResult dlg = MessageBox.Show("Êtes-vous sûr de vouloir enrégister?", "Confirmation", MessageBoxButtons.YesNo);
-
-            if (dlg == DialogResult.Yes)
-            {
-                if (TB_NbVerre.Text != "")
+           
+                if (TB_NbVerre.Text != ""&&Int32.Parse(TB_NbVerre.Text)<=6&& Int32.Parse(TB_NbVerre.Text)>=1)
                 {
                     int i = Int32.Parse(TB_NbVerre.Text);
-                    bd.AjouterShooter(i);
+                    bd.AjouterShooter(ref i);
+                    TB_NbVerre.Text = "";
                 }
                 else
                 {
                     erreurs();
                 }
-            }
         }
 
         private void AddCups_Load(object sender, EventArgs e)
         {
-            Cbx_TypeVerre.Items.Add("Verre Rouge");
-            Cbx_TypeVerre.Items.Add("Verre Shooter");
-            Cbx_TypeVerre.SelectedIndex = 1;
+            lbShooter.Text = "Verre Shooter";
             erreur.Visible = false;
             bd = DataBase.instance_bd;
         }
 
-        private void Cbx_TypeVerre_SelectedIndexChanged(object sender, EventArgs e)
+        private void TB_NbVerre_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if(Cbx_TypeVerre.SelectedIndex==1)
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
             {
-                TB_NbVerre.Enabled = true;
-                btn_Annuler.Enabled = true;
-                btn_Valider.Enabled = true;
-                PnlShooter.Visible = true;
-                PnlVerreRouge.Visible = false;
-            }
-            else
-            {
-                TB_NbVerre.Enabled = false;
-                btn_Annuler.Enabled = false;
-                btn_Valider.Enabled = false;
-                PnlShooter.Visible = false;
-                PnlVerreRouge.Visible = true;
+                e.Handled = true;
             }
         }
     }

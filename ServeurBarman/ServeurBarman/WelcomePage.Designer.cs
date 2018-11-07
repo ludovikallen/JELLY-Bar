@@ -44,7 +44,7 @@
             // 
             this.mLB_NombreDeShooter.FontSize = MetroFramework.MetroLabelSize.Tall;
             this.mLB_NombreDeShooter.FontWeight = MetroFramework.MetroLabelWeight.Bold;
-            this.mLB_NombreDeShooter.Location = new System.Drawing.Point(183, 166);
+            this.mLB_NombreDeShooter.Location = new System.Drawing.Point(234, 166);
             this.mLB_NombreDeShooter.Name = "mLB_NombreDeShooter";
             this.mLB_NombreDeShooter.Size = new System.Drawing.Size(56, 25);
             this.mLB_NombreDeShooter.TabIndex = 11;
@@ -55,7 +55,7 @@
             // 
             this.mLB_NombreDeVerre.FontSize = MetroFramework.MetroLabelSize.Tall;
             this.mLB_NombreDeVerre.FontWeight = MetroFramework.MetroLabelWeight.Bold;
-            this.mLB_NombreDeVerre.Location = new System.Drawing.Point(183, 117);
+            this.mLB_NombreDeVerre.Location = new System.Drawing.Point(234, 117);
             this.mLB_NombreDeVerre.Name = "mLB_NombreDeVerre";
             this.mLB_NombreDeVerre.Size = new System.Drawing.Size(56, 25);
             this.mLB_NombreDeVerre.TabIndex = 12;
@@ -66,7 +66,7 @@
             // 
             this.mLB_NombreDeBouteille.FontSize = MetroFramework.MetroLabelSize.Tall;
             this.mLB_NombreDeBouteille.FontWeight = MetroFramework.MetroLabelWeight.Bold;
-            this.mLB_NombreDeBouteille.Location = new System.Drawing.Point(183, 66);
+            this.mLB_NombreDeBouteille.Location = new System.Drawing.Point(234, 66);
             this.mLB_NombreDeBouteille.Name = "mLB_NombreDeBouteille";
             this.mLB_NombreDeBouteille.Size = new System.Drawing.Size(56, 25);
             this.mLB_NombreDeBouteille.TabIndex = 13;
@@ -77,7 +77,7 @@
             // 
             this.mLB_CustomNumber.FontSize = MetroFramework.MetroLabelSize.Tall;
             this.mLB_CustomNumber.FontWeight = MetroFramework.MetroLabelWeight.Bold;
-            this.mLB_CustomNumber.Location = new System.Drawing.Point(183, 16);
+            this.mLB_CustomNumber.Location = new System.Drawing.Point(234, 16);
             this.mLB_CustomNumber.Name = "mLB_CustomNumber";
             this.mLB_CustomNumber.Size = new System.Drawing.Size(56, 25);
             this.mLB_CustomNumber.TabIndex = 14;
@@ -88,27 +88,27 @@
             // 
             this.metroLabel1.FontSize = MetroFramework.MetroLabelSize.Tall;
             this.metroLabel1.FontWeight = MetroFramework.MetroLabelWeight.Bold;
-            this.metroLabel1.Location = new System.Drawing.Point(291, 16);
+            this.metroLabel1.Location = new System.Drawing.Point(312, 16);
             this.metroLabel1.Name = "metroLabel1";
-            this.metroLabel1.Size = new System.Drawing.Size(157, 38);
+            this.metroLabel1.Size = new System.Drawing.Size(199, 38);
             this.metroLabel1.TabIndex = 10;
-            this.metroLabel1.Text = "Activités robot";
+            this.metroLabel1.Text = "Panneau d\'erreurs";
             this.metroLabel1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // LBX_Activities
             // 
             this.LBX_Activities.FormattingEnabled = true;
-            this.LBX_Activities.Location = new System.Drawing.Point(291, 57);
+            this.LBX_Activities.Location = new System.Drawing.Point(312, 57);
             this.LBX_Activities.Name = "LBX_Activities";
             this.LBX_Activities.ScrollAlwaysVisible = true;
-            this.LBX_Activities.Size = new System.Drawing.Size(232, 199);
+            this.LBX_Activities.Size = new System.Drawing.Size(218, 199);
             this.LBX_Activities.TabIndex = 9;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(32, 173);
+            this.label4.Location = new System.Drawing.Point(86, 171);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(145, 18);
             this.label4.TabIndex = 5;
@@ -118,7 +118,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(50, 124);
+            this.label3.Location = new System.Drawing.Point(104, 122);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(127, 18);
             this.label3.TabIndex = 6;
@@ -128,7 +128,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(29, 73);
+            this.label2.Location = new System.Drawing.Point(83, 71);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(148, 18);
             this.label2.TabIndex = 7;
@@ -138,11 +138,11 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(3, 23);
+            this.label1.Location = new System.Drawing.Point(2, 21);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(174, 18);
+            this.label1.Size = new System.Drawing.Size(229, 18);
             this.label1.TabIndex = 8;
-            this.label1.Text = "Nombre de client en ligne";
+            this.label1.Text = "Nombre de commande en attente";
             // 
             // WelcomePage
             // 

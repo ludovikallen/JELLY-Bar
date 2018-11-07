@@ -24,8 +24,6 @@ namespace ServeurBarman
         {
             InitializeComponent();
             baseDonnees = DataBase.instance_bd;
-            
-
         }
 
         public void Init_UserUI()
@@ -37,8 +35,14 @@ namespace ServeurBarman
                 this.Invoke((MethodInvoker)(() => mLB_NombreDeVerre.Text = baseDonnees.NombreDeVerreRouge()));
                 this.Invoke((MethodInvoker)(() => mLB_NombreDeShooter.Text = baseDonnees.NombreDeShooter()));
                 this.Invoke((MethodInvoker)(() => mLB_CustomNumber.Text = baseDonnees.ListeCommande().Count.ToString()));
+
+                //this.Invoke((MethodInvoker)(() =>
+                //{
+                //    if (activiteRobot != null && !activiteRobot.Equals("") && LBX_Activities.Items.Count!=0 )
+                //        if(!activiteRobot.Equals(LBX_Activities.Items[0].ToString()))
+                //            LBX_Activities.Items.Add(activiteRobot);
+                //}));
             }
-            //LBX_Activities.Items.Add(activiteRobot);
         }
 
         private void WelcomePage_Load(object sender, EventArgs e)
@@ -49,6 +53,11 @@ namespace ServeurBarman
         private void TBX_NombreClient_TextChanged(object sender, EventArgs e)
         {
             Init_UserUI();
+        }
+
+        private void LBX_Activities_SizeChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
