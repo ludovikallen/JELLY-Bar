@@ -48,7 +48,6 @@ namespace ServeurBarman
         private void WelcomePage_Load(object sender, EventArgs e)
         {
             Task.Run(() => Init_UserUI());
-            LBX_Activities.Items.Add("Yo");
         }
 
         private void TBX_NombreClient_TextChanged(object sender, EventArgs e)
