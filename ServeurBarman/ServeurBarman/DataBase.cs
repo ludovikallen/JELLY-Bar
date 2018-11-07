@@ -48,10 +48,8 @@ namespace ServeurBarman
                 string bd = "Data Source=" + dsource + ";User id=" + user + ";Password=" + pass;
                 EtatBaseDonnées.ConnectionString = bd;
                 EtatBaseDonnées.Open();
-                MessageBox.Show("Connecté avec succès!!!!");
-
             }
-            catch (Exception) { MessageBox.Show("Erreur de connexion!!!"); }
+            catch (Exception) {  }
 
             return EtatBaseDonnées;
         }
@@ -156,6 +154,30 @@ namespace ServeurBarman
             return nombreShooter;
         }
 
+        public bool VerreShooterSuffisant(int numcommnde)
+        {
+            int val = 0;
+
+            string cmd = "select qty from commande where numcommande=" + numcommnde.ToString();
+            OracleCommand listeDiv = new OracleCommand(cmd, EtatBaseDonnées);
+            listeDiv.CommandType = CommandType.Text;
+            OracleDataReader divisionReader = listeDiv.ExecuteReader();
+            try
+            {
+                while (divisionReader.Read())
+                {
+                    val= divisionReader.GetInt32(0);
+                }
+                divisionReader.Close();
+            }
+            catch (Exception sel) { MessageBox.Show(sel.Message.ToString()); }
+
+            if (val > Int32.Parse(NombreDeShooter()))
+                return true;
+
+            return false;
+        }
+
         /// <summary>
         /// Permet d'établir le nombre de verre de rouge dans la base de données
         /// </summary>
@@ -217,7 +239,7 @@ namespace ServeurBarman
         /// <param name="nombre">nombre de verres de shooter à ajouter à la table shooter</param>
         /// <exception cref="Exception">Lance une exception si la table shooter n'existe pas</exception>
         /// <seealso cref="DataBase.AjouterShooter(int)"/> Ajouter des ingrédients
-        public void AjouterShooter(int nombre )
+        public void AjouterShooter(ref int nombre )
         {
             try
             {

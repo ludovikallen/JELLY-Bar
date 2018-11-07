@@ -35,7 +35,6 @@
             this.deconnexion = new System.Windows.Forms.Button();
             this.BTN_Setting = new System.Windows.Forms.Button();
             this.BTN_AddCup = new System.Windows.Forms.Button();
-            this.BTN_AddDrink = new System.Windows.Forms.Button();
             this.BTN_Welcome = new System.Windows.Forms.Button();
             this.PBX_Logo = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -57,7 +56,6 @@
             this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.btn_Servir = new System.Windows.Forms.Button();
             this.addCups1 = new ServeurBarman.AddCups();
-            this.add_Drinks1 = new ServeurBarman.Add_Drinks();
             this.welcomePage1 = new ServeurBarman.WelcomePage();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PBX_Logo)).BeginInit();
@@ -73,7 +71,6 @@
             this.panel1.Controls.Add(this.deconnexion);
             this.panel1.Controls.Add(this.BTN_Setting);
             this.panel1.Controls.Add(this.BTN_AddCup);
-            this.panel1.Controls.Add(this.BTN_AddDrink);
             this.panel1.Controls.Add(this.BTN_Welcome);
             this.panel1.Controls.Add(this.PBX_Logo);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
@@ -124,11 +121,11 @@
             this.BTN_Setting.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.BTN_Setting.Image = global::ServeurBarman.Properties.Resources.if_setting_18141171;
             this.BTN_Setting.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.BTN_Setting.Location = new System.Drawing.Point(3, 358);
+            this.BTN_Setting.Location = new System.Drawing.Point(2, 338);
             this.BTN_Setting.Name = "BTN_Setting";
             this.BTN_Setting.Size = new System.Drawing.Size(182, 35);
             this.BTN_Setting.TabIndex = 2;
-            this.BTN_Setting.Text = "       Paramètre";
+            this.BTN_Setting.Text = "       Paramètres";
             this.BTN_Setting.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.BTN_Setting.UseVisualStyleBackColor = true;
             this.BTN_Setting.Click += new System.EventHandler(this.BTN_Setting_Click);
@@ -141,7 +138,7 @@
             this.BTN_AddCup.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.BTN_AddCup.Image = global::ServeurBarman.Properties.Resources.Google_Noto_Emoji_Food_Drink_32443_cup_with_straw;
             this.BTN_AddCup.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.BTN_AddCup.Location = new System.Drawing.Point(3, 299);
+            this.BTN_AddCup.Location = new System.Drawing.Point(2, 272);
             this.BTN_AddCup.Name = "BTN_AddCup";
             this.BTN_AddCup.Size = new System.Drawing.Size(260, 35);
             this.BTN_AddCup.TabIndex = 2;
@@ -149,23 +146,6 @@
             this.BTN_AddCup.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.BTN_AddCup.UseVisualStyleBackColor = true;
             this.BTN_AddCup.Click += new System.EventHandler(this.BTN_AddCup_Click);
-            // 
-            // BTN_AddDrink
-            // 
-            this.BTN_AddDrink.FlatAppearance.BorderSize = 0;
-            this.BTN_AddDrink.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.BTN_AddDrink.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BTN_AddDrink.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.BTN_AddDrink.Image = global::ServeurBarman.Properties.Resources.Papirus_Team_Papirus_Apps_Github_mirkobrombin_bottles;
-            this.BTN_AddDrink.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.BTN_AddDrink.Location = new System.Drawing.Point(2, 240);
-            this.BTN_AddDrink.Name = "BTN_AddDrink";
-            this.BTN_AddDrink.Size = new System.Drawing.Size(215, 35);
-            this.BTN_AddDrink.TabIndex = 2;
-            this.BTN_AddDrink.Text = "       Ajouter des drinks";
-            this.BTN_AddDrink.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.BTN_AddDrink.UseVisualStyleBackColor = true;
-            this.BTN_AddDrink.Click += new System.EventHandler(this.BTN_AddDrink_Click);
             // 
             // BTN_Welcome
             // 
@@ -176,7 +156,7 @@
             this.BTN_Welcome.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.BTN_Welcome.Image = global::ServeurBarman.Properties.Resources.if_go_home_1187701;
             this.BTN_Welcome.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.BTN_Welcome.Location = new System.Drawing.Point(3, 181);
+            this.BTN_Welcome.Location = new System.Drawing.Point(2, 206);
             this.BTN_Welcome.Name = "BTN_Welcome";
             this.BTN_Welcome.Size = new System.Drawing.Size(181, 35);
             this.BTN_Welcome.TabIndex = 2;
@@ -367,15 +347,7 @@
             this.addCups1.Name = "addCups1";
             this.addCups1.Size = new System.Drawing.Size(548, 274);
             this.addCups1.TabIndex = 18;
-            // 
-            // add_Drinks1
-            // 
-            this.add_Drinks1.Location = new System.Drawing.Point(616, 345);
-            this.add_Drinks1.MaximumSize = new System.Drawing.Size(548, 274);
-            this.add_Drinks1.MinimumSize = new System.Drawing.Size(548, 274);
-            this.add_Drinks1.Name = "add_Drinks1";
-            this.add_Drinks1.Size = new System.Drawing.Size(548, 274);
-            this.add_Drinks1.TabIndex = 17;
+
             // 
             // welcomePage1
             // 
@@ -400,7 +372,6 @@
             this.Controls.Add(this.panel3);
             this.Controls.Add(this.panel5);
             this.Controls.Add(this.addCups1);
-            this.Controls.Add(this.add_Drinks1);
             this.Controls.Add(this.welcomePage1);
             this.Controls.Add(this.mBtnConnexionRobot);
             this.Controls.Add(this.panel2);
@@ -429,7 +400,6 @@
         private System.Windows.Forms.Button BTN_Developers;
         private System.Windows.Forms.Button BTN_Setting;
         private System.Windows.Forms.Button BTN_AddCup;
-        private System.Windows.Forms.Button BTN_AddDrink;
         private System.Windows.Forms.Button BTN_Welcome;
         private System.Windows.Forms.PictureBox PBX_Logo;
         private System.Windows.Forms.Label label1;
@@ -442,7 +412,6 @@
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Label lbFinishiCommande;
         private WelcomePage welcomePage1;
-        private Add_Drinks add_Drinks1;
         private AddCups addCups1;
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Panel panel5;

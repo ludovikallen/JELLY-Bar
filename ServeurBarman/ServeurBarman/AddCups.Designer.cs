@@ -28,48 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.Cbx_TypeVerre = new System.Windows.Forms.ComboBox();
-            this.PnlShooter = new System.Windows.Forms.PictureBox();
-            this.PnlVerreRouge = new System.Windows.Forms.PictureBox();
             this.btn_Valider = new System.Windows.Forms.Button();
             this.btn_Annuler = new System.Windows.Forms.Button();
             this.TB_NbVerre = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.erreur = new System.Windows.Forms.Label();
+            this.lbShooter = new System.Windows.Forms.Label();
+            this.PnlShooter = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.PnlShooter)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.PnlVerreRouge)).BeginInit();
             this.SuspendLayout();
-            // 
-            // Cbx_TypeVerre
-            // 
-            this.Cbx_TypeVerre.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Cbx_TypeVerre.FormattingEnabled = true;
-            this.Cbx_TypeVerre.Location = new System.Drawing.Point(195, 47);
-            this.Cbx_TypeVerre.Name = "Cbx_TypeVerre";
-            this.Cbx_TypeVerre.Size = new System.Drawing.Size(142, 28);
-            this.Cbx_TypeVerre.Sorted = true;
-            this.Cbx_TypeVerre.TabIndex = 27;
-            this.Cbx_TypeVerre.SelectedIndexChanged += new System.EventHandler(this.Cbx_TypeVerre_SelectedIndexChanged);
-            // 
-            // PnlShooter
-            // 
-            this.PnlShooter.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.PnlShooter.Location = new System.Drawing.Point(367, 16);
-            this.PnlShooter.Name = "PnlShooter";
-            this.PnlShooter.Size = new System.Drawing.Size(143, 149);
-            this.PnlShooter.TabIndex = 25;
-            this.PnlShooter.TabStop = false;
-            // 
-            // PnlVerreRouge
-            // 
-            this.PnlVerreRouge.BackgroundImage = global::ServeurBarman.Properties.Resources.red_cup;
-            this.PnlVerreRouge.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.PnlVerreRouge.Location = new System.Drawing.Point(367, 16);
-            this.PnlVerreRouge.Name = "PnlVerreRouge";
-            this.PnlVerreRouge.Size = new System.Drawing.Size(143, 149);
-            this.PnlVerreRouge.TabIndex = 26;
-            this.PnlVerreRouge.TabStop = false;
             // 
             // btn_Valider
             // 
@@ -99,6 +67,7 @@
             this.TB_NbVerre.Name = "TB_NbVerre";
             this.TB_NbVerre.Size = new System.Drawing.Size(143, 26);
             this.TB_NbVerre.TabIndex = 22;
+            this.TB_NbVerre.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TB_NbVerre_KeyPress);
             // 
             // label2
             // 
@@ -131,14 +100,33 @@
             this.erreur.Text = "*";
             this.erreur.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // lbShooter
+            // 
+            this.lbShooter.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbShooter.Location = new System.Drawing.Point(195, 46);
+            this.lbShooter.Name = "lbShooter";
+            this.lbShooter.Size = new System.Drawing.Size(143, 25);
+            this.lbShooter.TabIndex = 29;
+            this.lbShooter.Text = "label3";
+            this.lbShooter.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // PnlShooter
+            // 
+            this.PnlShooter.BackgroundImage = global::ServeurBarman.Properties.Resources.shooter;
+            this.PnlShooter.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.PnlShooter.Location = new System.Drawing.Point(367, 29);
+            this.PnlShooter.Name = "PnlShooter";
+            this.PnlShooter.Size = new System.Drawing.Size(143, 149);
+            this.PnlShooter.TabIndex = 25;
+            this.PnlShooter.TabStop = false;
+            // 
             // AddCups
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.lbShooter);
             this.Controls.Add(this.erreur);
-            this.Controls.Add(this.Cbx_TypeVerre);
             this.Controls.Add(this.PnlShooter);
-            this.Controls.Add(this.PnlVerreRouge);
             this.Controls.Add(this.btn_Valider);
             this.Controls.Add(this.btn_Annuler);
             this.Controls.Add(this.TB_NbVerre);
@@ -150,22 +138,19 @@
             this.Size = new System.Drawing.Size(548, 274);
             this.Load += new System.EventHandler(this.AddCups_Load);
             ((System.ComponentModel.ISupportInitialize)(this.PnlShooter)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.PnlVerreRouge)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.ComboBox Cbx_TypeVerre;
         private System.Windows.Forms.PictureBox PnlShooter;
-        private System.Windows.Forms.PictureBox PnlVerreRouge;
         private System.Windows.Forms.Button btn_Valider;
         private System.Windows.Forms.Button btn_Annuler;
         private System.Windows.Forms.TextBox TB_NbVerre;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label erreur;
+        private System.Windows.Forms.Label lbShooter;
     }
 }

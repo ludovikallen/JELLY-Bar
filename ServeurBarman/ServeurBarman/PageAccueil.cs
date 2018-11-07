@@ -19,7 +19,7 @@ namespace ServeurBarman
     public partial class PageAccueil : MetroFramework.Forms.MetroForm
     {
         bool estConnecté { get; set; }
-        CRS_A255 robot = CRS_A255.Instance;
+        CRS_A255 robot;
         private readonly object accessLock = new object();
         List<(int, int)> numcommande = new List<(int, int)>();
         DataBase base2Donnees;
@@ -34,17 +34,12 @@ namespace ServeurBarman
         public PageAccueil()
         {
             InitializeComponent();
+            welcomePage1.activiteRobot = "Ingrédient de la commande numéro " + item1.ToString() + " non disponible";
         }
 
         private void BTN_Welcome_Click(object sender, EventArgs e)
         {
             welcomePage1.BringToFront();
-        }
-
-        private void BTN_AddDrink_Click(object sender, EventArgs e)
-        {
-
-            add_Drinks1.BringToFront();
         }
 
         private void BTN_AddCup_Click(object sender, EventArgs e)
@@ -94,8 +89,7 @@ namespace ServeurBarman
             compteur++;
             btn_Servir.Enabled = false;
             pbx_Halt.Enabled = false;
-            //service = new Commande();
-            read.SpeakAsync("Connexion base données établie avec succès");
+            robot = CRS_A255.Instance;
         }
 
 
@@ -123,7 +117,7 @@ namespace ServeurBarman
         // AFFICHE DANS L'INTERFACE LA LISTE DES COMMANDES EN ATTENTE
         private void Show_WaitingDrinksList()
         {
-            if (numcommande.Count != base2Donnees.ListeCommande().Count )
+            if (numcommande.Count != base2Donnees.ListeCommande().Count)
             {
                 Refresh_WaitingList();
 
@@ -175,11 +169,10 @@ namespace ServeurBarman
                             {
                                 List<(Position, int)> ing = p.Ingredients(item1);
 
-                                
                                 if (robot.MakeDrink(ing.ToList()))
                                 {
                                     read.SpeakAsync("Commande normale numéro " + item1.ToString() + " en cours");
-                                    base2Donnees.SupprimerCommande(item1); 
+                                    base2Donnees.SupprimerCommande(item1);
                                     this.Invoke((MethodInvoker)(() => lb_CommandeEnCours.Text = item1.ToString()));
 
                                     if (commandePrecedente != null)
@@ -187,27 +180,33 @@ namespace ServeurBarman
                                         this.Invoke((MethodInvoker)(() => lbFinishiCommande.Text = "Commande numéro " + commandePrecedente + " terminée!"));
                                         read.SpeakAsync(lbFinishiCommande.Text);
                                     }
-                                    
+
                                     this.Invoke((MethodInvoker)(() => commandePrecedente = lb_CommandeEnCours.Text.ToString()));
                                 }
-                                //if(robot.task.IsCompleted)
-                                //{
-                                //    this.Invoke((MethodInvoker)(() => lbFinishiCommande.Text = "Commande numéro " + commandePrecedente + " terminée!"));
-                                //    read.SpeakAsync(lbFinishiCommande.Text);
-                                //}
+                            }
+                            while (!robot.EnMarche()) ; // ON S'ASSURE QUE LE ROBOT TERMINE LA TACHE EN COURS
+
+                            this.Invoke((MethodInvoker)(() => lb_CommandeEnCours.Text = ""));
+
+                            // ACTIONS NECESSAIRES SUR LA DERNIÈRE COMMANDE
+                            if (numcommande.Count == 0)
+                            {
+                                read.SpeakAsync("Commande numéro " + commandePrecedente + " terminée!");
+                                commandePrecedente = null;
                             }
                         }
                         else
                         {
-                            MessageBox.Show("Plus de verres rouge, veuillez en ajouter svp!");
+                            welcomePage1.activiteRobot = "Plus de verres rouge, veuillez en ajouter svp!";
+                            read.SpeakAsync("Manque de verres rouge");
                         }
                     }
-                    else
+                    else if(item2==1)
                     {
                         /*
                          * IL S'AGIT D'UN SHOOTER
                          */
-                        if (Int32.Parse(base2Donnees.NombreDeShooter()) != 0)
+                        if (base2Donnees.VerreShooterSuffisant(item1))
                         {
                             service = new Commande(item2);
                             var p = service.TypeReel();
@@ -226,11 +225,18 @@ namespace ServeurBarman
                                 commandePrecedente = lb_CommandeEnCours.Text.ToString();
                             }
                         }
+                        else
+                        {
+                            welcomePage1.activiteRobot = "Nombre de verre shooter insuffisant";
+                            read.SpeakAsync(welcomePage1.activiteRobot);
+                        }
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Ingrédient numéro " + item1.ToString() + " non disponible");
+                    base2Donnees.SupprimerCommande(item1);
+                    welcomePage1.activiteRobot = "Ingrédient de la commande numéro " + item1.ToString() + " non disponible";
+                    read.SpeakAsync("Commande numéro " + item1.ToString() + " supprimé");
                 }
             }
         }
@@ -240,19 +246,18 @@ namespace ServeurBarman
         {
             // On établie la connexion avec le robot
             robot.ConnexionRobot();
-            System.Threading.Thread.Sleep(2000);
+            System.Threading.Thread.Sleep(2000); // CECI PERMET DE S'ASSURER QUE LE ROBOT SE CONNECTE PARFAITEMENT 
+                                                 // SINON UNE EXCEPTION EST LEVÉE
             if (robot.Connected)
             {
                 estConnecté = true;
                 pbx_Halt.Enabled = true;
                 btn_Servir.Enabled = true;
                 mBtnConnexionRobot.Enabled = false;
-                MessageBox.Show("Connexion robot réussie");
-                System.Threading.Thread.Sleep(2000);
             }
             else
             {
-                MessageBox.Show("Connexion robot impossible");
+                welcomePage1.activiteRobot = "Connexion robot impossible";
                 robot.Deconnexion();
             }
         }
@@ -260,10 +265,17 @@ namespace ServeurBarman
         // BOUTON DE SUPPRESSION DES COMMANDES DISPONIBLES DANS LA TABLE COMMANDE
         private void Btn_ResetCommande_Click(object sender, EventArgs e)
         {
-            DialogResult dialogResult = MessageBox.Show("Êtes-vous certain de vouloir vider la liste de commande?", "Confirmation", MessageBoxButtons.YesNo);
-            if (dialogResult == DialogResult.Yes)
+            if (numcommande.Count != 0)
             {
-                base2Donnees.SupprimerCommande();
+                DialogResult dialogResult = MessageBox.Show("Êtes-vous certain de vouloir vider la liste de commande?", "Confirmation", MessageBoxButtons.YesNo);
+                if (dialogResult == DialogResult.Yes)
+                {
+                    base2Donnees.SupprimerCommande();
+                }
+            }
+            else
+            {
+                welcomePage1.activiteRobot = "Connexion robot impossible";
             }
         }
 
@@ -285,13 +297,14 @@ namespace ServeurBarman
         // ARRET D'URGENCE DU ROBOT LORSQUE LE BOUTON EST CLICKÉ 
         private void pbx_Halt_Click(object sender, EventArgs e)
         {
-            robot.Halt();
+            if (estConnecté)
+                robot.Halt();
         }
 
         // FERME LA CONNEXION À LA BASE DE DONNÉES
         private void deconnexion_Click(object sender, EventArgs e)
         {
-            base2Donnees.FermerConnexion();
+            this.Close();
         }
 
         private void btn_Servir_Click(object sender, EventArgs e)

@@ -31,11 +31,16 @@ namespace ServeurBarman
             base2Donnees.Connexion(TBX_User.Text, TBX_Pwd.Text); // Ouvrir Connexion
             if (base2Donnees.EtatBaseDonnées.State.ToString().Equals("Open"))
             {
+                lbCheckConnexion.Visible = false;
                 PageAccueil dlgPageAccueil = new PageAccueil();
                 this.Hide();
                 DialogResult dlg_result = dlgPageAccueil.ShowDialog();
                 base2Donnees.FermerConnexion(); // Fermer connexion
                 this.Close();
+            }
+            else
+            {
+                lbCheckConnexion.Visible = true;
             }
         }
 
@@ -48,6 +53,7 @@ namespace ServeurBarman
         private void PageConnexion_Load(object sender, EventArgs e)
         {
             base2Donnees = DataBase.instance_bd;
+            lbCheckConnexion.Visible = false;
         }
     }
 }
