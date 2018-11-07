@@ -51,7 +51,6 @@
             this.lb_CommandeEnCours = new System.Windows.Forms.Label();
             this.pbx_Halt = new System.Windows.Forms.PictureBox();
             this.Btn_ResetCommande = new System.Windows.Forms.Button();
-            this.lB_DateTime = new System.Windows.Forms.Label();
             this.pnlDonnees = new System.Windows.Forms.Panel();
             this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.btn_Servir = new System.Windows.Forms.Button();
@@ -306,15 +305,6 @@
             this.Btn_ResetCommande.UseVisualStyleBackColor = true;
             this.Btn_ResetCommande.Click += new System.EventHandler(this.Btn_ResetCommande_Click);
             // 
-            // lB_DateTime
-            // 
-            this.lB_DateTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lB_DateTime.Location = new System.Drawing.Point(965, 73);
-            this.lB_DateTime.Name = "lB_DateTime";
-            this.lB_DateTime.Size = new System.Drawing.Size(192, 44);
-            this.lB_DateTime.TabIndex = 25;
-            this.lB_DateTime.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // pnlDonnees
             // 
             this.pnlDonnees.Controls.Add(this.lbFinishiCommande);
@@ -347,7 +337,6 @@
             this.addCups1.Name = "addCups1";
             this.addCups1.Size = new System.Drawing.Size(548, 274);
             this.addCups1.TabIndex = 18;
-
             // 
             // welcomePage1
             // 
@@ -365,7 +354,6 @@
             this.ClientSize = new System.Drawing.Size(1166, 691);
             this.Controls.Add(this.btn_Servir);
             this.Controls.Add(this.pnlDonnees);
-            this.Controls.Add(this.lB_DateTime);
             this.Controls.Add(this.Btn_ResetCommande);
             this.Controls.Add(this.lb_CommandeEnCours);
             this.Controls.Add(this.label3);
@@ -419,7 +407,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label lb_CommandeEnCours;
         private System.Windows.Forms.Button Btn_ResetCommande;
-        private System.Windows.Forms.Label lB_DateTime;
         private System.Windows.Forms.Panel pnlDonnees;
         private System.Windows.Forms.Timer timer2;
         private System.Windows.Forms.Button btn_Servir;
