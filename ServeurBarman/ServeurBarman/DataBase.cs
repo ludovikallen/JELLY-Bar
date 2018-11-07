@@ -62,12 +62,12 @@ namespace ServeurBarman
             EtatBaseDonnées.Close();
         }
 
-        public bool Ingredient_Est_Disponible(int num)
+        public bool Ingredient_Est_Disponible(int numerocommande)
         {
             List<object> listeIngredient = new List<object>();
             bool ingredientDisponible = true;
 
-            string cmd = "select e.bouteillepresente from ingredient e inner join commande c on e.codebouteille=c.ingredient where c.numcommande=" + num.ToString();
+            string cmd = "select e.bouteillepresente from ingredient e inner join commande c on e.codebouteille=c.ingredient where c.numcommande=" + numerocommande.ToString();
 
             OracleCommand listeDiv = new OracleCommand(cmd, EtatBaseDonnées);
             listeDiv.CommandType = CommandType.Text;
@@ -84,7 +84,7 @@ namespace ServeurBarman
 
             foreach (var s in listeIngredient)
             {
-                if (s.Equals("0"))
+                if (s.Equals('0'))
                 {
                     ingredientDisponible = false;
                 }
