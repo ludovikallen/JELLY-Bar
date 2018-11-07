@@ -34,6 +34,7 @@
             this.BTN_Logon = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.lbCheckConnexion = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -41,7 +42,7 @@
             // 
             this.TBX_User.Font = new System.Drawing.Font("Arial Narrow", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TBX_User.ForeColor = System.Drawing.Color.Silver;
-            this.TBX_User.Location = new System.Drawing.Point(112, 312);
+            this.TBX_User.Location = new System.Drawing.Point(81, 268);
             this.TBX_User.Name = "TBX_User";
             this.TBX_User.Size = new System.Drawing.Size(210, 32);
             this.TBX_User.TabIndex = 1;
@@ -51,7 +52,7 @@
             // 
             this.TBX_Pwd.Font = new System.Drawing.Font("Arial Narrow", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TBX_Pwd.ForeColor = System.Drawing.Color.Silver;
-            this.TBX_Pwd.Location = new System.Drawing.Point(112, 360);
+            this.TBX_Pwd.Location = new System.Drawing.Point(81, 316);
             this.TBX_Pwd.Name = "TBX_Pwd";
             this.TBX_Pwd.Size = new System.Drawing.Size(210, 32);
             this.TBX_Pwd.TabIndex = 1;
@@ -61,7 +62,7 @@
             // BTN_Logon
             // 
             this.BTN_Logon.Font = new System.Drawing.Font("Arial Rounded MT Bold", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BTN_Logon.Location = new System.Drawing.Point(146, 427);
+            this.BTN_Logon.Location = new System.Drawing.Point(112, 354);
             this.BTN_Logon.Name = "BTN_Logon";
             this.BTN_Logon.Size = new System.Drawing.Size(142, 50);
             this.BTN_Logon.TabIndex = 2;
@@ -73,7 +74,7 @@
             // label1
             // 
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 27.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(66, 21);
+            this.label1.Location = new System.Drawing.Point(42, 17);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(298, 100);
             this.label1.TabIndex = 3;
@@ -84,25 +85,35 @@
             // 
             this.pictureBox1.BackgroundImage = global::ServeurBarman.Properties.Resources.JELLY_Bar_Logo;
             this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.pictureBox1.Location = new System.Drawing.Point(90, 142);
+            this.pictureBox1.Location = new System.Drawing.Point(88, 130);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(252, 151);
+            this.pictureBox1.Size = new System.Drawing.Size(201, 118);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
+            // 
+            // lbCheckConnexion
+            // 
+            this.lbCheckConnexion.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbCheckConnexion.ForeColor = System.Drawing.Color.Red;
+            this.lbCheckConnexion.Location = new System.Drawing.Point(46, 441);
+            this.lbCheckConnexion.Name = "lbCheckConnexion";
+            this.lbCheckConnexion.Size = new System.Drawing.Size(294, 23);
+            this.lbCheckConnexion.TabIndex = 4;
+            this.lbCheckConnexion.Text = "* Vérifier vos informations de connexion";
+            this.lbCheckConnexion.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // PageConnexion
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(430, 500);
+            this.ClientSize = new System.Drawing.Size(382, 500);
+            this.Controls.Add(this.lbCheckConnexion);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.BTN_Logon);
             this.Controls.Add(this.TBX_Pwd);
             this.Controls.Add(this.TBX_User);
             this.Controls.Add(this.pictureBox1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MaximumSize = new System.Drawing.Size(430, 500);
-            this.MinimumSize = new System.Drawing.Size(430, 500);
             this.Name = "PageConnexion";
             this.Load += new System.EventHandler(this.PageConnexion_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -118,6 +129,7 @@
         private System.Windows.Forms.TextBox TBX_Pwd;
         private System.Windows.Forms.Button BTN_Logon;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lbCheckConnexion;
     }
 }
 

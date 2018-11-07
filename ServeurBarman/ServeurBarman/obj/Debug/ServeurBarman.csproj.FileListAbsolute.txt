@@ -126,7 +126,6 @@ C:\Users\Sanogo Mael\Desktop\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman
 C:\Users\Sanogo Mael\Desktop\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.pdb
 C:\Users\201605878\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.exe.config
 C:\Users\201605878\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.AddCups.resources
-C:\Users\201605878\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.Add_Drinks.resources
 C:\Users\201605878\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.Developers.resources
 C:\Users\201605878\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.DLG_Settings.resources
 C:\Users\201605878\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.PageAccueil.resources

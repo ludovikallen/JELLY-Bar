@@ -101,7 +101,7 @@
             this.LBX_Activities.Location = new System.Drawing.Point(312, 57);
             this.LBX_Activities.Name = "LBX_Activities";
             this.LBX_Activities.ScrollAlwaysVisible = true;
-            this.LBX_Activities.Size = new System.Drawing.Size(232, 199);
+            this.LBX_Activities.Size = new System.Drawing.Size(218, 199);
             this.LBX_Activities.TabIndex = 9;
             // 
             // label4

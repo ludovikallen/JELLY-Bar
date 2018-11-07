@@ -85,13 +85,6 @@
     <Compile Include="AddCups.Designer.cs">
       <DependentUpon>AddCups.cs</DependentUpon>
     </Compile>
-    <Compile Include="Add_Drinks.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Add_Drinks.Designer.cs">
-      <DependentUpon>Add_Drinks.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Cups.cs" />
     <Compile Include="DataBase.cs" />
     <Compile Include="Developers.cs">
       <SubType>Form</SubType>
@@ -141,9 +134,6 @@
     <None Include="Resources\red-cup.jpg" />
     <EmbeddedResource Include="AddCups.resx">
       <DependentUpon>AddCups.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Add_Drinks.resx">
-      <DependentUpon>Add_Drinks.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Developers.resx">
       <DependentUpon>Developers.cs</DependentUpon>
@@ -231,6 +221,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Google-Noto-Emoji-Food-Drink-32443-cup-with-straw.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\shooter.jpeg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

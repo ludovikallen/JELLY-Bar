@@ -29,22 +29,18 @@ namespace ServeurBarman
         int compteur;
         bool enService;
         SpeechSynthesizer read;
+        string x;
 
 
         public PageAccueil()
         {
             InitializeComponent();
+            welcomePage1.activiteRobot = "Ingrédient de la commande numéro " + item1.ToString() + " non disponible";
         }
 
         private void BTN_Welcome_Click(object sender, EventArgs e)
         {
             welcomePage1.BringToFront();
-        }
-
-        private void BTN_AddDrink_Click(object sender, EventArgs e)
-        {
-
-            add_Drinks1.BringToFront();
         }
 
         private void BTN_AddCup_Click(object sender, EventArgs e)
@@ -85,6 +81,7 @@ namespace ServeurBarman
 
         private void PageAccueil_Load(object sender, EventArgs e)
         {
+            x = "";
             read = new SpeechSynthesizer();
             welcomePage1.BringToFront();
             Init_PageAcceuil();
@@ -190,16 +187,14 @@ namespace ServeurBarman
                                     
                                     this.Invoke((MethodInvoker)(() => commandePrecedente = lb_CommandeEnCours.Text.ToString()));
                                 }
-                                //if(robot.task.IsCompleted)
-                                //{
-                                //    this.Invoke((MethodInvoker)(() => lbFinishiCommande.Text = "Commande numéro " + commandePrecedente + " terminée!"));
-                                //    read.SpeakAsync(lbFinishiCommande.Text);
-                                //}
                             }
                         }
                         else
                         {
-                            MessageBox.Show("Plus de verres rouge, veuillez en ajouter svp!");
+                            if (!x.Equals(welcomePage1.activiteRobot)) 
+                                welcomePage1.activiteRobot = "Plus de verres rouge, veuillez en ajouter svp!";
+                            else
+                                read.SpeakAsync("Manque de verres rouge");
                         }
                     }
                     else
@@ -230,7 +225,15 @@ namespace ServeurBarman
                 }
                 else
                 {
-                    MessageBox.Show("Ingrédient numéro " + item1.ToString() + " non disponible");
+                    base2Donnees.SupprimerCommande(item1);
+                    if (!x.Equals(welcomePage1.activiteRobot))
+                    {
+                        welcomePage1.activiteRobot = "Ingrédient de la commande numéro " + item1.ToString() + " non disponible";
+                    }
+                    else
+                    {
+                        read.SpeakAsync("Commande numéro " + item1.ToString() + " supprimé");
+                    }
                 }
             }
         }
@@ -247,12 +250,19 @@ namespace ServeurBarman
                 pbx_Halt.Enabled = true;
                 btn_Servir.Enabled = true;
                 mBtnConnexionRobot.Enabled = false;
-                MessageBox.Show("Connexion robot réussie");
                 System.Threading.Thread.Sleep(2000);
+                if (!x.Equals(welcomePage1.activiteRobot))
+                {
+                    welcomePage1.activiteRobot = "Connexion robot impossible";
+                   
+                }
             }
             else
             {
-                MessageBox.Show("Connexion robot impossible");
+                if (!x.Equals(welcomePage1.activiteRobot))
+                {
+                    welcomePage1.activiteRobot = "Connexion robot impossible";
+                }
                 robot.Deconnexion();
             }
         }
@@ -260,11 +270,22 @@ namespace ServeurBarman
         // BOUTON DE SUPPRESSION DES COMMANDES DISPONIBLES DANS LA TABLE COMMANDE
         private void Btn_ResetCommande_Click(object sender, EventArgs e)
         {
-            DialogResult dialogResult = MessageBox.Show("Êtes-vous certain de vouloir vider la liste de commande?", "Confirmation", MessageBoxButtons.YesNo);
-            if (dialogResult == DialogResult.Yes)
+            if (numcommande.Count != 0)
             {
-                base2Donnees.SupprimerCommande();
+                DialogResult dialogResult = MessageBox.Show("Êtes-vous certain de vouloir vider la liste de commande?", "Confirmation", MessageBoxButtons.YesNo);
+                if (dialogResult == DialogResult.Yes)
+                {
+                    base2Donnees.SupprimerCommande();
+                }
             }
+            else
+            {
+                if (!x.Equals(welcomePage1.activiteRobot))
+                {
+                    welcomePage1.activiteRobot = "Connexion robot impossible";
+                }
+            }
+
         }
 
         private void timer2_Tick(object sender, EventArgs e)
@@ -291,7 +312,7 @@ namespace ServeurBarman
         // FERME LA CONNEXION À LA BASE DE DONNÉES
         private void deconnexion_Click(object sender, EventArgs e)
         {
-            base2Donnees.FermerConnexion();
+            this.Close();
         }
 
         private void btn_Servir_Click(object sender, EventArgs e)

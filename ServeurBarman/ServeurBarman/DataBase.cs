@@ -48,10 +48,8 @@ namespace ServeurBarman
                 string bd = "Data Source=" + dsource + ";User id=" + user + ";Password=" + pass;
                 EtatBaseDonnées.ConnectionString = bd;
                 EtatBaseDonnées.Open();
-                MessageBox.Show("Connecté avec succès!!!!");
-
             }
-            catch (Exception) { MessageBox.Show("Erreur de connexion!!!"); }
+            catch (Exception) {  }
 
             return EtatBaseDonnées;
         }
@@ -217,7 +215,7 @@ namespace ServeurBarman
         /// <param name="nombre">nombre de verres de shooter à ajouter à la table shooter</param>
         /// <exception cref="Exception">Lance une exception si la table shooter n'existe pas</exception>
         /// <seealso cref="DataBase.AjouterShooter(int)"/> Ajouter des ingrédients
-        public void AjouterShooter(int nombre )
+        public void AjouterShooter(ref int nombre )
         {
             try
             {
