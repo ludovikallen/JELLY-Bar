@@ -154,6 +154,30 @@ namespace ServeurBarman
             return nombreShooter;
         }
 
+        public bool VerreShooterSuffisant(int numcommnde)
+        {
+            int val = 0;
+
+            string cmd = "select qty from commande where numcommande=" + numcommnde.ToString();
+            OracleCommand listeDiv = new OracleCommand(cmd, EtatBaseDonnées);
+            listeDiv.CommandType = CommandType.Text;
+            OracleDataReader divisionReader = listeDiv.ExecuteReader();
+            try
+            {
+                while (divisionReader.Read())
+                {
+                    val= divisionReader.GetInt32(0);
+                }
+                divisionReader.Close();
+            }
+            catch (Exception sel) { MessageBox.Show(sel.Message.ToString()); }
+
+            if (val > Int32.Parse(NombreDeShooter()))
+                return true;
+
+            return false;
+        }
+
         /// <summary>
         /// Permet d'établir le nombre de verre de rouge dans la base de données
         /// </summary>
