@@ -28,6 +28,7 @@ namespace ServeurBarman
         int item1, item2;
         int compteur;
         bool enService;
+        bool servire = false;
         SpeechSynthesizer read;
 
 
@@ -165,7 +166,7 @@ namespace ServeurBarman
                         {
                             service = new Commande(item2);
                             var p = service.TypeReel();
-                            if (robot.EnMarche())
+                            if (!robot.EnMarche())
                             {
                                 List<(Position, int)> ing = p.Ingredients(item1);
 
@@ -184,7 +185,7 @@ namespace ServeurBarman
                                     this.Invoke((MethodInvoker)(() => commandePrecedente = lb_CommandeEnCours.Text.ToString()));
                                 }
                             }
-                            while (!robot.EnMarche()) ; // ON S'ASSURE QUE LE ROBOT TERMINE LA TACHE EN COURS
+                            while (robot.EnMarche()) ; // ON S'ASSURE QUE LE ROBOT TERMINE LA TACHE EN COURS
 
                             this.Invoke((MethodInvoker)(() => lb_CommandeEnCours.Text = ""));
 
@@ -227,6 +228,7 @@ namespace ServeurBarman
                         }
                         else
                         {
+                            base2Donnees.SupprimerCommande(item1);
                             welcomePage1.activiteRobot = "Nombre de verre shooter insuffisant";
                             read.SpeakAsync(welcomePage1.activiteRobot);
                         }
@@ -306,21 +308,31 @@ namespace ServeurBarman
         {
             this.Close();
         }
-
+        private Task serviceClient = Task.Delay(0);
+        private Task arreter = Task.Delay(0);
         private void btn_Servir_Click(object sender, EventArgs e)
         {
-            if (estConnecté)
+             if (estConnecté)
             {
-                if (btn_Servir.Text == "Servir")
+                if (!servire)
                 {
                     //service = new Commande();
                     enService = true;
+                    servire = true;
                     btn_Servir.Text = "Arrêter service";
-                    Task.Run(() => ServirClient());
+                    serviceClient = Task.Run(() => ServirClient());
                 }
                 else
                 {
-                    enService = false;
+                    if (arreter.IsCompleted)
+                    {
+                        arreter = Task.Run(() =>
+                        {
+                            enService = false; // arrete le thread
+                            while (!serviceClient.IsCompleted) { } // attend que le thread arrete
+                            servire = false; // active l'option pour repartir le thread
+                        });
+                    }
                     btn_Servir.Text = "Servir";
                 }
             }
