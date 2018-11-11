@@ -35,7 +35,7 @@ namespace ServeurBarman
                 if (TB_NbVerre.Text != ""&&Int32.Parse(TB_NbVerre.Text)<=6&& Int32.Parse(TB_NbVerre.Text)>=1)
                 {
                     int i = Int32.Parse(TB_NbVerre.Text);
-                    bd.AjouterShooter(ref i);
+                    bd.ModifierShooter(ref i);
                     TB_NbVerre.Text = "";
                 }
                 else

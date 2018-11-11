@@ -598,6 +598,7 @@ C:\Users\201605878\Desktop\ServeurBarman\ServeurBarman\bin\Debug\System.Runtime.
 C:\Users\201605878\Desktop\ServeurBarman\ServeurBarman\bin\Debug\System.Threading.Tasks.Extensions.xml
 C:\Users\201605878\Desktop\ServeurBarman\ServeurBarman\bin\Debug\System.ValueTuple.xml
 C:\Users\201605878\Desktop\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.DLG_UserIdentify.resources
+C:\Users\201605878\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.csprojAssemblyReference.cache
 C:\Users\Mael\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\bin\Debug\ServeurBarman.exe.config
 C:\Users\Mael\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\bin\Debug\ServeurBarman.exe
 C:\Users\Mael\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\bin\Debug\ServeurBarman.pdb
@@ -711,9 +712,9 @@ C:\Users\Mael\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\bin\Debug\EntityFram
 C:\Users\Mael\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
 C:\Users\Mael\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\bin\Debug\System.Threading.Tasks.Extensions.xml
 C:\Users\Mael\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\bin\Debug\System.ValueTuple.xml
+C:\Users\Mael\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.csprojAssemblyReference.cache
 C:\Users\Mael\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.exe.config
 C:\Users\Mael\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.AddCups.resources
-C:\Users\Mael\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.Add_Drinks.resources
 C:\Users\Mael\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.Developers.resources
 C:\Users\Mael\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.DLG_Settings.resources
 C:\Users\Mael\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.PageAccueil.resources
@@ -726,5 +727,4 @@ C:\Users\Mael\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\obj\Debug\ServeurBar
 C:\Users\Mael\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.csproj.CopyComplete
 C:\Users\Mael\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.exe
 C:\Users\Mael\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.pdb
-C:\Users\Mael\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.csprojAssemblyReference.cache
-C:\Users\201605878\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\obj\Debug\ServeurBarman.csprojAssemblyReference.cache
+C:\Users\Mael\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\obj\Debug\FlashButton.FlashButton.resources

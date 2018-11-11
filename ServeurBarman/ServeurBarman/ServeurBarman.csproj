@@ -98,6 +98,12 @@
     <Compile Include="DLG_Settings.Designer.cs">
       <DependentUpon>DLG_Settings.cs</DependentUpon>
     </Compile>
+    <Compile Include="FlashButton.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="FlashButton.designer.cs">
+      <DependentUpon>FlashButton.cs</DependentUpon>
+    </Compile>
     <Compile Include="PageAccueil.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -140,6 +146,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DLG_Settings.resx">
       <DependentUpon>DLG_Settings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FlashButton.resx">
+      <DependentUpon>FlashButton.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PageAccueil.resx">
       <DependentUpon>PageAccueil.cs</DependentUpon>
@@ -224,6 +233,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shooter.jpeg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\stop1Balcked.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\if_Log Out_27856.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\member.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
