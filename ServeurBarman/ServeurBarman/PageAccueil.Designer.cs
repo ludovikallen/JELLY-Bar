@@ -52,9 +52,9 @@
             this.BTN_AddCup = new System.Windows.Forms.Button();
             this.BTN_Welcome = new System.Windows.Forms.Button();
             this.PBX_Logo = new System.Windows.Forms.PictureBox();
+            this.fbtn_Halt = new FlashButton.FlashButton();
             this.addCups1 = new ServeurBarman.AddCups();
             this.welcomePage1 = new ServeurBarman.WelcomePage();
-            this.fbtn_Halt = new FlashButton.FlashButton();
             this.pnlBar.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PBX_Logo)).BeginInit();
@@ -331,6 +331,20 @@
             this.PBX_Logo.TabIndex = 1;
             this.PBX_Logo.TabStop = false;
             // 
+            // fbtn_Halt
+            // 
+            this.fbtn_Halt.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.fbtn_Halt.ImageClick = null;
+            this.fbtn_Halt.ImageDisable = null;
+            this.fbtn_Halt.ImageNeutral = null;
+            this.fbtn_Halt.ImageOver = null;
+            this.fbtn_Halt.Location = new System.Drawing.Point(595, 88);
+            this.fbtn_Halt.Name = "fbtn_Halt";
+            this.fbtn_Halt.Size = new System.Drawing.Size(140, 123);
+            this.fbtn_Halt.TabIndex = 61;
+            this.fbtn_Halt.EnabledChanged += new System.EventHandler(this.fbtn_Halt_EnabledChanged);
+            this.fbtn_Halt.Click += new System.EventHandler(this.fbtn_Halt_Click);
+            // 
             // addCups1
             // 
             this.addCups1.Location = new System.Drawing.Point(296, 307);
@@ -348,20 +362,6 @@
             this.welcomePage1.Name = "welcomePage1";
             this.welcomePage1.Size = new System.Drawing.Size(439, 208);
             this.welcomePage1.TabIndex = 58;
-            // 
-            // fbtn_Halt
-            // 
-            this.fbtn_Halt.BackgroundImage = global::ServeurBarman.Properties.Resources.stop1;
-            this.fbtn_Halt.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.fbtn_Halt.ImageClick = null;
-            this.fbtn_Halt.ImageDisable = global::ServeurBarman.Properties.Resources.stop1Balcked;
-            this.fbtn_Halt.ImageNeutral = global::ServeurBarman.Properties.Resources.stop1;
-            this.fbtn_Halt.ImageOver = null;
-            this.fbtn_Halt.Location = new System.Drawing.Point(595, 88);
-            this.fbtn_Halt.Name = "fbtn_Halt";
-            this.fbtn_Halt.Size = new System.Drawing.Size(140, 123);
-            this.fbtn_Halt.TabIndex = 61;
-            this.fbtn_Halt.Click += new System.EventHandler(this.fbtn_Halt_Click);
             // 
             // PageAccueil
             // 

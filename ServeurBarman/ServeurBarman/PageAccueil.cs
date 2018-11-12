@@ -24,7 +24,7 @@ namespace ServeurBarman
         DataBase base2Donnees;
         Commande service;
         bool enService;
-        bool servir= false;
+        bool servir = false;
 
 
         public PageAccueil()
@@ -101,8 +101,8 @@ namespace ServeurBarman
 
             base2Donnees.onCommandeChange += (s, events) => this.Invoke((MethodInvoker)(() =>
             {
-                     foreach (var contenu in numcommande)
-                         LBX_WaitingList.Items.Add(contenu.Item1);
+                foreach (var contenu in numcommande)
+                    LBX_WaitingList.Items.Add(contenu.Item1);
             }));
         }
 
@@ -138,7 +138,7 @@ namespace ServeurBarman
                 }
             }
         }
-        
+
 
         // BOUTON DE SUPPRESSION DES COMMANDES DISPONIBLES DANS LA TABLE COMMANDE
         private void Btn_ResetCommande_Click(object sender, EventArgs e)
@@ -213,19 +213,21 @@ namespace ServeurBarman
 
         private void Btn_ConnexionRobot_Click(object sender, EventArgs e)
         {
-            // On établie la connexion avec le robot
-            LBX_WaitingList.SelectedIndex = -1;
-
-            robot.ConnexionRobot();
-            Thread.Sleep(2000);
-
-            if (robot.Connected)
+            Task.Run(() =>
             {
+                // On établie la connexion avec le robot
+                while (!robot.Connected)
+                {
+                    robot.ConnexionRobot();
+                    Thread.Sleep(2000);
+                }
                 estConnecté = true;
-                fbtn_Halt.Enabled = true;
-                btn_Servir.Enabled = true;
-                btn_ConnexionRobot.Enabled = false;
-            }
+                this.Invoke((MethodInvoker)(() => LBX_WaitingList.SelectedIndex = -1));
+                this.Invoke((MethodInvoker)(() => fbtn_Halt.Enabled = true));
+                this.Invoke((MethodInvoker)(() => btn_Servir.Enabled = true));
+                this.Invoke((MethodInvoker)(() => btn_ConnexionRobot.Enabled = false));
+            });
+
         }
 
         private void LBX_WaitingList_SelectedIndexChanged(object sender, EventArgs e)
@@ -248,9 +250,25 @@ namespace ServeurBarman
 
         private void fbtn_Halt_Click(object sender, EventArgs e)
         {
-            robot.Halt();
-            robot.Deconnexion();
-            fbtn_Halt.Enabled = true;
+            if (estConnecté)
+            {
+                fbtn_Halt.Enabled = false;
+                enService = false;
+                estConnecté = false;
+                btn_ConnexionRobot.Enabled = true;
+                btn_Servir.Enabled = false;
+                robot.Deconnexion();
+                btn_Servir.Text = "Servir";
+                servir = false;
+            }
+        }
+
+        private void fbtn_Halt_EnabledChanged(object sender, EventArgs e)
+        {
+            if (fbtn_Halt.Enabled)
+                fbtn_Halt.BackgroundImage = Image.FromFile("C:\\Users\\201605878\\Desktop\\JELLY-Bar\\ServeurBarman\\ServeurBarman\\Resources\\stop1.jpg");
+            else
+                fbtn_Halt.BackgroundImage = Image.FromFile("C:\\Users\\201605878\\Desktop\\JELLY-Bar\\ServeurBarman\\ServeurBarman\\Resources\\stop1Balcked.jpg");
         }
     }
 }

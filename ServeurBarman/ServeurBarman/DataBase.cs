@@ -8,7 +8,7 @@ using System.Speech.Synthesis;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Speech.Synthesis;
+//using System.Speech.Synthesis;
 
 namespace ServeurBarman
 {
@@ -349,7 +349,7 @@ namespace ServeurBarman
         private SpecificateurCommande commande;
         private CRS_A255 robot;
         DataBase base2Donnees;
-        SpeechSynthesizer vocal;
+        //SpeechSynthesizer vocal;
 
         ///// <summary>
         ///// Constructeur paramétrique,
@@ -392,7 +392,6 @@ namespace ServeurBarman
 
         public void ServirClient(List<(int,int)> e)
         {
-
             using (SpeechSynthesizer vocal = new SpeechSynthesizer())
             {
                 robot = CRS_A255.Instance;
@@ -480,7 +479,7 @@ namespace ServeurBarman
                             // la voix de commande en cours
                             vocal.SpeakAsync("Commande numéro " + commandeEnCours + " en cours");
                         }
-                        while (robot.EnMarche()) ;
+                        while (robot.EnMarche());
                         // la voix de la commande terminée
                         vocal.SpeakAsync("Commande numéro " + commandeEnCours + " terminée");
                         // Enlever la commande en cours dans le UI
