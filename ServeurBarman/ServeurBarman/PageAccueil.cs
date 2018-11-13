@@ -25,6 +25,8 @@ namespace ServeurBarman
         Commande service;
         bool enService;
         bool servir = false;
+        private Task serviceClient = Task.Delay(0);
+        private Task arreter = Task.Delay(0);
 
 
         public PageAccueil()
@@ -46,14 +48,14 @@ namespace ServeurBarman
         {
             if (estConnecté)
             {
-                if (!enService)
+                if (serviceClient.IsCompleted)
                 {
                     DLG_Settings dlg = new DLG_Settings();
                     DialogResult dlg_result = dlg.ShowDialog();
                 }
                 else
                 {
-                    base2Donnees.ErreurBD = "Impossible d'atteindre Paramètres, car le robot est en activité!!";
+                    base2Donnees.ErreurBD = "Accès impossible à paramètres, robot en activité!!";
                 }
             }
             else
@@ -159,8 +161,7 @@ namespace ServeurBarman
         {
             this.Close();
         }
-        private Task serviceClient = Task.Delay(0);
-        private Task arreter = Task.Delay(0);
+        
         private void Btn_Servir_Click(object sender, EventArgs e)
         {
             if (estConnecté)
@@ -196,7 +197,6 @@ namespace ServeurBarman
             else
             {
                 base2Donnees.ErreurBD = "veuillez d'abord, svp connecter le robot!";
-                //MessageBox.Show("veuillez d'abord connecter le robot svp");
             }
         }
 
@@ -238,7 +238,7 @@ namespace ServeurBarman
                 btn_Supp.Visible = false;
         }
 
-        private void lbx_Avertissement_SelectedIndexChanged(object sender, EventArgs e)
+        private void Lbx_Avertissement_SelectedIndexChanged(object sender, EventArgs e)
         {
             lbx_Avertissement.SelectedIndex = -1;
         }

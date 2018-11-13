@@ -444,7 +444,7 @@ namespace ServeurBarman
                     while (robot.EnMarche()) ;
 
                     // la voix lorsque commande terminée
-                    vocal.SpeakAsync("Commande numéro " + commandeEnCours + " terminée");
+                    vocal.Speak("Commande numéro " + commandeEnCours + " terminée");
 
                     // Supprimer la commande en cours dans le UI
                     CommandeEnCours = "";
@@ -461,8 +461,7 @@ namespace ServeurBarman
         {
             using (SpeechSynthesizer vocal = new SpeechSynthesizer())
             {
-                if (int.Parse(base2Donnees.NombreDeShooter()) != 0)
-                {
+                
                     if (int.Parse(base2Donnees.NombreDeVerreRouge()) != 0)
                     {
                         commande = new Commande_Normale();
@@ -481,7 +480,7 @@ namespace ServeurBarman
                         }
                         while (robot.EnMarche());
                         // la voix de la commande terminée
-                        vocal.SpeakAsync("Commande numéro " + commandeEnCours + " terminée");
+                        vocal.Speak("Commande numéro " + commandeEnCours + " terminée");
                         // Enlever la commande en cours dans le UI
                         CommandeEnCours = "";
                     }
@@ -489,7 +488,7 @@ namespace ServeurBarman
                     {
                         base2Donnees.ErreurBD = "Manque de verres rouge";
                     }
-                }
+                
             }
         }
 

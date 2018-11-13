@@ -32,7 +32,6 @@
             this.erreur = new System.Windows.Forms.Label();
             this.PnlShooter = new System.Windows.Forms.PictureBox();
             this.btn_Valider = new System.Windows.Forms.Button();
-            this.btn_Annuler = new System.Windows.Forms.Button();
             this.TB_NbVerre = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -73,23 +72,13 @@
             // btn_Valider
             // 
             this.btn_Valider.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_Valider.Location = new System.Drawing.Point(168, 147);
+            this.btn_Valider.Location = new System.Drawing.Point(290, 155);
             this.btn_Valider.Name = "btn_Valider";
             this.btn_Valider.Size = new System.Drawing.Size(116, 37);
             this.btn_Valider.TabIndex = 33;
             this.btn_Valider.Text = "Valider";
             this.btn_Valider.UseVisualStyleBackColor = true;
             this.btn_Valider.Click += new System.EventHandler(this.btn_Valider_Click);
-            // 
-            // btn_Annuler
-            // 
-            this.btn_Annuler.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_Annuler.Location = new System.Drawing.Point(290, 147);
-            this.btn_Annuler.Name = "btn_Annuler";
-            this.btn_Annuler.Size = new System.Drawing.Size(116, 37);
-            this.btn_Annuler.TabIndex = 34;
-            this.btn_Annuler.Text = "Annuler";
-            this.btn_Annuler.UseVisualStyleBackColor = true;
             // 
             // TB_NbVerre
             // 
@@ -98,6 +87,7 @@
             this.TB_NbVerre.Name = "TB_NbVerre";
             this.TB_NbVerre.Size = new System.Drawing.Size(89, 26);
             this.TB_NbVerre.TabIndex = 32;
+            this.TB_NbVerre.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TB_NbVerre_KeyPress);
             // 
             // label2
             // 
@@ -127,7 +117,6 @@
             this.Controls.Add(this.erreur);
             this.Controls.Add(this.PnlShooter);
             this.Controls.Add(this.btn_Valider);
-            this.Controls.Add(this.btn_Annuler);
             this.Controls.Add(this.TB_NbVerre);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -148,7 +137,6 @@
         private System.Windows.Forms.Label erreur;
         private System.Windows.Forms.PictureBox PnlShooter;
         private System.Windows.Forms.Button btn_Valider;
-        private System.Windows.Forms.Button btn_Annuler;
         private System.Windows.Forms.TextBox TB_NbVerre;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
