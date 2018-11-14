@@ -260,15 +260,19 @@ namespace ServeurBarman
                 robot.Deconnexion();
                 btn_Servir.Text = "Servir";
                 servir = false;
+                Task.Run(() =>
+                {
+                    robot.ConnexionRobot();
+                });
             }
         }
 
         private void fbtn_Halt_EnabledChanged(object sender, EventArgs e)
         {
             if (fbtn_Halt.Enabled)
-                fbtn_Halt.BackgroundImage = Image.FromFile("C:\\Users\\201605878\\Desktop\\JELLY-Bar\\ServeurBarman\\ServeurBarman\\Resources\\stop1.jpg");
+                fbtn_Halt.BackgroundImage = Image.FromFile("C:\\Users\\201646963\\Desktop\\JELLY-Bar\\ServeurBarman\\ServeurBarman\\Resources\\stop1.jpg");
             else
-                fbtn_Halt.BackgroundImage = Image.FromFile("C:\\Users\\201605878\\Desktop\\JELLY-Bar\\ServeurBarman\\ServeurBarman\\Resources\\stop1Balcked.jpg");
+                fbtn_Halt.BackgroundImage = Image.FromFile("C:\\Users\\201646963\\Desktop\\JELLY-Bar\\ServeurBarman\\ServeurBarman\\Resources\\stop1Balcked.jpg");
         }
     }
 }

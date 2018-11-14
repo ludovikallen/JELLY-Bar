@@ -1,0 +1,3 @@
+﻿1>------ Début de la génération : Projet : ServeurBarman, Configuration : Debug Any CPU ------
+1>  ServeurBarman -> C:\Users\201646963\Desktop\JELLY-Bar\ServeurBarman\ServeurBarman\bin\Debug\ServeurBarman.exe
+========== Génération : 1 a réussi, 0 a échoué, 0 mis à jour, 0 a été ignoré ==========
