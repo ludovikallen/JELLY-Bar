@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Bras_Robot;
+using System.IO;
 
 namespace ServeurBarman
 {
@@ -27,6 +28,7 @@ namespace ServeurBarman
         bool servir = false;
         private Task serviceClient = Task.Delay(0);
         private Task arreter = Task.Delay(0);
+        string path1, path2;
 
 
         public PageAccueil()
@@ -112,6 +114,8 @@ namespace ServeurBarman
         {
             BTN_Setting.Enabled = true;
             base2Donnees = DataBase.instance_bd;
+            path1 = Path.GetFullPath("...\\...\\Resources\\stop1.jpg");
+            path2 = Path.GetFullPath("...\\...\\Resources\\stop1Balcked.jpg");
 
             Task.Run(() =>
             {
@@ -270,9 +274,9 @@ namespace ServeurBarman
         private void fbtn_Halt_EnabledChanged(object sender, EventArgs e)
         {
             if (fbtn_Halt.Enabled)
-                fbtn_Halt.BackgroundImage = Image.FromFile("C:\\Users\\201646963\\Desktop\\JELLY-Bar\\ServeurBarman\\ServeurBarman\\Resources\\stop1.jpg");
+                fbtn_Halt.BackgroundImage = Image.FromFile(path1);
             else
-                fbtn_Halt.BackgroundImage = Image.FromFile("C:\\Users\\201646963\\Desktop\\JELLY-Bar\\ServeurBarman\\ServeurBarman\\Resources\\stop1Balcked.jpg");
+                fbtn_Halt.BackgroundImage = Image.FromFile(path2);
         }
     }
 }
