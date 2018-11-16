@@ -46,7 +46,7 @@ namespace Bras_Robot
         private int PosY { get; set; }
         private int PosZ { get; set; }
         public bool Connected { get; private set; }
-        private int nbCup { get; set; } = 0;
+        private int nbCup { get; set; } = 6;
         Position[] bouteilles = new Position[6]
         {
             new Position(130, -200, -365),
@@ -111,8 +111,7 @@ namespace Bras_Robot
         }
         public void Deconnexion()
         {
-            
-            
+            task.Dispose();
             serialPort.Close();
             Connected = false;
         }
@@ -227,7 +226,7 @@ namespace Bras_Robot
         }
         #endregion
         #region Barman fonction
-        private void VersPosition(ref Position pos) => JOG(pos.X - PosX, pos.Y - PosY, pos.Z - PosZ);
+        public void VersPosition(ref Position pos) => JOG(pos.X - PosX, pos.Y - PosY, pos.Z - PosZ);
         private void VerserBouteille(ref (Position pos, int nbShots) pos)
         {
             SetSpeed(100);
@@ -331,7 +330,7 @@ namespace Bras_Robot
             return Task.Run(() =>
             {
                 GoToStart(); // Se met un position de debart
-                Position cuptemp = new Position(redCupStackStation.X, redCupStackStation.Y, redCupStackStation.Z + (nbCup * 4));
+                Position cuptemp = new Position(redCupStackStation.X, redCupStackStation.Y, redCupStackStation.Z + (nbCup * 5));
                 PickUpCup(ref cuptemp); // Prend le cup dans la pile
                 SetSpeed(75);
                 DeplacerMainPriv(-180);
@@ -352,16 +351,10 @@ namespace Bras_Robot
         //retourne si il accepte de faire l'operation ou non
         public bool MakeDrink(List<(Position pos, int nbShots)> positions)
         {
-            try
+            if (task.IsCompleted && positions.Capacity != 0 && !Calibration)
             {
-                if (task.IsCompleted && positions.Capacity != 0 && !Calibration)
-                {
-                    task = DrinkOperation(positions);
-                    return true;
-                }
-            }
-            catch
-            {
+                task=DrinkOperation(positions);
+                return true;
             }
             return false;
         }
@@ -399,13 +392,24 @@ namespace Bras_Robot
         };
         public void TEST()
         {
-            //SetSartPos();
-            //GoToStart();
-            //AjouterCup(4);
-            //CALIBRE();
-            //VersPosition(ref redCupStackStation);
-            //FuncNSleep(() => serialPort.Write("MOTOR 2, -4000\r"), 200);
-            //DeplacerMain(-180);
+            GoToStart();
+
+            Task.Run(() =>
+            {
+                while (nbCup > 0)
+                {
+                    Position cuptemp = new Position(redCupStackStation.X, redCupStackStation.Y, redCupStackStation.Z + (nbCup * 5));
+                    PickUpCup(ref cuptemp);
+
+                    AjouterCup(nbCup - 1);
+                    DeplacerMainPriv(-180);
+                    VersPosition(ref CreateStation);
+                    Thread.Sleep(10000);
+                    OuvrirPince(100);
+                    DeplacerMainPriv(180);
+                }
+            });
+            
         }
     }
 }
