@@ -29,6 +29,7 @@ namespace ServeurBarman
         private Task serviceClient = Task.Delay(0);
         private Task arreter = Task.Delay(0);
         string path1, path2;
+        Erreurs erreur;
 
 
         public PageAccueil()
@@ -57,12 +58,12 @@ namespace ServeurBarman
                 }
                 else
                 {
-                    base2Donnees.ErreurBD = "Accès impossible à paramètres, robot en activité!!";
+                    erreur.ErreurBD = "Accès impossible à paramètres, robot en activité!!";
                 }
             }
             else
             {
-                base2Donnees.ErreurBD = "Robot non connecté...";
+                erreur.ErreurBD = "Robot non connecté...";
             }
         }
 
@@ -83,27 +84,26 @@ namespace ServeurBarman
             btn_Supp.Visible = false;
             LBX_WaitingList.SelectedIndex = -1;
 
-            service.onCommandeEnCours += (s, events) => this.Invoke((MethodInvoker)(() => lb_CommandeEnCours.Text = service.CommandeEnCours));
-            base2Donnees.onErreurBD_Detectee += (s, events) => this.Invoke((MethodInvoker)(() =>
+            erreur.onCommandeEnCours += (s, events) => this.Invoke((MethodInvoker)(() => lb_CommandeEnCours.Text = erreur.CommandeEnCours));
+            erreur.onErreurBD_Detectee += (s, events) => this.Invoke((MethodInvoker)(() =>
             {
                 if (lbx_Avertissement.Items.Count != 0)
                 {
                     int x = lbx_Avertissement.Items.Count - 1;
-                    if (!base2Donnees.ErreurBD.Equals(lbx_Avertissement.Items[x]))
+                    if (!erreur.ErreurBD.Equals(lbx_Avertissement.Items[x]))
                     {
-                        lbx_Avertissement.Items.Add(base2Donnees.ErreurBD);
+                        lbx_Avertissement.Items.Add(erreur.ErreurBD);
                         lbx_Avertissement.TopIndex = lbx_Avertissement.Items.Count - 1;
                     }
                 }
                 else
                 {
-                    lbx_Avertissement.Items.Add(base2Donnees.ErreurBD);
+                    lbx_Avertissement.Items.Add(erreur.ErreurBD);
                     lbx_Avertissement.TopIndex = lbx_Avertissement.Items.Count - 1;
                 }
-
             }));
 
-            base2Donnees.onCommandeChange += (s, events) => this.Invoke((MethodInvoker)(() =>
+            erreur.onCommandeChange += (s, events) => this.Invoke((MethodInvoker)(() =>
             {
                 foreach (var contenu in numcommande)
                     LBX_WaitingList.Items.Add(contenu.Item1);
@@ -116,6 +116,7 @@ namespace ServeurBarman
             base2Donnees = DataBase.instance_bd;
             path1 = Path.GetFullPath("...\\...\\Resources\\stop1.jpg");
             path2 = Path.GetFullPath("...\\...\\Resources\\stop1Balcked.jpg");
+            erreur = Erreurs.InstacnceErreur;
 
             Task.Run(() =>
             {
@@ -140,7 +141,7 @@ namespace ServeurBarman
                 {
                     this.Invoke((MethodInvoker)(() => LBX_WaitingList.Items.Clear()));
                     numcommande = base2Donnees.ListeCommande();
-                    base2Donnees.Numcommande = numcommande;
+                    erreur.Numcommande = numcommande;
                 }
             }
         }
@@ -200,7 +201,7 @@ namespace ServeurBarman
             }
             else
             {
-                base2Donnees.ErreurBD = "veuillez d'abord, svp connecter le robot!";
+                erreur.ErreurBD = "veuillez d'abord, svp connecter le robot!";
             }
         }
 
@@ -231,7 +232,6 @@ namespace ServeurBarman
                 this.Invoke((MethodInvoker)(() => btn_Servir.Enabled = true));
                 this.Invoke((MethodInvoker)(() => btn_ConnexionRobot.Enabled = false));
             });
-
         }
 
         private void LBX_WaitingList_SelectedIndexChanged(object sender, EventArgs e)
