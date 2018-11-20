@@ -121,11 +121,14 @@
   <data name="if_go-home_118770" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\if_go-home_118770.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="if_Rounded-02_2024670" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\if_Rounded-02_2024670.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="if_go-home_1187701" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\if_go-home_118770.ico;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="stop1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\stop1.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Google-Noto-Emoji-Food-Drink-32443-cup-with-straw" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Google-Noto-Emoji-Food-Drink-32443-cup-with-straw.ico;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="if_icon-ios7-arrow-back_211686" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\if_icon-ios7-arrow-back_211686.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -133,14 +136,8 @@
   <data name="icons8-wine-bottle-64" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\icons8-wine-bottle-64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Google-Noto-Emoji-Food-Drink-32443-cup-with-straw" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Google-Noto-Emoji-Food-Drink-32443-cup-with-straw.ico;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Setting-icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Setting-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="if_Rounded-01_2024671" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\if_Rounded-01_2024671.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Papirus-Team-Papirus-Apps-Github-mirkobrombin-bottles" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Papirus-Team-Papirus-Apps-Github-mirkobrombin-bottles.ico;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="JELLY_Bar Logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\JELLY_Bar Logo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -148,8 +145,11 @@
   <data name="emergency" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\emergency.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="red-cup" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\red-cup.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="point-rouge" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\point-rouge.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ur10e" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ur10e.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="point-vert" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\point-vert.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -157,14 +157,20 @@
   <data name="Icons8-Ios7-Food-Beer-Bottle" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons8-Ios7-Food-Beer-Bottle.ico;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="if_Rounded-14_2024661" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\if_Rounded-14_2024661.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="stop1Balcked" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\stop1Balcked.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Papirus-Team-Papirus-Apps-Github-mirkobrombin-bottles" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Papirus-Team-Papirus-Apps-Github-mirkobrombin-bottles.ico;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="stop1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\stop1.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="ur10e" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\ur10e.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="red-cup" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\red-cup.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="if_Log Out_27856" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\if_Log Out_27856.ico;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="if_Rounded-01_2024671" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\if_Rounded-01_2024671.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="if_Rounded-13_2024662" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\if_Rounded-13_2024662.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -172,19 +178,22 @@
   <data name="if_setting_1814117" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\if_setting_1814117.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="shooter" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\shooter.jpeg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="2000px-Go-home.svg" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\2000px-Go-home.svg.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="if_setting_18141171" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\if_setting_1814117.ico;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="point-rouge" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\point-rouge.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="if_Rounded-14_2024661" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\if_Rounded-14_2024661.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="if_Rounded-02_2024670" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\if_Rounded-02_2024670.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Setting-icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Setting-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="shooter" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\shooter.jpeg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="member" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\member.ico;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

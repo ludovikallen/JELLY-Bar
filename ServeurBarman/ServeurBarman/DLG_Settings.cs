@@ -30,7 +30,7 @@ namespace ServeurBarman
                             robot.task = Task.Run(() =>
                             {
                                 robot.DeplacerBase(-angle);
-                                System.Threading.Thread.Sleep(wait); //TODO
+                                System.Threading.Thread.Sleep(wait);
                             });
                         }
                     }
@@ -49,7 +49,7 @@ namespace ServeurBarman
                             robot.task = Task.Run(() =>
                             {
                                 robot.DeplacerBase(angle);
-                                System.Threading.Thread.Sleep(wait); //TODO
+                                System.Threading.Thread.Sleep(wait);
                             });
                         }
                     }
@@ -68,7 +68,7 @@ namespace ServeurBarman
                             robot.task = Task.Run(() =>
                             {
                                 robot.DeplacerEpaule(-angle);
-                                System.Threading.Thread.Sleep(wait); //TODO
+                                System.Threading.Thread.Sleep(wait);
                             });
                         }
                     }
@@ -87,7 +87,7 @@ namespace ServeurBarman
                             robot.task = Task.Run(() =>
                             {
                                 robot.DeplacerEpaule(angle);
-                                System.Threading.Thread.Sleep(wait); //TODO
+                                System.Threading.Thread.Sleep(wait);
                             });
                         }
                     }
@@ -106,7 +106,7 @@ namespace ServeurBarman
                             robot.task = Task.Run(() =>
                             {
                                 robot.DeplacerCoude(angle);
-                                System.Threading.Thread.Sleep(wait); //TODO
+                                System.Threading.Thread.Sleep(wait);
                             });
                         }
                     }
@@ -126,7 +126,7 @@ namespace ServeurBarman
                             robot.task = Task.Run(() =>
                             {
                                 robot.DeplacerCoude(-angle);
-                                System.Threading.Thread.Sleep(wait); //TODO
+                                System.Threading.Thread.Sleep(wait);
                             });
                         }
                     }
@@ -145,7 +145,7 @@ namespace ServeurBarman
                             robot.task = Task.Run(() =>
                             {
                                 robot.DeplacerMain(-angle);
-                                System.Threading.Thread.Sleep(wait); //TODO
+                                System.Threading.Thread.Sleep(wait);
                             });
                         }
                     }
@@ -165,7 +165,7 @@ namespace ServeurBarman
                             robot.task = Task.Run(() =>
                             {
                                 robot.DeplacerMain(angle);
-                                System.Threading.Thread.Sleep(wait); //TODO
+                                System.Threading.Thread.Sleep(wait);
                             });
                         }
                     }
@@ -184,7 +184,7 @@ namespace ServeurBarman
                             robot.task = Task.Run(() =>
                             {
                                 robot.DeplacerPoignet(angle);
-                                System.Threading.Thread.Sleep(wait); //TODO
+                                System.Threading.Thread.Sleep(wait);
                             });
                         }
                     }
@@ -203,7 +203,7 @@ namespace ServeurBarman
                             robot.task = Task.Run(() =>
                             {
                                 robot.DeplacerPoignet(-angle);
-                                System.Threading.Thread.Sleep(wait); //TODO
+                                System.Threading.Thread.Sleep(wait);
                             });
                         }
                     }
@@ -224,7 +224,7 @@ namespace ServeurBarman
 
             robot.task = Task.Run(() =>
             {
-                while (robot.EnMarche()) { }
+                while (!robot.EnMarche()) { }
                 robot.Calibration = true;
             });
         }
@@ -274,7 +274,7 @@ namespace ServeurBarman
                 robot.task = Task.Run(() =>
                 {
                     robot.Ready();
-                    System.Threading.Thread.Sleep(1000); //TODO
+                    System.Threading.Thread.Sleep(1000);
                 });
             }
         }
@@ -286,7 +286,7 @@ namespace ServeurBarman
                 robot.task = Task.Run(() =>
                 {
                     robot.GoToStart();
-                    System.Threading.Thread.Sleep(1000); //TODO
+                    System.Threading.Thread.Sleep(1000);
                 });
             }
         }

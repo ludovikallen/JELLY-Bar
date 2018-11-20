@@ -32,10 +32,10 @@ namespace ServeurBarman
         private void btn_Valider_Click(object sender, EventArgs e)
         {
            
-                if (TB_NbVerre.Text != ""&&Int32.Parse(TB_NbVerre.Text)<=6&& Int32.Parse(TB_NbVerre.Text)>=1)
+                if (TB_NbVerre.Text != ""&&Int32.Parse(TB_NbVerre.Text)<=18&& Int32.Parse(TB_NbVerre.Text)>=0)
                 {
                     int i = Int32.Parse(TB_NbVerre.Text);
-                    bd.AjouterShooter(ref i);
+                    bd.ModifierShooter(ref i);
                     TB_NbVerre.Text = "";
                 }
                 else

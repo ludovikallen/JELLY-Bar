@@ -11,7 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Bras_Robot;
-using System.Speech.Synthesis;
+using System.IO;
 
 namespace ServeurBarman
 {
@@ -24,18 +24,17 @@ namespace ServeurBarman
         List<(int, int)> numcommande = new List<(int, int)>();
         DataBase base2Donnees;
         Commande service;
-        string commandePrecedente;
-        int item1, item2;
-        int compteur;
         bool enService;
-        bool servire = false;
-        SpeechSynthesizer read;
+        bool servir = false;
+        private Task serviceClient = Task.Delay(0);
+        private Task arreter = Task.Delay(0);
+        string path1, path2;
+        Erreurs erreur;
 
 
         public PageAccueil()
         {
             InitializeComponent();
-            welcomePage1.activiteRobot = "Ingrédient de la commande numéro " + item1.ToString() + " non disponible";
         }
 
         private void BTN_Welcome_Click(object sender, EventArgs e)
@@ -52,19 +51,19 @@ namespace ServeurBarman
         {
             if (estConnecté)
             {
-                if (!enService)
+                if (serviceClient.IsCompleted)
                 {
                     DLG_Settings dlg = new DLG_Settings();
                     DialogResult dlg_result = dlg.ShowDialog();
                 }
                 else
                 {
-                    MessageBox.Show("Impossible d'atteindre Paramètres, car le robot est en activité!!");
+                    erreur.ErreurBD = "Accès impossible à paramètres, robot en activité!!";
                 }
             }
             else
             {
-                MessageBox.Show("Robot non connecté...");
+                erreur.ErreurBD = "Robot non connecté...";
             }
         }
 
@@ -74,61 +73,60 @@ namespace ServeurBarman
             DialogResult dlg_result = dlg.ShowDialog();
         }
 
-        private void PageAccueil_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            enService = false;
-        }
-
         private void PageAccueil_Load(object sender, EventArgs e)
         {
-            read = new SpeechSynthesizer();
+            service = new Commande();
+            robot = CRS_A255.Instance;
             welcomePage1.BringToFront();
             Init_PageAcceuil();
-            timer2.Start();
-            timer2.Enabled = true;
-            lbFinishiCommande.Location = new Point(pnlDonnees.Width - compteur, lbFinishiCommande.Location.Y);
-            compteur++;
             btn_Servir.Enabled = false;
-            pbx_Halt.Enabled = false;
-            robot = CRS_A255.Instance;
-        }
+            fbtn_Halt.Enabled = false;
+            btn_Supp.Visible = false;
+            LBX_WaitingList.SelectedIndex = -1;
 
+            erreur.onCommandeEnCours += (s, events) => this.Invoke((MethodInvoker)(() => lb_CommandeEnCours.Text = erreur.CommandeEnCours));
+            erreur.onErreurBD_Detectee += (s, events) => this.Invoke((MethodInvoker)(() =>
+            {
+                if (lbx_Avertissement.Items.Count != 0)
+                {
+                    int x = lbx_Avertissement.Items.Count - 1;
+                    if (!erreur.ErreurBD.Equals(lbx_Avertissement.Items[x]))
+                    {
+                        lbx_Avertissement.Items.Add(erreur.ErreurBD);
+                        lbx_Avertissement.TopIndex = lbx_Avertissement.Items.Count - 1;
+                    }
+                }
+                else
+                {
+                    lbx_Avertissement.Items.Add(erreur.ErreurBD);
+                    lbx_Avertissement.TopIndex = lbx_Avertissement.Items.Count - 1;
+                }
+            }));
+
+            erreur.onCommandeChange += (s, events) => this.Invoke((MethodInvoker)(() =>
+            {
+                foreach (var contenu in numcommande)
+                    LBX_WaitingList.Items.Add(contenu.Item1);
+            }));
+        }
 
         private void Init_PageAcceuil()
         {
             BTN_Setting.Enabled = true;
             base2Donnees = DataBase.instance_bd;
-            lbFinishiCommande.Font = new Font("Arial", 30, FontStyle.Bold);
+            path1 = Path.GetFullPath("...\\...\\Resources\\stop1.jpg");
+            path2 = Path.GetFullPath("...\\...\\Resources\\stop1Balcked.jpg");
+            erreur = Erreurs.InstacnceErreur;
 
             Task.Run(() =>
             {
                 while (true)
                 {
                     Thread.Sleep(500);
-                    Show_WaitingDrinksList();
+                    Refresh_WaitingList();
                     Thread.Sleep(500);
                 }
             });
-
-            //Task.Run(() => base2Donnees.ListeCommande());
-            timer1.Start();
-            timer1.Enabled = true;
-        }
-
-        // AFFICHE DANS L'INTERFACE LA LISTE DES COMMANDES EN ATTENTE
-        private void Show_WaitingDrinksList()
-        {
-            if (numcommande.Count != base2Donnees.ListeCommande().Count)
-            {
-                Refresh_WaitingList();
-
-                foreach (var e in numcommande)
-                    this.Invoke((MethodInvoker)(() => LBX_WaitingList.Items.Add(e.Item1)));
-            }
-            //else if (base2Donnees.ListeCommande().Count == 0)
-            //{
-            //    LBX_WaitingList.Items.Clear();
-            //}
         }
 
         /// <summary>
@@ -139,146 +137,20 @@ namespace ServeurBarman
         {
             lock (accessLock)
             {
-                numcommande.Clear();
-                this.Invoke((MethodInvoker)(() => LBX_WaitingList.Items.Clear()));
-                numcommande = base2Donnees.ListeCommande();
-                if (numcommande.Count != 0)
+                if (numcommande.Count != base2Donnees.ListeCommande().Count)
                 {
-                    item1 = numcommande[0].Item1;
-                    item2 = numcommande[0].Item2;
+                    this.Invoke((MethodInvoker)(() => LBX_WaitingList.Items.Clear()));
+                    numcommande = base2Donnees.ListeCommande();
+                    erreur.Numcommande = numcommande;
                 }
             }
         }
 
-        /// <summary>
-        /// Cette méthode permet de servir le client sur la base des commandes disponible 
-        /// dans la liste d'attante tout en distinguant le type de commande
-        /// </summary>
-        private void ServirClient()
-        {
-            while (enService)
-            {
-                if (base2Donnees.Ingredient_Est_Disponible(item1))
-                {
-                    if (item2 == 0)
-                    {
-                        if (Int32.Parse(base2Donnees.NombreDeVerreRouge()) != 0)
-                        {
-                            service = new Commande(item2);
-                            var p = service.TypeReel();
-                            if (!robot.EnMarche())
-                            {
-                                List<(Position, int)> ing = p.Ingredients(item1);
-
-                                if (robot.MakeDrink(ing.ToList()))
-                                {
-                                    if (commandePrecedente != null)
-                                    {
-                                        this.Invoke((MethodInvoker)(() => lbFinishiCommande.Text = "Commande numéro " + commandePrecedente + " terminée!"));
-                                        read.SpeakAsync(lbFinishiCommande.Text);
-                                    }
-                                    read.SpeakAsync("Commande normale numéro " + item1.ToString() + " en cours");
-                                    base2Donnees.SupprimerCommande(item1);
-                                    this.Invoke((MethodInvoker)(() => lb_CommandeEnCours.Text = item1.ToString()));
-
-                                    this.Invoke((MethodInvoker)(() => commandePrecedente = lb_CommandeEnCours.Text.ToString()));
-                                }
-                            }
-                            VerifierActivitéRobot();
-                        }
-                        else
-                        {
-                            welcomePage1.activiteRobot = "Plus de verres rouge, veuillez en ajouter svp!";
-                            read.SpeakAsync("Manque de verres rouge");
-                        }
-                    }
-                    else if(item2==1)
-                    {
-                        /*
-                         * IL S'AGIT D'UN SHOOTER
-                         */
-                        if (base2Donnees.VerreShooterSuffisant(item1))
-                        {
-                            service = new Commande(item2);
-                            var p = service.TypeReel();
-                            if (!robot.EnMarche())
-                            {
-                                List<(Position, int)> ing = p.Ingredients(item1);
-
-                                if (robot.MakeShooterTest(ing[0].Item1,ing[0].Item2))
-                                {
-                                    if (commandePrecedente != null)
-                                    {
-                                        this.Invoke((MethodInvoker)(() => lbFinishiCommande.Text = "Commande numéro " + commandePrecedente + " terminée!"));
-                                        read.SpeakAsync(lbFinishiCommande.Text);
-                                    }
-
-                                    read.SpeakAsync("Commande shooter numéro " + item1.ToString() + " en cours");
-                                    base2Donnees.SupprimerCommande(item1);
-                                    this.Invoke((MethodInvoker)(() => lb_CommandeEnCours.Text = item1.ToString()));
-
-                                    this.Invoke((MethodInvoker)(() => commandePrecedente = lb_CommandeEnCours.Text.ToString()));
-                                }
-                            }
-
-                            VerifierActivitéRobot();
-                           
-                        }
-                        else
-                        {
-                            base2Donnees.SupprimerCommande(item1);
-                            welcomePage1.activiteRobot = "Nombre de verre shooter insuffisant";
-                            read.SpeakAsync(welcomePage1.activiteRobot);
-                        }
-                    }
-                }
-                else
-                {
-                    base2Donnees.SupprimerCommande(item1);
-                    welcomePage1.activiteRobot = "Ingrédient de la commande numéro " + item1.ToString() + " non disponible";
-                    read.SpeakAsync("Commande numéro " + item1.ToString() + " non valide supprimé");
-                }
-            }
-        }
-
-        private void VerifierActivitéRobot()
-        {
-            while (robot.EnMarche()) ; // ON S'ASSURE QUE LE ROBOT TERMINE LA TACHE EN COURS
-
-            this.Invoke((MethodInvoker)(() => lb_CommandeEnCours.Text = ""));
-
-            // ACTIONS NECESSAIRES SUR LA DERNIÈRE COMMANDE
-            if (numcommande.Count == 0)
-            {
-                read.SpeakAsync("Commande numéro " + commandePrecedente + " terminée!");
-                commandePrecedente = null;
-            }
-        }
-
-        // BOUTON DE CONNEXION AU ROBOT
-        private void mBtnConnexionRobot_Click(object sender, EventArgs e)
-        {
-            // On établie la connexion avec le robot
-
-            Task.Run(() =>
-            {
-                while(robot.ConnexionRobot()==1)
-                {
-                    robot.ConnexionRobot();
-                    Thread.Sleep(2000);
-                }
-
-                estConnecté = true;
-                pbx_Halt.Enabled = true;
-                btn_Servir.Enabled = true;
-                mBtnConnexionRobot.Enabled = false;
-            });
-           
-        }
 
         // BOUTON DE SUPPRESSION DES COMMANDES DISPONIBLES DANS LA TABLE COMMANDE
         private void Btn_ResetCommande_Click(object sender, EventArgs e)
         {
+            LBX_WaitingList.SelectedIndex = -1;
             if (numcommande.Count != 0)
             {
                 DialogResult dialogResult = MessageBox.Show("Êtes-vous certain de vouloir vider la liste de commande?", "Confirmation", MessageBoxButtons.YesNo);
@@ -287,32 +159,6 @@ namespace ServeurBarman
                     base2Donnees.SupprimerCommande();
                 }
             }
-            else
-            {
-                welcomePage1.activiteRobot = "Connexion robot impossible";
-            }
-        }
-
-        private void timer2_Tick(object sender, EventArgs e)
-        {
-            if (lbFinishiCommande.Location.X == 0)
-            {
-                compteur = 0;
-                lbFinishiCommande.Location = new Point(pnlDonnees.Width - compteur, lbFinishiCommande.Location.Y);
-                compteur++;
-            }
-            else
-            {
-                lbFinishiCommande.Location = new Point(pnlDonnees.Width - compteur, lbFinishiCommande.Location.Y);
-                compteur++;
-            }
-        }
-
-        // ARRET D'URGENCE DU ROBOT LORSQUE LE BOUTON EST CLICKÉ 
-        private void pbx_Halt_Click(object sender, EventArgs e)
-        {
-            if (estConnecté)
-                robot.Halt();
         }
 
         // FERME LA CONNEXION À LA BASE DE DONNÉES
@@ -320,19 +166,24 @@ namespace ServeurBarman
         {
             this.Close();
         }
-        private Task serviceClient = Task.Delay(0);
-        private Task arreter = Task.Delay(0);
-        private void btn_Servir_Click(object sender, EventArgs e)
+        
+        private void Btn_Servir_Click(object sender, EventArgs e)
         {
-             if (estConnecté)
+            if (estConnecté)
             {
-                if (!servire)
+                if (!servir)
                 {
-                    //service = new Commande();
                     enService = true;
-                    servire = true;
+                    servir = true;
                     btn_Servir.Text = "Arrêter service";
-                    serviceClient = Task.Run(() => ServirClient());
+
+                    serviceClient = Task.Run(() =>
+                    {
+                        while (enService)
+                        {
+                            service.ServirClient(numcommande);
+                        }
+                    });
                 }
                 else
                 {
@@ -342,7 +193,7 @@ namespace ServeurBarman
                         {
                             enService = false; // arrete le thread
                             while (!serviceClient.IsCompleted) { } // attend que le thread arrete
-                            servire = false; // active l'option pour repartir le thread
+                            servir = false; // active l'option pour repartir le thread
                         });
                     }
                     btn_Servir.Text = "Servir";
@@ -350,18 +201,82 @@ namespace ServeurBarman
             }
             else
             {
-                MessageBox.Show("veuillez d'abord connecter le robot svp");
+                erreur.ErreurBD = "veuillez d'abord, svp connecter le robot!";
             }
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
+        // ICI ON SUUPRIME LA COMMANDE SELECTIONNÉE
+        private void btn_Supp_Click(object sender, EventArgs e)
         {
-            //Random rand = new Random();
-            //int one = rand.Next(0, 255);
-            //int two = rand.Next(0, 255);
-            //int three = rand.Next(0, 255);
-            //int four = rand.Next(0, 255);
-            //lbFinishiCommande.ForeColor = Color.FromArgb(one, two, three, four);
+            if (LBX_WaitingList.SelectedIndex != 1)
+            {
+                var x = LBX_WaitingList.SelectedItem.ToString();
+                base2Donnees.SupprimerCommande(int.Parse(x));
+            }
+            LBX_WaitingList.SelectedIndex = -1;
+        }
+
+        private void Btn_ConnexionRobot_Click(object sender, EventArgs e)
+        {
+            Task.Run(() =>
+            {
+                // On établie la connexion avec le robot
+                //while (!robot.Connected)
+                //{
+                    robot.ConnexionRobot();
+                    Thread.Sleep(2000);
+                //}
+                estConnecté = true;
+                this.Invoke((MethodInvoker)(() => LBX_WaitingList.SelectedIndex = -1));
+                this.Invoke((MethodInvoker)(() => fbtn_Halt.Enabled = true));
+                this.Invoke((MethodInvoker)(() => btn_Servir.Enabled = true));
+                this.Invoke((MethodInvoker)(() => btn_ConnexionRobot.Enabled = false));
+            });
+        }
+
+        private void LBX_WaitingList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (LBX_WaitingList.SelectedIndex != -1)
+                btn_Supp.Visible = true;
+            else
+                btn_Supp.Visible = false;
+        }
+
+        private void Lbx_Avertissement_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            lbx_Avertissement.SelectedIndex = -1;
+        }
+
+        private void PageAccueil_Click(object sender, EventArgs e)
+        {
+            lbx_Avertissement.SelectedIndex = -1;
+        }
+
+        private void fbtn_Halt_Click(object sender, EventArgs e)
+        {
+            if (estConnecté)
+            {
+                fbtn_Halt.Enabled = false;
+                enService = false;
+                estConnecté = false;
+                btn_ConnexionRobot.Enabled = true;
+                btn_Servir.Enabled = false;
+                robot.Deconnexion();
+                btn_Servir.Text = "Servir";
+                servir = false;
+                Task.Run(() =>
+                {
+                    robot.ConnexionRobot();
+                });
+            }
+        }
+
+        private void fbtn_Halt_EnabledChanged(object sender, EventArgs e)
+        {
+            if (fbtn_Halt.Enabled)
+                fbtn_Halt.BackgroundImage = Image.FromFile(path1);
+            else
+                fbtn_Halt.BackgroundImage = Image.FromFile(path2);
         }
     }
 }
