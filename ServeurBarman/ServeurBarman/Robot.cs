@@ -266,6 +266,48 @@ namespace Bras_Robot
             JOG(pos.pos.X - PosX, pos.pos.Y - PosY, (pos.pos.Z - PosZ) + 300);
             JOG(0, 0, 0);
         }
+        private void VerserBouteille(ref Position pos, int nbshot)
+        {
+            SetSpeed(100);
+            //------Prendre bouteille------//
+            JOG(0, 0, 0); // wait
+            FuncNSleep(() => OuvrirPince(100), 1000);
+
+            JOG(pos.X - PosX, pos.Y - PosY, (pos.Z - PosZ) + 280);
+            SetSpeed(75);
+            JOG(pos.X - PosX, pos.Y - PosY, pos.Z - PosZ);
+
+            JOG(0, 0, 0); // wait
+            FuncNSleep(() => FermerPince(100), 2000);
+
+            JOG(0, 0, 320);
+
+            //------Apporter le bouteille a la station de travail------//
+            for (int i = 0; i < nbshot; ++i)
+            {
+                var verre = new Position(shooterCupFin[i].X - 5, shooterCupFin[i].Y + 85, shooterCupFin[i].Z + 235); ;
+                JOG(verre.X - PosX, verre.Y - PosY, 0);
+                JOG(0, 0, verre.Z - PosZ);
+                FuncNSleep(() => JOG(0, 0, 0), 2000);
+                //------Verser------//
+                SetSpeed(7);
+                FuncNSleep(() => DeplacerMainPriv(130), 7000);
+                SetSpeed(75);
+                FuncNSleep(() => DeplacerMainPriv(-130), 500);
+                SetSpeed(50);
+            }
+
+            //------Rapporter la bouteille a sa place d'origine------//
+
+            JOG(0, 0, (pos.Z - PosZ) + 280);
+            JOG(pos.X - PosX, pos.Y - PosY, 0);
+            JOG(pos.X - PosX, pos.Y - PosY, pos.Z - PosZ + 1);
+
+            JOG(0, 0, 0); // wait
+            FuncNSleep(() => OuvrirPince(50), 5000);
+            JOG(pos.X - PosX, pos.Y - PosY, (pos.Z - PosZ) + 280);
+            JOG(0, 0, 0);
+        }
         private void PickUpCup(ref Position cup)
         {
             OuvrirPince(100);
@@ -334,10 +376,9 @@ namespace Bras_Robot
                 PickUpCup(ref cuptemp); // Prend le cup dans la pile
                 SetSpeed(75);
                 DeplacerMainPriv(-180);
-                --nbCup;
+                //--nbCup;
                 DropCup(ref redCupDrinkStation); // Depose le cup dans la station de travail
-                var listeDrink = positions.ToList();
-                foreach (var position in listeDrink) // Verse les bouteille une par une
+                foreach (var position in positions) // Verse les bouteille une par une
                 {
                     var p = position;
                     VerserBouteille(ref p);
@@ -348,6 +389,73 @@ namespace Bras_Robot
             });
         }
         #endregion
+
+        #region Shooter
+        private Task ShooterOperation(Position position, int nbShooter)
+        {
+            return Task.Run(() =>
+            {
+                while (nbShooter > 0)
+                {
+                    int nb;
+                    if (nbShooter > 2)
+                    {
+                        nb = 2;
+                        nbShooter -= 2;
+                    }
+                    else
+                    {
+                        nb = 1;
+                        nbShooter--;
+                    }
+
+                    //------Prépare le bras------//
+                    FuncNSleep(() => GoToStart(), 2000);
+                    SetSpeed(50);
+                    FuncNSleep(() => serialPort.Write("OPEN 100\r"), 200);
+
+                    for (int i = 0; i < nb; ++i)
+                    {
+                        GoToStart(); // Se met un position de debart
+                        Position cuptemp = new Position(redCupStackStation.X, redCupStackStation.Y, redCupStackStation.Z + (nbCup * 5));
+                        PickUpCup(ref cuptemp); // Prend le cup dans la pile
+                        SetSpeed(75);
+                        DeplacerMainPriv(-180);
+
+                        cuptemp = new Position(shooterCupFin[i].X, shooterCupFin[i].Y, -200);
+                        FuncNSleep(() => VersPosition(ref cuptemp), 500);
+
+                        cuptemp = new Position(shooterCupFin[i].X, shooterCupFin[i].Y, shooterCupFin[i].Z);
+                        FuncNSleep(() => VersPosition(ref cuptemp), 1500);
+                        FuncNSleep(() => serialPort.Write("OPEN 100\r"), 2000);
+                        cuptemp = new Position(shooterCupFin[i].X, shooterCupFin[i].Y, -200);
+                        FuncNSleep(() => VersPosition(ref cuptemp), 500);
+                    }
+                    GoToStart();
+                    var temp = position;
+                    VerserBouteille(ref temp, nb);
+                }
+
+            });
+        }
+
+        private Position[] shooterCupFin = new Position[2]
+        {
+            new Position(125, -60, -385),
+            new Position(125,50,-385)
+        };
+
+        public bool MakeShooter(Position position, int nbShooter)
+        {
+            if (task.IsCompleted && position != null && !Calibration)
+            {
+                task = ShooterOperation(position, nbShooter);
+                return true;
+            }
+            return false;
+        }
+        #endregion
+
         //retourne si il accepte de faire l'operation ou non
         public bool MakeDrink(List<(Position pos, int nbShots)> positions)
         {

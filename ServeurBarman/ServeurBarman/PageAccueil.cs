@@ -220,11 +220,11 @@ namespace ServeurBarman
             Task.Run(() =>
             {
                 // On établie la connexion avec le robot
-                while (!robot.Connected)
-                {
+                //while (!robot.Connected)
+                //{
                     robot.ConnexionRobot();
                     Thread.Sleep(2000);
-                }
+                //}
                 estConnecté = true;
                 this.Invoke((MethodInvoker)(() => LBX_WaitingList.SelectedIndex = -1));
                 this.Invoke((MethodInvoker)(() => fbtn_Halt.Enabled = true));

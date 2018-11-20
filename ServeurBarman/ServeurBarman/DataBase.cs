@@ -431,9 +431,9 @@ namespace ServeurBarman
                     if (!robot.EnMarche())
                     {
                         var x = commande.Ingredients(numeroCommande);
-                        robot.MakeShooterTest(x[0].Item1, x[0].Item2);
+                        robot.MakeShooter(x[0].Item1, x[0].Item2);
 
-                        base2Donnees.SupprimerCommande(numeroCommande);
+                        
 
                         // Afficher la commande en cours dans le UI
                         CommandeEnCours = numeroCommande.ToString();
@@ -442,6 +442,8 @@ namespace ServeurBarman
                         vocal.SpeakAsync("Commande numéro " + commandeEnCours + " en cours");
                     }
                     while (robot.EnMarche()) ;
+
+                    base2Donnees.SupprimerCommande(numeroCommande);
 
                     // la voix lorsque commande terminée
                     vocal.Speak("Commande numéro " + commandeEnCours + " terminée");
@@ -452,7 +454,6 @@ namespace ServeurBarman
                 else
                 {
                     base2Donnees.ErreurBD = "Manque de verre à shooter";
-
                 }
             }
         }
@@ -471,7 +472,6 @@ namespace ServeurBarman
                             var x = commande.Ingredients(numeroCommande);
                             robot.MakeDrink(x); // commande normale
 
-                            base2Donnees.SupprimerCommande(numeroCommande);
                         
                             CommandeEnCours = numeroCommande.ToString();
 
@@ -479,8 +479,11 @@ namespace ServeurBarman
                             vocal.SpeakAsync("Commande numéro " + commandeEnCours + " en cours");
                         }
                         while (robot.EnMarche());
-                        // la voix de la commande terminée
-                        vocal.Speak("Commande numéro " + commandeEnCours + " terminée");
+
+                    base2Donnees.SupprimerCommande(numeroCommande);
+
+                    // la voix de la commande terminée
+                    vocal.Speak("Commande numéro " + commandeEnCours + " terminée");
                         // Enlever la commande en cours dans le UI
                         CommandeEnCours = "";
                     }
