@@ -2248,6 +2248,7 @@ public class MainActivity extends AppCompatActivity {
         TextView drinkTXT=findViewById(R.id.drink_TXT);
         TextView shooterTXT=findViewById(R.id.shooter_TXT);
         TextView panierTXT=findViewById(R.id.panier_TXT);
+        TextView glisserTXT=findViewById(R.id.glisser_TXT);
 
         optionsTXT.setTextColor(color);
         infosTXT.setTextColor(color);
@@ -2256,6 +2257,7 @@ public class MainActivity extends AppCompatActivity {
         drinkTXT.setTextColor(color);
         shooterTXT.setTextColor(color);
         panierTXT.setTextColor(color);
+        glisserTXT.setTextColor(color);
     }
 
     void changeRadioButtonColor(ColorStateList color)

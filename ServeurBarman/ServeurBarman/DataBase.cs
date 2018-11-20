@@ -19,51 +19,27 @@ namespace ServeurBarman
     /// </summary>
     public class DataBase
     {
+        /// <summary>
+        /// Instance de la classe DataBase
+        /// </summary>
         public static readonly DataBase instance_bd = new DataBase();
-
-        string erreurBD;
-        List<(int, int)> numcommande;
-
-        public event EventHandler onErreurBD_Detectee;
-        public event EventHandler onCommandeChange;
-
-        public List<(int, int)> Numcommande
-        {
-            get=>numcommande;
-            set
-            {
-                if (value == null)
-                    throw new ArgumentNullException();
-                numcommande = value;
-                onCommandeChange.Invoke(this, EventArgs.Empty);
-            }
-        }
 
         /// <summary>
         /// Obtient l'état de la base de données
         /// </summary>
         public OracleConnection EtatBaseDonnées { get; private set; }
-        public string ErreurBD
-        {
-            get => erreurBD;
-            set
-            {
-                if (value == null)
-                    throw new ArgumentNullException();
-
-                erreurBD = value;
-                onErreurBD_Detectee?.Invoke(this, EventArgs.Empty);
-            }
-        }
 
         /// <summary>
-        /// Constructeur privé pour singleton
+        /// Constructeur privé de la classe DataBase
         /// </summary>
         private DataBase()
         {
             EtatBaseDonnées = new OracleConnection();
         }
 
+        /// <summary>
+        /// Constructeur static de la classe DataBase
+        /// </summary>
         static DataBase() { }
 
         /// <summary>
@@ -95,6 +71,13 @@ namespace ServeurBarman
             EtatBaseDonnées.Close();
         }
 
+        /// <summary>
+        /// vérifie si le ou les ingrédient(s) constituant la commande
+        /// est/sont disponible(s) 
+        /// </summary>
+        /// <param name="numerocommande"> numéro de la commande</param>
+        /// <returns>Retourne true, si la commande est disponible; 
+        /// dans le cas contraire false</returns>
         public bool Ingredient_Est_Disponible(int numerocommande)
         {
             List<object> listeIngredient = new List<object>();
@@ -175,7 +158,14 @@ namespace ServeurBarman
             catch (Exception sel) { MessageBox.Show(sel.Message.ToString()); }
             return nombreShooter;
         }
-
+        /// <summary>
+        /// Vérifie si le nombre de verres à shooter est supérieur ou égale
+        /// au nombre de verre indispensable pour exécuter la commande.
+        /// </summary>
+        /// <param name="numcommnde">numéro de la commande</param>
+        /// <returns>Retourne true, si le nombre de verre dans la base de données 
+        /// est supérieur ou éagle au de verres selon la commande,
+        /// sinon retourne false.</returns>
         public bool VerreShooterSuffisant(int numcommnde)
         {
             int val = 0;
@@ -253,11 +243,11 @@ namespace ServeurBarman
 
 
         /// <summary>
-        /// Permet de modifier le nombre de verres de shooter à la table shooter de la base de données
+        /// Permet d'ajouter des verres de shooter à la table shooter de la base de données
         /// </summary>
         /// <param name="nombre">nombre de verres de shooter à ajouter à la table shooter</param>
         /// <exception cref="Exception">Lance une exception si la table shooter n'existe pas</exception>
-        /// <seealso cref="DataBase.AjouterIngredients(int)"/> Ajouter des ingrédients
+        /// <seealso cref="DataBase.AjouterIngredients(List{string})"/> Ajouter des ingrédients
         public void ModifierShooter(ref int nombre)
         {
             try
@@ -283,7 +273,7 @@ namespace ServeurBarman
         /// <param name="ingredients">Une collection contenant toutes les informations nécessaires sur l'ingrédient à
         /// ajouter, à savoir le code de la bouteille, le nom, les positions (x,yet z) et la quantité du liquide</param>
         /// <exception cref="Exception">Lance une exception si l'un des éléments de la liste présente une erreur</exception>
-        /// <seealso cref="DataBase.ModifierShooter(int)"/> Ajouter des verres de shooter
+        /// <seealso cref="DataBase.ModifierShooter(ref int)"/> Ajouter des verres de shooter
         public void AjouterIngredients(List<string> ingredients)
         {
             try
@@ -310,7 +300,7 @@ namespace ServeurBarman
         /// Cette méthode permet de supprimer toutes les commandes de la table Commande
         /// </summary>
         /// <exception cref="Exception">Lève une exception si la table commande n'existe pas</exception>
-        /// <see cref="DataBase.SupprimerCommande(string)"/> Pour supprimer la commande dont le numero est en paramètre
+        /// <see cref="DataBase.SupprimerCommande(int)"/> Pour supprimer la commande dont le numero est en paramètre
         public void SupprimerCommande()
         {
             try
@@ -327,6 +317,7 @@ namespace ServeurBarman
         /// </summary>
         /// <exception cref="Exception">Lève une exception si la table commande n'existe pas</exception>
         /// <see cref="DataBase.SupprimerCommande()"/> Pour supprimer toutes les commandes disponibles
+        /// <param name="num"> Numéro de la commande à supprimer</param>
         public void SupprimerCommande(int num)
         {
             try
@@ -340,90 +331,70 @@ namespace ServeurBarman
         }
     }
 
-
     /// <summary>
     /// Classe contenant des méthodes indispensables pour passer une commande
     /// </summary>
     public class Commande
     {
-        private SpecificateurCommande commande;
-        private CRS_A255 robot;
+        SpecificateurCommande commande;
+        CRS_A255 robot;
         DataBase base2Donnees;
-        //SpeechSynthesizer vocal;
-
-        ///// <summary>
-        ///// Constructeur paramétrique,
-        ///// permet de construire une commande en fonction de son numéro identificateur
-        ///// </summary>
-        ///// <param name="num">Le numéro idificateur de commande, soit 0 pour normale et 1 pour shooter</param>
-        //public Commande(int num)
-        //{
-        //    if (num == 0)
-        //        commande = new Commande_Normale();
-        //    else
-        //        commande = new Shooter();
-        //}
-
-        //public Commande()
-        //{
-        //    ro
-        //}
-
-        string commandeEnCours;
-
-        public event EventHandler onCommandeEnCours;
-
+        Erreurs erreur;
+        
         /// <summary>
-        /// Obtient l'état de la base de données
+        /// Constructeur paramétrique,
+        /// permet de construire une commande en fonction de son numéro identificateur
         /// </summary>
-        public string CommandeEnCours
+        public Commande()
         {
-            get => commandeEnCours;
-            set
-            {
-                if (value == null)
-                    throw new ArgumentNullException();
-
-                commandeEnCours = value;
-                onCommandeEnCours?.Invoke(this, EventArgs.Empty);
-            }
+            robot = CRS_A255.Instance;
+            base2Donnees = DataBase.instance_bd;
+            erreur = Erreurs.InstacnceErreur;
         }
 
-
-        public void ServirClient(List<(int,int)> e)
+        ///// <summary>
+        ///// Cette méthode réalise une opération bien précise, à
+        /// savoir différencier les commandes et appeler le bon objet en vu de réaliser 
+        /// l'opération de service.
+        ///// </summary>
+        ///<param name="lstingredient">La liste des ingrédients constituant la commande
+        /// à servir </param>
+        public void ServirClient(List<(int,int)> lstingredient)
         {
-            using (SpeechSynthesizer vocal = new SpeechSynthesizer())
+            using (SpeechSynthesizer speech = new SpeechSynthesizer())
             {
-                robot = CRS_A255.Instance;
-                base2Donnees = DataBase.instance_bd;
-
-                if (e.Count >= 1)
+                if (lstingredient.Count >= 1)
                 {
-                    if (base2Donnees.Ingredient_Est_Disponible(e[0].Item1))
+                    if (base2Donnees.Ingredient_Est_Disponible(lstingredient[0].Item1))
                     {
-                        switch (e[0].Item2)
+                        switch (lstingredient[0].Item2)
                         {
                             case 1:
-                                VerifierCommandeShooter(e[0].Item1);
+                                VerifierCommandeShooter(lstingredient[0].Item1);
                                 break;
                             case 0:
-                                VerifierCommandeNormale(e[0].Item1);
+                                VerifierCommandeNormale(lstingredient[0].Item1);
                                 break;
                         }
                     }
                     else
                     {
-                        base2Donnees.ErreurBD = "Commande numéro " + e[0].Item1.ToString() + " non valide";
-                        vocal.SpeakAsync("Commande numéro " + e[0].Item1.ToString() + " non valide");
-                        base2Donnees.SupprimerCommande(e[0].Item1);
+                        erreur.ErreurBD = "Commande numéro " + lstingredient[0].Item1.ToString() + " non valide";
+                        speech.SpeakAsync("Commande numéro " + lstingredient[0].Item1.ToString() + " non valide");
+                        base2Donnees.SupprimerCommande(lstingredient[0].Item1);
                     }
                 }
             }
         }
 
+        /// <summary>
+        /// Vérifie la commande de type shooter tout en s'assurant de la disponibilité des verres,
+        /// et de l'ingrédient
+        /// </summary>
+        /// <param name="numeroCommande">Numéro de la commande à exécuter</param>
         private void VerifierCommandeShooter(int numeroCommande)
         {
-            using (SpeechSynthesizer vocal = new SpeechSynthesizer())
+            using (SpeechSynthesizer speech = new SpeechSynthesizer())
             {
                 if (int.Parse(base2Donnees.NombreDeShooter()) != 0)
                 {
@@ -435,13 +406,12 @@ namespace ServeurBarman
 
                         
 
-                        // Afficher la commande en cours dans le UI
-                        CommandeEnCours = numeroCommande.ToString();
-
-                        // la voix de commande en cours
-                        vocal.SpeakAsync("Commande numéro " + commandeEnCours + " en cours");
+                        erreur.CommandeEnCours = numeroCommande.ToString();
+                        speech.SpeakAsync("Commande numéro " + numeroCommande.ToString() + " en cours");
+                        erreur.ErreurBD = "Commande numéro " + numeroCommande.ToString() + " en cours";
                     }
                     while (robot.EnMarche()) ;
+<<<<<<< HEAD
 
                     base2Donnees.SupprimerCommande(numeroCommande);
 
@@ -454,24 +424,40 @@ namespace ServeurBarman
                 else
                 {
                     base2Donnees.ErreurBD = "Manque de verre à shooter";
+=======
+                    erreur.ErreurBD = "Commande numéro " + numeroCommande.ToString() + " terminée";
+                    // la voix de la commande terminée
+                    speech.Speak("Commande numéro " + numeroCommande.ToString() + " terminée");
+                    // Enlever la commande en cours dans le UI
+                    erreur.CommandeEnCours = "";
+                }
+                else
+                {
+                    erreur.ErreurBD = "Manque de verre à shooter";
+>>>>>>> Développement
                 }
             }
         }
 
+        /// <summary>
+        /// Vérifie la commande de type commande normale tout en s'assurant de la disponibilité des verres,
+        /// et des ingrédients constituant la commande
+        /// </summary>
+        /// <param name="numeroCommande">Numéro de la commande à exécuter</param>
         private void VerifierCommandeNormale(int numeroCommande)
         {
-            using (SpeechSynthesizer vocal = new SpeechSynthesizer())
+            using (SpeechSynthesizer speech = new SpeechSynthesizer())
             {
-                
-                    if (int.Parse(base2Donnees.NombreDeVerreRouge()) != 0)
+                if (int.Parse(base2Donnees.NombreDeVerreRouge()) != 0)
+                {
+                    commande = new Commande_Normale(); // à revoir
+
+                    if (!robot.EnMarche())
                     {
-                        commande = new Commande_Normale();
+                        var x = commande.Ingredients(numeroCommande);
+                        robot.MakeDrink(x); // commande normale
 
-                        if (!robot.EnMarche())
-                        {
-                            var x = commande.Ingredients(numeroCommande);
-                            robot.MakeDrink(x); // commande normale
-
+<<<<<<< HEAD
                         
                             CommandeEnCours = numeroCommande.ToString();
 
@@ -490,40 +476,49 @@ namespace ServeurBarman
                     else
                     {
                         base2Donnees.ErreurBD = "Manque de verres rouge";
+=======
+                        base2Donnees.SupprimerCommande(numeroCommande);
+
+                        // la voix de commande en cours
+                        speech.SpeakAsync("Commande numéro " + numeroCommande.ToString() + " en cours");
+                        erreur.ErreurBD = "Commande numéro " + numeroCommande.ToString() + " en cours";
+                        erreur.CommandeEnCours = numeroCommande.ToString();
+>>>>>>> Développement
                     }
-                
+                    while (robot.EnMarche()) ;
+                    erreur.ErreurBD = "Commande numéro " + numeroCommande.ToString() + " terminée";
+                    // la voix de la commande terminée
+                    speech.Speak("Commande numéro " + numeroCommande.ToString() + " terminée");
+                    // Enlever la commande en cours dans le UI
+                    erreur.CommandeEnCours = "";
+
+                }
+                else
+                {
+                    erreur.ErreurBD = "Manque de verres rouge";
+                }
             }
         }
-
-        ///// <summary>
-        ///// Cette méthode permet de déterminer le type réel d'une commande
-        ///// </summary>
-        ///// <returns>Retourne  le type de la commande, soit normale ou shooter</returns>
-        //public SpecificateurCommande TypeReel()
-        //{
-        //    return commande.TypeReel();
-        //}
-
-        /// <summary>
-        /// Cette méthode permet de lister tous les ingrédients constituant une commande
-        /// </summary>
-        /// <param name="numcom">Numéro de  commande</param>
-        /// <returns>Collection contenant la position et la quantité de la commande</returns>
-        //public List<(Position, int)> ListerIngredients(int numcom)
-        //{
-        //    return commande.Ingredients(numcom);
-        //}
     }
 
-    // CLASS QUI GÈRE LES COMMANDES PASSÉES PAR LE CLIENT ANDROID(Interface)
+    /// <summary>
+    /// Classe abstraite pemettant de spécifier la commande
+    /// </summary>
     public abstract class SpecificateurCommande
     {
+        /// <summary>
+        /// Partage l'instance de DataBase aux classes héritière que sont
+        /// <c>SpecificateurCommande.Commande_Normale</c> et <c>SpecificateurCommande.Shooter</c>
+        /// </summary>
         protected DataBase Connexion { get; } = DataBase.instance_bd;
-        // ENUMÈRE LA LISTE DES INGRÉDIENTS DE LA COMMANDE DU CLIENT ANDROID
+
+        /// <summary>
+        /// Méthode abstraite, dont l'implémentaion dépend du type de commande à servir,
+        /// soit commande normale ou shooter.
+        /// </summary>
+        /// <param name="numcom">Numéro de  commande</param>
+        /// <returns>Retourne une collection contenant la liste des ingrédients</returns>
         public abstract List<(Position, int)> Ingredients(int numcom);
-        // OBTIENT LE TYPE RÉEL DE LA COMMANDE,
-        // SOIT (NORMALE OU SHOOTER)
-        //public abstract SpecificateurCommande TypeReel();
     }
 
     /// <summary>
@@ -533,10 +528,22 @@ namespace ServeurBarman
     class Shooter : SpecificateurCommande
     {
         List<(Position, int)> ingredients = new List<(Position, int)>();
+
+        /// <summary>
+        /// Constructeur par defaut,
+        /// permet de construire un objet de type Shooter
+        /// </summary>
         public Shooter() : base()
         {
 
         }
+
+        /// <summary>
+        /// Cette méthode forunie la liste de tous les ingrédients constituant la commande
+        /// dont le numéro est passé en paramètre
+        /// </summary>
+        /// <param name="numcom">Numéro de  commande</param>
+        /// <returns>Retourne une collection contenant la liste des ingrédients</returns>
         public override List<(Position, int)> Ingredients(int numcom)
         {
             string cmd = "select e.POSITIONX,e.POSITIONY,e.POSITIONZ,c.QTY from ingredient e inner join commande c on e.codebouteille=c.ingredient where c.numcommande=" + numcom.ToString();
@@ -556,13 +563,7 @@ namespace ServeurBarman
 
             return ingredients;
         }
-
-        //public override SpecificateurCommande TypeReel()
-        //{
-        //    return new Shooter();
-        //}
     }
-
 
     /// <summary>
     /// Classe gérant les commandes normales
@@ -571,15 +572,21 @@ namespace ServeurBarman
     public class Commande_Normale : SpecificateurCommande
     {
         List<(Position, int)> ingredients = new List<(Position, int)>();
+        /// <summary>
+        /// Constructeur par defaut,
+        /// permet de construire un objet de type Commande_Normale
+        /// </summary>
         public Commande_Normale() : base()
         {
 
         }
-        //public override SpecificateurCommande TypeReel()
-        //{
-        //    return new Commande_Normale();
-        //}
 
+        /// <summary>
+        /// Cette méthode forunie la liste de tous les ingrédients constituant la commande
+        /// dont le numéro est passé en paramètre
+        /// </summary>
+        /// <param name="numcom">Numéro de  commande</param>
+        /// <returns>Retourne une collection contenant la liste des ingrédients</returns>
         public override List<(Position, int)> Ingredients(int numcom)
         {
             string cmd = "select e.POSITIONX,e.POSITIONY,e.POSITIONZ,c.QTY from ingredient e inner join commande c on e.codebouteille=c.ingredient where numcommande=" + numcom.ToString();
@@ -598,6 +605,91 @@ namespace ServeurBarman
             catch (Exception sel) { MessageBox.Show(sel.Message.ToString()); }
 
             return ingredients;
+        }
+    }
+
+    /// <summary>
+    /// La classe Erreurs de type singleton.
+    /// Elle contient les évènements déclenchés uniquement lorsque
+    /// lorsqu'un avertissement de base de données et/ou commande est détecté.
+    /// </summary>
+    public sealed class Erreurs
+    {
+        private Erreurs() { }
+        string erreurBD;
+        List<(int, int)> numcommande;
+        string commandeEnCours;
+
+        /// <summary>
+        /// Évènement déclenché lorsqu'une commande est en cours.
+        /// </summary>
+        public event EventHandler onCommandeEnCours;
+
+        /// <summary>
+        /// Évènement déclenché lorsqu'une erreur de type BD est détectée.
+        /// </summary>
+        public event EventHandler onErreurBD_Detectee;
+
+        /// <summary>
+        /// Évènement déclenché lorsqu'un changement de commande a lieu.
+        /// </summary>
+        public event EventHandler onCommandeChange;
+
+        private static readonly Erreurs instance = new Erreurs();
+
+        /// <summary>
+        /// Instance de la classe Erreurs
+        /// </summary>
+        public static Erreurs InstacnceErreur { get { return instance; } }
+
+        /// <summary>
+        /// Déclenche l'évènement <c>onCommandeChange</c>
+        /// si et seulement si le numéro de commande à changer
+        /// </summary>
+        public List<(int, int)> Numcommande
+        {
+            get => numcommande;
+            set
+            {
+                if (value == null)
+                    throw new ArgumentNullException();
+                numcommande = value;
+                onCommandeChange.Invoke(this, EventArgs.Empty);
+            }
+        }
+
+        /// <summary>
+        /// Déclenche l'évènement <c>onErreurBD_Detectee</c>
+        /// si et seulement si une erreur survient dans la base de données
+        /// </summary>
+        public string ErreurBD
+        {
+            get => erreurBD;
+            set
+            {
+                if (value == null)
+                    throw new ArgumentNullException();
+
+                erreurBD = value;
+                onErreurBD_Detectee?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
+        /// <summary>
+        /// Déclenche l'évènement <c>onCommandeEnCours</c>
+        /// si et seulement si la commande courante présente une erreur
+        /// </summary>
+        public string CommandeEnCours
+        {
+            get => commandeEnCours;
+            set
+            {
+                if (value == null)
+                    throw new ArgumentNullException();
+
+                commandeEnCours = value;
+                onCommandeEnCours?.Invoke(this, EventArgs.Empty);
+            }
         }
     }
 }

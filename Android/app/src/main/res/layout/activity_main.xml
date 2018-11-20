@@ -8,7 +8,9 @@
     android:background="@color/blanc"
     tools:context=".MainActivity">
 
-    <include layout="@layout/custom_list_drink" />
+    <include
+        android:id="@+id/include"
+        layout="@layout/custom_list_drink" />
 
     <include layout="@layout/custom_list_ing" />
 
@@ -170,7 +172,7 @@
             android:drawablePadding="6dp"
             android:gravity="left|center"
             android:padding="6dp"
-            android:text="Ajouter"
+            android:text="Accepter"
             android:textColor="#000"
             android:textSize="10sp"
             android:visibility="visible"
@@ -667,6 +669,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/backgroundFooter_TView"
         app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/glisser_TXT"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/glisser_str"
+        app:layout_constraintBottom_toBottomOf="@+id/backgroundFooter_TView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.831" />
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/connexion_LYT"
