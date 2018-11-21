@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO.Ports;
 using System.IO;
+using ServeurBarman;
 
 namespace Bras_Robot
 {
@@ -318,7 +319,7 @@ namespace Bras_Robot
             VersPosition(ref cup);
 
             JOG(0, 0, 0); // wait
-            FuncNSleep(() => FermerPince(15), 8000);
+            FuncNSleep(() => FermerPince(15), 10000);
             FuncNSleep(() => VersPosition(ref RedCupHauteur), 2000);
 
             SetSpeed(50);
@@ -417,8 +418,12 @@ namespace Bras_Robot
                     for (int i = 0; i < nb; ++i)
                     {
                         GoToStart(); // Se met un position de debart
+
                         Position cuptemp = new Position(redCupStackStation.X, redCupStackStation.Y, redCupStackStation.Z + (nbCup * 5));
                         PickUpCup(ref cuptemp); // Prend le cup dans la pile
+
+                        nbCup--;
+
                         SetSpeed(75);
                         DeplacerMainPriv(-180);
 
@@ -461,7 +466,7 @@ namespace Bras_Robot
         {
             if (task.IsCompleted && positions.Capacity != 0 && !Calibration)
             {
-                task=DrinkOperation(positions);
+                task = DrinkOperation(positions);
                 return true;
             }
             return false;
@@ -469,7 +474,7 @@ namespace Bras_Robot
         //retourne si il accepte de faire l'operation ou non
         public bool MakeShooterTest(Position position, int nbShooter)
         {
-            if(task.IsCompleted && !Calibration)
+            if (task.IsCompleted && !Calibration)
             {
                 task = Task.Delay(10000);
                 return true;
@@ -517,7 +522,7 @@ namespace Bras_Robot
                     DeplacerMainPriv(180);
                 }
             });
-            
+
         }
     }
 }
