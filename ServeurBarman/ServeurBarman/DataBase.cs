@@ -402,7 +402,7 @@ namespace ServeurBarman
                     if (!robot.EnMarche())
                     {
                         var x = commande.Ingredients(numeroCommande);
-                        robot.MakeShooterTest(x[0].Item1, x[0].Item2);
+                        robot.MakeShooter(x[0].Item1, x[0].Item2); // Commande shooter
 
                         erreur.CommandeEnCours = numeroCommande.ToString();
                         speech.SpeakAsync("Commande numéro " + numeroCommande.ToString() + " en cours");
