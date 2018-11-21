@@ -28,32 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.mLB_NombreDeShooter = new MetroFramework.Controls.MetroLabel();
             this.mLB_NombreDeVerre = new MetroFramework.Controls.MetroLabel();
             this.mLB_NombreDeBouteille = new MetroFramework.Controls.MetroLabel();
             this.mLB_CustomNumber = new MetroFramework.Controls.MetroLabel();
-            this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // mLB_NombreDeShooter
-            // 
-            this.mLB_NombreDeShooter.FontSize = MetroFramework.MetroLabelSize.Tall;
-            this.mLB_NombreDeShooter.FontWeight = MetroFramework.MetroLabelWeight.Bold;
-            this.mLB_NombreDeShooter.Location = new System.Drawing.Point(245, 165);
-            this.mLB_NombreDeShooter.Name = "mLB_NombreDeShooter";
-            this.mLB_NombreDeShooter.Size = new System.Drawing.Size(68, 25);
-            this.mLB_NombreDeShooter.TabIndex = 19;
-            this.mLB_NombreDeShooter.Text = "                   ";
-            this.mLB_NombreDeShooter.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // mLB_NombreDeVerre
             // 
             this.mLB_NombreDeVerre.FontSize = MetroFramework.MetroLabelSize.Tall;
             this.mLB_NombreDeVerre.FontWeight = MetroFramework.MetroLabelWeight.Bold;
-            this.mLB_NombreDeVerre.Location = new System.Drawing.Point(245, 116);
+            this.mLB_NombreDeVerre.Location = new System.Drawing.Point(267, 141);
             this.mLB_NombreDeVerre.Name = "mLB_NombreDeVerre";
             this.mLB_NombreDeVerre.Size = new System.Drawing.Size(68, 25);
             this.mLB_NombreDeVerre.TabIndex = 20;
@@ -64,7 +51,7 @@
             // 
             this.mLB_NombreDeBouteille.FontSize = MetroFramework.MetroLabelSize.Tall;
             this.mLB_NombreDeBouteille.FontWeight = MetroFramework.MetroLabelWeight.Bold;
-            this.mLB_NombreDeBouteille.Location = new System.Drawing.Point(245, 66);
+            this.mLB_NombreDeBouteille.Location = new System.Drawing.Point(267, 91);
             this.mLB_NombreDeBouteille.Name = "mLB_NombreDeBouteille";
             this.mLB_NombreDeBouteille.Size = new System.Drawing.Size(68, 25);
             this.mLB_NombreDeBouteille.TabIndex = 21;
@@ -75,28 +62,18 @@
             // 
             this.mLB_CustomNumber.FontSize = MetroFramework.MetroLabelSize.Tall;
             this.mLB_CustomNumber.FontWeight = MetroFramework.MetroLabelWeight.Bold;
-            this.mLB_CustomNumber.Location = new System.Drawing.Point(245, 15);
+            this.mLB_CustomNumber.Location = new System.Drawing.Point(267, 40);
             this.mLB_CustomNumber.Name = "mLB_CustomNumber";
             this.mLB_CustomNumber.Size = new System.Drawing.Size(68, 25);
             this.mLB_CustomNumber.TabIndex = 22;
             this.mLB_CustomNumber.Text = "                   ";
             this.mLB_CustomNumber.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(97, 168);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(145, 18);
-            this.label4.TabIndex = 15;
-            this.label4.Text = "Nombre de shooters";
-            // 
             // label3
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(115, 119);
+            this.label3.Location = new System.Drawing.Point(137, 144);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(127, 18);
             this.label3.TabIndex = 16;
@@ -106,7 +83,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(94, 68);
+            this.label2.Location = new System.Drawing.Point(116, 93);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(148, 18);
             this.label2.TabIndex = 17;
@@ -116,7 +93,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(13, 18);
+            this.label1.Location = new System.Drawing.Point(35, 43);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(229, 18);
             this.label1.TabIndex = 18;
@@ -126,11 +103,9 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.mLB_NombreDeShooter);
             this.Controls.Add(this.mLB_NombreDeVerre);
             this.Controls.Add(this.mLB_NombreDeBouteille);
             this.Controls.Add(this.mLB_CustomNumber);
-            this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -145,12 +120,9 @@
         }
 
         #endregion
-
-        private MetroFramework.Controls.MetroLabel mLB_NombreDeShooter;
         private MetroFramework.Controls.MetroLabel mLB_NombreDeVerre;
         private MetroFramework.Controls.MetroLabel mLB_NombreDeBouteille;
         private MetroFramework.Controls.MetroLabel mLB_CustomNumber;
-        private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;

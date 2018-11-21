@@ -396,7 +396,7 @@ namespace ServeurBarman
         {
             using (SpeechSynthesizer speech = new SpeechSynthesizer())
             {
-                int nbVerre = int.Parse(base2Donnees.NombreDeShooter());
+                int nbVerre = int.Parse(base2Donnees.NombreDeVerreRouge());
 
                 if (nbVerre != 0)
                 {
@@ -405,7 +405,7 @@ namespace ServeurBarman
                     {
                         var x = commande.Ingredients(numeroCommande);
 
-                        if(nbVerre < x[0].Item2)
+                        if(nbVerre < x.Count)
                         {
                             erreur.ErreurBD = "Manque de verre à shooter";
                             return;
