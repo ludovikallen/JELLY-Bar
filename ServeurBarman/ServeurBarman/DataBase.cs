@@ -402,15 +402,15 @@ namespace ServeurBarman
                     if (!robot.EnMarche())
                     {
                         var x = commande.Ingredients(numeroCommande);
-                        robot.MakeShooterTest(x[0].Item1, x[0].Item2);
-
-                        base2Donnees.SupprimerCommande(numeroCommande);
+                        robot.MakeShooter(x[0].Item1, x[0].Item2); // Commande shooter
 
                         erreur.CommandeEnCours = numeroCommande.ToString();
                         speech.SpeakAsync("Commande numéro " + numeroCommande.ToString() + " en cours");
                         erreur.ErreurBD = "Commande numéro " + numeroCommande.ToString() + " en cours";
                     }
                     while (robot.EnMarche()) ;
+                    // Suppression de lq commande
+                    base2Donnees.SupprimerCommande(numeroCommande);
                     erreur.ErreurBD = "Commande numéro " + numeroCommande.ToString() + " terminée";
                     // la voix de la commande terminée
                     speech.Speak("Commande numéro " + numeroCommande.ToString() + " terminée");
@@ -442,14 +442,14 @@ namespace ServeurBarman
                         var x = commande.Ingredients(numeroCommande);
                         robot.MakeDrink(x); // commande normale
 
-                        base2Donnees.SupprimerCommande(numeroCommande);
-
                         // la voix de commande en cours
                         speech.SpeakAsync("Commande numéro " + numeroCommande.ToString() + " en cours");
                         erreur.ErreurBD = "Commande numéro " + numeroCommande.ToString() + " en cours";
                         erreur.CommandeEnCours = numeroCommande.ToString();
                     }
                     while (robot.EnMarche()) ;
+                    // Suppression de lq commande
+                    base2Donnees.SupprimerCommande(numeroCommande);
                     erreur.ErreurBD = "Commande numéro " + numeroCommande.ToString() + " terminée";
                     // la voix de la commande terminée
                     speech.Speak("Commande numéro " + numeroCommande.ToString() + " terminée");
