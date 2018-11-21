@@ -300,13 +300,13 @@ namespace Bras_Robot
 
             //------Rapporter la bouteille a sa place d'origine------//
 
-            JOG(0, 0, (pos.Z - PosZ) + 280);
+            JOG(0, 0, (pos.Z - PosZ) + 300);
             JOG(pos.X - PosX, pos.Y - PosY, 0);
             JOG(pos.X - PosX, pos.Y - PosY, pos.Z - PosZ + 1);
 
             JOG(0, 0, 0); // wait
             FuncNSleep(() => OuvrirPince(50), 5000);
-            JOG(pos.X - PosX, pos.Y - PosY, (pos.Z - PosZ) + 280);
+            JOG(pos.X - PosX, pos.Y - PosY, (pos.Z - PosZ) + 300);
             JOG(0, 0, 0);
         }
         private void PickUpCup(ref Position cup)
@@ -390,7 +390,6 @@ namespace Bras_Robot
             });
         }
         #endregion
-
         #region Shooter
         private Task ShooterOperation(Position position, int nbShooter)
         {

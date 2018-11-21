@@ -412,7 +412,6 @@ namespace ServeurBarman
                         }
                         robot.AjouterCup(nbVerre);
                         robot.MakeShooter(x[0].Item1, x[0].Item2); // Commande shooter
-
                         erreur.CommandeEnCours = numeroCommande.ToString();
                         speech.SpeakAsync("Commande numéro " + numeroCommande.ToString() + " en cours");
                         erreur.ErreurBD = "Commande numéro " + numeroCommande.ToString() + " en cours";
@@ -453,6 +452,10 @@ namespace ServeurBarman
                         robot.AjouterCup(nbVerre);
                         var x = commande.Ingredients(numeroCommande);
                         robot.MakeDrink(x); // commande normale
+
+                        erreur.CommandeEnCours = numeroCommande.ToString();
+                        speech.SpeakAsync("Commande numéro " + numeroCommande.ToString() + " en cours");
+                        erreur.ErreurBD = "Commande numéro " + numeroCommande.ToString() + " en cours";
                     }
                     while (robot.EnMarche()) ;
                     // Suppression de lq commande
@@ -462,7 +465,6 @@ namespace ServeurBarman
                     speech.Speak("Commande numéro " + numeroCommande.ToString() + " terminée");
                     // Enlever la commande en cours dans le UI
                     erreur.CommandeEnCours = "";
-
                 }
                 else
                 {
