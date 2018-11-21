@@ -373,7 +373,6 @@ namespace Bras_Robot
             return Task.Run(() =>
             {
                 GoToStart(); // Se met un position de debart
-                nbCup = int.Parse(DataBase.instance_bd.NombreDeVerreRouge());
                 Position cuptemp = new Position(redCupStackStation.X, redCupStackStation.Y, redCupStackStation.Z + (nbCup * 5));
                 PickUpCup(ref cuptemp); // Prend le cup dans la pile
                 SetSpeed(75);
@@ -419,9 +418,12 @@ namespace Bras_Robot
                     for (int i = 0; i < nb; ++i)
                     {
                         GoToStart(); // Se met un position de debart
-                        nbCup = int.Parse(DataBase.instance_bd.NombreDeVerreRouge());
+
                         Position cuptemp = new Position(redCupStackStation.X, redCupStackStation.Y, redCupStackStation.Z + (nbCup * 5));
                         PickUpCup(ref cuptemp); // Prend le cup dans la pile
+
+                        nbCup--;
+
                         SetSpeed(75);
                         DeplacerMainPriv(-180);
 

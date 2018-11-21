@@ -396,12 +396,21 @@ namespace ServeurBarman
         {
             using (SpeechSynthesizer speech = new SpeechSynthesizer())
             {
-                if (int.Parse(base2Donnees.NombreDeShooter()) != 0)
+                int nbVerre = int.Parse(base2Donnees.NombreDeShooter());
+
+                if (nbVerre != 0)
                 {
                     commande = new Shooter();
                     if (!robot.EnMarche())
                     {
                         var x = commande.Ingredients(numeroCommande);
+
+                        if(nbVerre < x[0].Item2)
+                        {
+                            erreur.ErreurBD = "Manque de verre à shooter";
+                            return;
+                        }
+                        robot.AjouterCup(nbVerre);
                         robot.MakeShooter(x[0].Item1, x[0].Item2); // Commande shooter
 
                         erreur.CommandeEnCours = numeroCommande.ToString();
@@ -411,6 +420,7 @@ namespace ServeurBarman
                     while (robot.EnMarche()) ;
                     // Suppression de lq commande
                     base2Donnees.SupprimerCommande(numeroCommande);
+
                     erreur.ErreurBD = "Commande numéro " + numeroCommande.ToString() + " terminée";
                     // la voix de la commande terminée
                     speech.Speak("Commande numéro " + numeroCommande.ToString() + " terminée");
@@ -433,19 +443,16 @@ namespace ServeurBarman
         {
             using (SpeechSynthesizer speech = new SpeechSynthesizer())
             {
+                int nbVerre = int.Parse(base2Donnees.NombreDeVerreRouge());
                 if (int.Parse(base2Donnees.NombreDeVerreRouge()) != 0)
                 {
                     commande = new Commande_Normale(); // à revoir
 
                     if (!robot.EnMarche())
                     {
+                        robot.AjouterCup(nbVerre);
                         var x = commande.Ingredients(numeroCommande);
                         robot.MakeDrink(x); // commande normale
-
-                        // la voix de commande en cours
-                        speech.SpeakAsync("Commande numéro " + numeroCommande.ToString() + " en cours");
-                        erreur.ErreurBD = "Commande numéro " + numeroCommande.ToString() + " en cours";
-                        erreur.CommandeEnCours = numeroCommande.ToString();
                     }
                     while (robot.EnMarche()) ;
                     // Suppression de lq commande
