@@ -1274,7 +1274,7 @@ public class MainActivity extends AppCompatActivity {
                         int codeBouteille = resultSet.getInt(1);
                         String SQL;
                         if (listeNomsDrinks.contains(arrayListPanier.get(i).get("nom"))) {
-                            SQL = "INSERT INTO COMMANDE VALUES ( " + (Numcommande + i) + "," + codeBouteille + "," + quantite + "," + 0 + ")";
+                            SQL = "INSERT INTO COMMANDE VALUES ( " + (Numcommande + i+1) + "," + codeBouteille + "," + quantite + "," + 0 + ")";
                         } else {
                             SQL = "INSERT INTO COMMANDE VALUES ( " + (Numcommande) + "," + codeBouteille + "," + quantite + "," + 1 + ")";
                         }
