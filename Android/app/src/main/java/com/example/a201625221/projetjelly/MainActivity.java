@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Nombre maximum d'oz dans un drink
      */
-    Integer maxOz=12;
+    Integer maxOz=8;
 
     /**
      * Easter egg
@@ -1276,7 +1276,7 @@ public class MainActivity extends AppCompatActivity {
                         if (listeNomsDrinks.contains(arrayListPanier.get(i).get("nom"))) {
                             SQL = "INSERT INTO COMMANDE VALUES ( " + (Numcommande + i) + "," + codeBouteille + "," + quantite + "," + 0 + ")";
                         } else {
-                            SQL = "INSERT INTO COMMANDE VALUES ( " + (Numcommande + i) + "," + codeBouteille + "," + quantite + "," + 1 + ")";
+                            SQL = "INSERT INTO COMMANDE VALUES ( " + (Numcommande) + "," + codeBouteille + "," + quantite + "," + 1 + ")";
                         }
                         statement.executeUpdate(SQL);
                         stm1.close();
