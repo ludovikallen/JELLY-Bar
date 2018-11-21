@@ -220,10 +220,10 @@ namespace ServeurBarman
         {
             Task.Run(() =>
             {
-                // On établie la connexion avec le robot
-                //while (!robot.Connected)
-                //{
-                    robot.ConnexionRobot();
+            // On établie la connexion avec le robot
+            //while (!robot.Connected)
+            //{
+                robot.ConnexionRobot();
                     Thread.Sleep(2000);
                 //}
                 estConnecté = true;
