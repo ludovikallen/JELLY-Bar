@@ -105,7 +105,7 @@
             android:listSelector="@color/listSelector"
             android:paddingLeft="5dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -303,9 +303,9 @@
         <ListView
             android:id="@+id/panier_LVIEW"
             android:layout_width="592dp"
-            android:layout_height="589dp"
+            android:layout_height="455dp"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="72dp"
+            android:layout_marginTop="80dp"
             android:divider="@color/listDivider"
             android:dividerHeight="2dp"
             android:listSelector="@color/listSelector"
