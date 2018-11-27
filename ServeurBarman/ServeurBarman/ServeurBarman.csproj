@@ -79,12 +79,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AddCups.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="AddCups.Designer.cs">
-      <DependentUpon>AddCups.cs</DependentUpon>
-    </Compile>
     <Compile Include="DataBase.cs" />
     <Compile Include="Developers.cs">
       <SubType>Form</SubType>
@@ -138,9 +132,6 @@
     <None Include="Resources\Setting-icon.png" />
     <None Include="Resources\2000px-Go-home.svg.png" />
     <None Include="Resources\red-cup.jpg" />
-    <EmbeddedResource Include="AddCups.resx">
-      <DependentUpon>AddCups.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Developers.resx">
       <DependentUpon>Developers.cs</DependentUpon>
     </EmbeddedResource>

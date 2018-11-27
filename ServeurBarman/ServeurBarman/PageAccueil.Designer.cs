@@ -49,11 +49,9 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.deconnexion = new System.Windows.Forms.Button();
             this.BTN_Setting = new System.Windows.Forms.Button();
-            this.BTN_AddCup = new System.Windows.Forms.Button();
             this.BTN_Welcome = new System.Windows.Forms.Button();
             this.PBX_Logo = new System.Windows.Forms.PictureBox();
             this.fbtn_Halt = new FlashButton.FlashButton();
-            this.addCups1 = new ServeurBarman.AddCups();
             this.welcomePage1 = new ServeurBarman.WelcomePage();
             this.pnlBar.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -238,7 +236,6 @@
             this.panel1.Controls.Add(this.BTN_Developers);
             this.panel1.Controls.Add(this.deconnexion);
             this.panel1.Controls.Add(this.BTN_Setting);
-            this.panel1.Controls.Add(this.BTN_AddCup);
             this.panel1.Controls.Add(this.BTN_Welcome);
             this.panel1.Controls.Add(this.PBX_Logo);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
@@ -259,7 +256,7 @@
             this.deconnexion.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.deconnexion.Image = global::ServeurBarman.Properties.Resources.if_Log_Out_27856;
             this.deconnexion.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.deconnexion.Location = new System.Drawing.Point(2, 395);
+            this.deconnexion.Location = new System.Drawing.Point(1, 341);
             this.deconnexion.Name = "deconnexion";
             this.deconnexion.Size = new System.Drawing.Size(259, 35);
             this.deconnexion.TabIndex = 2;
@@ -276,7 +273,7 @@
             this.BTN_Setting.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.BTN_Setting.Image = ((System.Drawing.Image)(resources.GetObject("BTN_Setting.Image")));
             this.BTN_Setting.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.BTN_Setting.Location = new System.Drawing.Point(2, 332);
+            this.BTN_Setting.Location = new System.Drawing.Point(1, 276);
             this.BTN_Setting.Name = "BTN_Setting";
             this.BTN_Setting.Size = new System.Drawing.Size(260, 35);
             this.BTN_Setting.TabIndex = 2;
@@ -284,24 +281,6 @@
             this.BTN_Setting.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.BTN_Setting.UseVisualStyleBackColor = true;
             this.BTN_Setting.Click += new System.EventHandler(this.BTN_Setting_Click);
-            // 
-            // BTN_AddCup
-            // 
-            this.BTN_AddCup.FlatAppearance.BorderSize = 0;
-            this.BTN_AddCup.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Silver;
-            this.BTN_AddCup.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.BTN_AddCup.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BTN_AddCup.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.BTN_AddCup.Image = ((System.Drawing.Image)(resources.GetObject("BTN_AddCup.Image")));
-            this.BTN_AddCup.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.BTN_AddCup.Location = new System.Drawing.Point(2, 269);
-            this.BTN_AddCup.Name = "BTN_AddCup";
-            this.BTN_AddCup.Size = new System.Drawing.Size(260, 35);
-            this.BTN_AddCup.TabIndex = 2;
-            this.BTN_AddCup.Text = "        Ajouter verres à shooter";
-            this.BTN_AddCup.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.BTN_AddCup.UseVisualStyleBackColor = true;
-            this.BTN_AddCup.Click += new System.EventHandler(this.BTN_AddCup_Click);
             // 
             // BTN_Welcome
             // 
@@ -346,15 +325,6 @@
             this.fbtn_Halt.EnabledChanged += new System.EventHandler(this.fbtn_Halt_EnabledChanged);
             this.fbtn_Halt.Click += new System.EventHandler(this.fbtn_Halt_Click);
             // 
-            // addCups1
-            // 
-            this.addCups1.Location = new System.Drawing.Point(296, 307);
-            this.addCups1.MaximumSize = new System.Drawing.Size(439, 208);
-            this.addCups1.MinimumSize = new System.Drawing.Size(439, 208);
-            this.addCups1.Name = "addCups1";
-            this.addCups1.Size = new System.Drawing.Size(439, 208);
-            this.addCups1.TabIndex = 59;
-            // 
             // welcomePage1
             // 
             this.welcomePage1.Location = new System.Drawing.Point(296, 307);
@@ -370,7 +340,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1175, 691);
             this.Controls.Add(this.fbtn_Halt);
-            this.Controls.Add(this.addCups1);
             this.Controls.Add(this.welcomePage1);
             this.Controls.Add(this.panel8);
             this.Controls.Add(this.panel7);
@@ -425,11 +394,9 @@
         private System.Windows.Forms.Button BTN_Developers;
         private System.Windows.Forms.Button deconnexion;
         private System.Windows.Forms.Button BTN_Setting;
-        private System.Windows.Forms.Button BTN_AddCup;
         private System.Windows.Forms.Button BTN_Welcome;
         private System.Windows.Forms.PictureBox PBX_Logo;
         private WelcomePage welcomePage1;
-        private AddCups addCups1;
         private FlashButton.FlashButton fbtn_Halt;
     }
 }

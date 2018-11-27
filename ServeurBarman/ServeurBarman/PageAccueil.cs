@@ -42,11 +42,6 @@ namespace ServeurBarman
             welcomePage1.BringToFront();
         }
 
-        private void BTN_AddCup_Click(object sender, EventArgs e)
-        {
-            addCups1.BringToFront();
-        }
-
         private void BTN_Setting_Click(object sender, EventArgs e)
         {
             if (estConnecté)
